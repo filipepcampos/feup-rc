@@ -18,6 +18,10 @@
 
 volatile int STOP=FALSE;
 
+int verifyargv(int argc, char** argv){
+  return (argc < 2) || ((strcmp("/dev/ttyS10", argv[1])!=0) && (strcmp("/dev/ttyS11", argv[1])!=0));
+}
+
 int main(int argc, char** argv)
 {
   int fd, res;
@@ -25,19 +29,15 @@ int main(int argc, char** argv)
   char buf[255];
   int i, sum = 0, speed = 0;
   
-  if ( (argc < 2) || 
-        ((strcmp("/dev/ttyS10", argv[1])!=0) && 
-        (strcmp("/dev/ttyS11", argv[1])!=0) )) {
-    printf("Usage:\tnserial SerialPort\n\tex: nserial /dev/ttyS1\n");
+  if (verifyargv(argc, argv)) {
+    printf("Usage:\t%s SerialPort\n\tex: %s /dev/ttyS10\n", argv[0], argv[0]);
     exit(1);
   }
-
 
   /*
     Open serial port device for reading and writing and not as controlling tty
     because we don't want to get killed if linenoise sends CTRL-C.
   */
-
   fd = open(argv[1], O_RDWR | O_NOCTTY );
   if (fd <0) {perror(argv[1]); exit(-1); }
 
@@ -46,46 +46,41 @@ int main(int argc, char** argv)
     exit(-1);
   }
 
-  bzero(&newtio, sizeof(newtio));
-  newtio.c_cflag = BAUDRATE | CS8 | CLOCAL | CREAD;
-  newtio.c_iflag = IGNPAR;
+  bzero(&newtio, sizeof(newtio)); // Set contents of newtio to zero.
+  newtio.c_cflag = BAUDRATE | CS8 | CLOCAL | CREAD;  /*
+      BAUDRATE => B38400, I don't understand this #TODO
+      CS8 => Character size mask
+      CLOCAL => Ignore modem control lines
+      CREAD => Enable receiver
+  */
+  newtio.c_iflag = IGNPAR; // Ignore framing errors and parity errors
   newtio.c_oflag = 0;
 
   /* set input mode (non-canonical, no echo,...) */
   newtio.c_lflag = 0;
-  newtio.c_cc[VTIME]    = 0;   /* inter-character timer unused */
-  newtio.c_cc[VMIN]     = 1;   /* blocking read until 5 chars received */
+  newtio.c_cc[VTIME]    = 0;   /* inter-character timer unused (in deciseconds) */
+  newtio.c_cc[VMIN]     = 1;   /* blocking read until 1 chars received */
 
   /* 
     VTIME e VMIN devem ser alterados de forma a proteger com um temporizador a 
     leitura do(s) pr�ximo(s) caracter(es)
   */
+  tcflush(fd, TCIOFLUSH); // Clear the data that might be present in the fd
 
-  tcflush(fd, TCIOFLUSH);
-  
-
-  tcsetattr(0, TCSANOW, &newtio);
-  if ( tcsetattr(fd,TCSANOW,&newtio) == -1) {
+  if ( tcsetattr(fd,TCSANOW,&newtio) == -1) { // TCSANOW -> set attr takes place immediately
     perror("tcsetattr");
     exit(-1);
   }
 
   printf("New termios structure set\n");
 
-  while(TRUE){
-    char c = getchar();
-    res = write(fd, &c, 1);
-  }
+  fgets(buf, 254, stdin); // Ler até buffer_size - 1 chars
+  int datalen = strlen(buf);
+  buf[datalen+1] = '\0';
+  res = write(fd, buf, datalen+1);
+  printf("%d bytes written\n", res);
 
-  
-  /*testing*/
-  buf[25] = '\n';
-  
-  //res = write(fd,buf,255);   
-  //printf("%d bytes written\n", res);
-
-
-  if ( tcsetattr(fd,TCSANOW,&oldtio) == -1) {
+  if ( tcsetattr(fd,TCSANOW,&oldtio) == -1) { // Restaurar settings antigas do fd
     perror("tcsetattr");
     exit(-1);
   }
