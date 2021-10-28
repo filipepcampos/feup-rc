@@ -74,7 +74,7 @@ int main(int argc, char** argv)
 
   printf("New termios structure set\n");
 
-  fgets(buf, 254, stdin); // Ler até buffer_size - 1 chars
+  fgets(buf, 255, stdin); // Ler até buffer_size - 1 chars
   int datalen = strlen(buf);
   buf[datalen+1] = '\0';
   res = write(fd, buf, datalen+1);
