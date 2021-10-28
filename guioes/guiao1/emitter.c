@@ -11,7 +11,6 @@
 
 
 #define BAUDRATE B38400
-#define MODEMDEVICE "/dev/ttyS1"
 #define _POSIX_SOURCE 1 /* POSIX compliant source */
 #define FALSE 0
 #define TRUE 1
@@ -26,7 +25,7 @@ int main(int argc, char** argv)
 {
   int fd, res;
   struct termios oldtio,newtio;
-  char buf[255];
+  char outbuf[255], inbuf[255];
   int i, sum = 0, speed = 0;
   
   if (verifyargv(argc, argv)) {
@@ -58,7 +57,7 @@ int main(int argc, char** argv)
 
   /* set input mode (non-canonical, no echo,...) */
   newtio.c_lflag = 0;
-  newtio.c_cc[VTIME]    = 0;   /* inter-character timer unused (in deciseconds) */
+  newtio.c_cc[VTIME]    = 5;   /* inter-character timer unused (in deciseconds) */
   newtio.c_cc[VMIN]     = 1;   /* blocking read until 1 chars received */
 
   /* 
@@ -74,11 +73,19 @@ int main(int argc, char** argv)
 
   printf("New termios structure set\n");
 
-  fgets(buf, 255, stdin); // Ler até buffer_size - 1 chars
-  int datalen = strlen(buf);
-  buf[datalen+1] = '\0';
-  res = write(fd, buf, datalen+1);
+  fgets(outbuf, 255, stdin); // Ler até buffer_size - 1 chars
+  int datalen = strlen(outbuf);
+  outbuf[datalen+1] = '\0';
+  res = write(fd, outbuf, datalen+1); // TODO: Maybe we could add some error handling?
   printf("%d bytes written\n", res);
+
+  if(read(fd, inbuf, 255) == res && strcmp(inbuf, outbuf) == 0){
+    printf("Success\n");
+  }
+  else {
+    perror("failure");
+    exit(-1);
+  }
 
   if ( tcsetattr(fd,TCSANOW,&oldtio) == -1) { // Restaurar settings antigas do fd
     perror("tcsetattr");

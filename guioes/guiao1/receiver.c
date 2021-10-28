@@ -54,7 +54,7 @@ int main(int argc, char** argv)
   /* set input mode (non-canonical, no echo,...) */
   newtio.c_lflag = 0;
 
-  newtio.c_cc[VTIME]    = 0;   /* inter-character timer unused */
+  newtio.c_cc[VTIME]    = 5;   /* inter-character timer unused */
   newtio.c_cc[VMIN]     = 1;   /* blocking read until 5 chars received */
 
   /* 
@@ -73,10 +73,10 @@ int main(int argc, char** argv)
 
   while (STOP==FALSE) {       /* loop for input */
     res = read(fd,buf,255);   /* returns after 5 chars have been input */
-    buf[res]=0;               /* so we can printf... */
-    printf(":%s:%d\n", buf, res);
-    if (buf[0]=='\n') STOP=TRUE;
+    printf("> %s %d bytes read\n", buf, res);
+    if (buf[res-1]=='\0') STOP=TRUE;
   }
+  write(fd,buf,res); // Maybe add some error handling?
 
   tcsetattr(fd,TCSANOW,&oldtio);
   close(fd);
