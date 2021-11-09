@@ -28,7 +28,6 @@ receiver_state statemachine_cRcv(uint8_t byte, framecontent *fc) {
 	return START;
 }
 
-// TODO: This will return null if a sigalrm is rcvd, don't forget to document
 framecontent receive_frame(int fd) {
 	char buffer[255];
 	receiver_state state = START;
@@ -44,7 +43,6 @@ framecontent receive_frame(int fd) {
 			perror("read");
 			exit(-1);
 		}
-		printf("DEBUG> %s %d bytes read\n", buffer, res);
 		uint8_t byte = buffer[0];
 		if(byte == FLAG){
 			if(state == BCC_OK){
