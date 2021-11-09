@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "core.h"
+#include "rcv.h"
 
 int main(int argc, char *argv[]){
     if (verifyargv(argc, argv)) {
@@ -10,8 +11,10 @@ int main(int argc, char *argv[]){
 
     struct termios oldtio;
 	int fd = setup_serial(&oldtio, argv[1]);
-	receiver(fd);
-
+	
+	receive_frame(fd);
+	emitter(fd, CTL_UA);
+	
 	disconnect_serial(fd, &oldtio);
 	return 0;
 }

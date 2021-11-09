@@ -1,4 +1,5 @@
 #include "core.h"
+#include "rcv.h"
 #include <fcntl.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -34,71 +35,13 @@ int send_frame(int fd, char *frame, size_t frame_size) {
 	return 0;
 }
 
-int emitter(int fd) {
+int emitter(int fd, uint8_t control_byte) {
 	framecontent fc;        //TODO Change name
 	fc.address = ADDRESS1;  // TODO: Confirmar
-	fc.control = CTL_SET;
+	fc.control = control_byte;
 	char buffer[5];
 	create_frame(buffer, 5, &fc);
 	send_frame(fd, buffer, 5);
-	return 0;
-}
-
-receiver_state statemachine_flag(uint8_t byte) {
-	return (byte == ADDRESS1 || byte == ADDRESS2) ? A_RCV : START;  // TODO: Maybe verify this
-}
-
-bool valid_ctl_byte(uint8_t byte) {
-	if (byte == CTL_SET || byte == CTL_UA) { //TODO: Add all control 
-		return true;
-	}
-	return false;
-}
-
-receiver_state statemachine_addressrcv(uint8_t byte) {
-	return valid_ctl_byte(byte) ? C_RCV : START;
-}
-
-receiver_state statemachine_cRcv(uint8_t byte, framecontent *fc) {
-	if (((fc->control) ^ (fc->address)) == byte) {
-		return BCC_OK;
-	}
-	return START;
-}
-
-int receiver(int fd) {
-	char buffer[255];
-	receiver_state state = START;
-	framecontent fc;
-
-	while (state != STOP) {              /* loop for input */
-		int res = read(fd, buffer, 255); /* returns after 5 chars have been input */
-		if (res == -1) {
-			perror("read");
-			exit(-1);
-		}
-		printf("DEBUG> %s %d bytes read\n", buffer, res);
-		for (int i = 0; i < res; ++i) {
-			uint8_t byte = buffer[i];
-			if(byte == FLAG){
-				if(state == BCC_OK){
-					state = STOP;
-					break;
-				}
-				state = FLAG_RCV;
-			} else {
-				switch (state) {
-					case FLAG_RCV: state = statemachine_flag(byte); 
-						fc.address = byte; break;
-					case A_RCV:	state = statemachine_addressrcv(byte); 
-						fc.control = byte; break;
-					case C_RCV:	state = statemachine_cRcv(byte, &fc); break;
-					default: state = START;
-				}
-			}
-		}
-	}
-	printf("Read successful. (Address=%x and Control=%x)\n", fc.address, fc.control);
 	return 0;
 }
 
