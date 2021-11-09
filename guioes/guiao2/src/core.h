@@ -11,17 +11,6 @@
 #define FLAG 0x7e
 #define ADDRESS1 0x03  // TODO: Change name
 #define ADDRESS2 0x01
-#define CTL_SET 0x03
-#define CTL_UA 0x07
-
-#define BAUDRATE B38400
-#define _POSIX_SOURCE 1 /* POSIX compliant source */
-
-#define FRAME_RESEND_TIMEOUT 3
-
-#define FLAG 0x7e
-#define ADDRESS1 0x03  // TODO: Change name
-#define ADDRESS2 0x01
 
 // Control Commands
 #define CTL_SET 0x03
