@@ -12,7 +12,7 @@ int main(int argc, char *argv[]){
 
 	setup_sigalarm();
 
-    struct termios oldtio;
+	struct termios oldtio;
 	int fd = setup_serial(&oldtio, argv[1]);
 
 	emit_until_response(fd, CTL_SET, CTL_UA);
