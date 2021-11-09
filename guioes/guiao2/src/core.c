@@ -11,6 +11,7 @@
 #include <sys/types.h>
 #include <termios.h>
 #include <unistd.h>
+#include <signal.h>
 
 
 int create_frame(char *buffer, size_t buffer_size, framecontent *fc) {
@@ -104,4 +105,34 @@ int disconnect_serial(int fd, struct termios *oldtio) {
 
 int verifyargv(int argc, char **argv) {
 	return (argc < 2) || ((strcmp("/dev/ttyS0", argv[1]) != 0) && (strcmp("/dev/ttyS1", argv[1]) != 0));
+}
+
+volatile bool RESEND_FRAME = false;
+
+void sig_handler(int signum){
+	RESEND_FRAME = true;
+}
+
+void setup_sigalarm(){
+	struct sigaction a;
+	a.sa_handler = sig_handler;
+	a.sa_flags = 0;
+	sigemptyset(&a.sa_mask);
+	sigaction(SIGALRM, &a, NULL);
+}
+
+void emit_until_response(int fd, uint8_t control_byte, uint8_t expected_response){
+	emitter(fd, control_byte);
+	alarm(FRAME_RESEND_TIMEOUT);
+	while(true){
+		framecontent fc = receive_frame(fd);
+		if(fc.control == expected_response){
+			break;
+		}
+		if(RESEND_FRAME){
+			RESEND_FRAME = false;
+			emitter(fd, control_byte);
+			alarm(FRAME_RESEND_TIMEOUT);
+		}
+	}
 }

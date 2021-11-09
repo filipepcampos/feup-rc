@@ -50,3 +50,7 @@ int verifyargv(int argc, char **argv);
 int emitter(int fd, uint8_t control_byte);
 int send_frame(int fd, char *frame, size_t frame_size);
 int create_frame(char *buffer, size_t buffer_size, framecontent *fc);
+
+void sig_handler(int signum);
+void setup_sigalarm();
+void emit_until_response(int fd, uint8_t control_byte, uint8_t expected_response);
