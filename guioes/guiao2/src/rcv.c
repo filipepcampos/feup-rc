@@ -35,7 +35,7 @@ framecontent receive_frame(int fd) {
 	framecontent fc = DEFAULT_FC;
 
 	while (state != STOP) {              /* loop for input */
-		int res = read(fd, buffer, 255); /* returns after 5 chars have been input */
+		int res = read(fd, buffer, 1); /* returns after 5 chars have been input */
 		if (res == -1) {
 			if(errno == EINTR){
 				fc.control = 0; // TODO: Make sure there's no other Command with this value, and that this is properly documented
@@ -45,23 +45,21 @@ framecontent receive_frame(int fd) {
 			exit(-1);
 		}
 		printf("DEBUG> %s %d bytes read\n", buffer, res);
-		for (int i = 0; i < res; ++i) {
-			uint8_t byte = buffer[i];
-			if(byte == FLAG){
-				if(state == BCC_OK){
-					state = STOP;
-					break;
-				}
-				state = FLAG_RCV;
-			} else {
-				switch (state) {
-					case FLAG_RCV: state = statemachine_flag(byte); 
-						fc.address = byte; break;
-					case A_RCV:	state = statemachine_addressrcv(byte); 
-						fc.control = byte; break;
-					case C_RCV:	state = statemachine_cRcv(byte, &fc); break;
+		uint8_t byte = buffer[0];
+		if(byte == FLAG){
+			if(state == BCC_OK){
+				state = STOP;
+				break;
+			}
+			state = FLAG_RCV;
+		} else {
+			switch (state) {
+				case FLAG_RCV: state = statemachine_flag(byte); 
+					fc.address = byte; break;
+				case A_RCV:	state = statemachine_addressrcv(byte); 
+					fc.control = byte; break;
+				case C_RCV:	state = statemachine_cRcv(byte, &fc); break;
 					default: state = START;
-				}
 			}
 		}
 	}
