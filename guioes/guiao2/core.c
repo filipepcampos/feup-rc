@@ -25,7 +25,11 @@ int create_frame(char *buffer, size_t buffer_size, framecontent *fc) {
 }
 
 int send_frame(int fd, char *frame, size_t frame_size) {
-	int res = write(fd, frame, frame_size);  // TODO: Maybe we could add some error handling
+	int res = write(fd, frame, frame_size);
+	if (res == -1) {
+		perror("write");
+		exit(-1);
+	} 
 	printf("%d bytes written\n", res);
 	return 0;
 }
@@ -69,6 +73,10 @@ int receiver(int fd) {
 
 	while (state != STOP) {              /* loop for input */
 		int res = read(fd, buffer, 255); /* returns after 5 chars have been input */
+		if (res == -1) {
+			perror("read");
+			exit(-1);
+		}
 		printf("DEBUG> %s %d bytes read\n", buffer, res);
 		for (int i = 0; i < res; ++i) {
 			uint8_t byte = buffer[i];
@@ -125,7 +133,10 @@ int setup_serial(struct termios *oldtio, char *serial_device) {
 	newtio.c_cc[VTIME] = 5; /* inter-character timer unused (in deciseconds) */
 	newtio.c_cc[VMIN] = 5;  /* blocking read until 5 chars received */
 
-	tcflush(fd, TCIOFLUSH);  // Clear the data that might be present in the fd
+	if (tcflush(fd, TCIOFLUSH) == -1) { // Clear the data that might be present in the fd
+		perror("tcflush");
+		exit(-1);
+	} 
 
 	if (tcsetattr(fd, TCSANOW, &newtio) == -1) {  // TCSANOW -> set attr takes place immediately
 		perror("tcsetattr");
@@ -141,7 +152,10 @@ int disconnect_serial(int fd, struct termios *oldtio) {
 		perror("tcsetattr");
 		exit(-1);
 	}
-	close(fd);
+	if (close(fd) == -1) {
+		perror("close");
+		exit(-1);
+	}
 	return 0;
 }
 
