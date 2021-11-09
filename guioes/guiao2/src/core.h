@@ -14,19 +14,33 @@
 #define CTL_SET 0x03
 #define CTL_UA 0x07
 
+#define BAUDRATE B38400
+#define _POSIX_SOURCE 1 /* POSIX compliant source */
+
+#define FRAME_RESEND_TIMEOUT 3
+
+#define FLAG 0x7e
+#define ADDRESS1 0x03  // TODO: Change name
+#define ADDRESS2 0x01
+
+// Control Commands
+#define CTL_SET 0x03
+#define CTL_UA 0x07
+#define CTL_DISC 0X0B
+#define CTL_RR 0x05
+#define CTL_REJ 0x01
+
+// Representation of a frame, after flags have been removed
 typedef struct {
 	uint8_t address;
 	uint8_t control;
+	char *data;
+	bool has_data;
 } framecontent;
 
-typedef enum {
-	START,
-	FLAG_RCV,
-	A_RCV,
-	C_RCV,
-	BCC_OK,
-	STOP
-} receiver_state;
+#define DEFAULT_FC {0, 0, NULL, false};
+
+#define INIT_FRAMECONTENT() = framecontent X
 
 int setup_serial(struct termios *oldtio, char *serial_device);
 int disconnect_serial(int fd, struct termios *oldtio);

@@ -36,7 +36,9 @@ int main(int argc, char *argv[]){
 			}
 		}
 		if(RESEND_FRAME){
+			RESEND_FRAME = false;
 			emitter(fd, CTL_SET);
+			alarm(FRAME_RESEND_TIMEOUT);
 		}
 	}
 

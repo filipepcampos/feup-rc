@@ -36,7 +36,7 @@ int send_frame(int fd, char *frame, size_t frame_size) {
 }
 
 int emitter(int fd, uint8_t control_byte) {
-	framecontent fc;        //TODO Change name
+	framecontent fc = DEFAULT_FC; //TODO Change name
 	fc.address = ADDRESS1;  // TODO: Confirmar
 	fc.control = control_byte;
 	char buffer[5];

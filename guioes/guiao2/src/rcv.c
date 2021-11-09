@@ -32,7 +32,7 @@ receiver_state statemachine_cRcv(uint8_t byte, framecontent *fc) {
 framecontent receive_frame(int fd) {
 	char buffer[255];
 	receiver_state state = START;
-	framecontent fc;
+	framecontent fc = DEFAULT_FC;
 
 	while (state != STOP) {              /* loop for input */
 		int res = read(fd, buffer, 255); /* returns after 5 chars have been input */
