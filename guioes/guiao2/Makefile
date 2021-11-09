@@ -1,24 +1,23 @@
 CC=gcc
 CFLAGS=-Wall
 
-all: receiver emitter
+EXEC = receiver emitter
+OBJ = ./src/core.o ./src/rcv.o
 
-core.o :
-	$(CC) $(CFLAGS) -c core.c
+.SILENT: clean
+.INTERMEDIATE: $(OBJ)
 
-rcv :
-	$(CC) $(CFLAGS) -c core.o rcv.c
+all: build_dir $(EXEC)
 
-emitter : core.o rcv.o
-	$(CC) $(CFLAGS) core.o rcv.o emitter.c -o ./build/emitter
+build_dir:
+	mkdir -p build 
 
-receiver : core.o rcv.o
-	$(CC) $(CFLAGS) core.o rcv.o receiver.c -o ./build/receiver
+$(EXEC) : $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) ./src/$@.c -o ./build/$@
+
+clean:
+	-rm -rf ./build/*
 
 test:
 	./build/receiver /dev/ttyS1 &
 	./build/emitter /dev/ttyS0
-
-clean:
-	-rm -rf ./build/*
-	-rm *.o
