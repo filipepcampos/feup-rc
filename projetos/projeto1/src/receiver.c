@@ -17,9 +17,11 @@ int main(int argc, char *argv[]){
 	framecontent fc = create_non_information_frame(CTL_UA);
 	emitter(fd, &fc);
 
+	
+	fc = create_non_information_frame(CTL_RR);
 	while(true){
+		printf("Attempting to read\n");
 		receive_frame(fd);
-		fc = create_non_information_frame(CTL_RR);
 		emitter(fd, &fc);
 	}
 	
