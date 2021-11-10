@@ -4,6 +4,7 @@ typedef enum {
 	A_RCV,
 	C_RCV,
 	BCC_OK,
+	INFO,
 	STOP
 } receiver_state;
 

@@ -24,22 +24,32 @@ typedef struct {
 	uint8_t address;
 	uint8_t control;
 	char *data;
-	bool has_data;
+	size_t data_len;
 } framecontent;
 
-#define DEFAULT_FC {0, 0, NULL, false};
+#define DEFAULT_FC {0, 0, NULL, 0};
 
-#define INIT_FRAMECONTENT() = framecontent X
+#define INFORMATION_FRAME_CONTROL_BYTE(S) (S << 6)
 
 int setup_serial(struct termios *oldtio, char *serial_device);
 int disconnect_serial(int fd, struct termios *oldtio);
 
 int verifyargv(int argc, char **argv);
 
-int emitter(int fd, uint8_t control_byte);
-int send_frame(int fd, char *frame, size_t frame_size);
-int create_frame(char *buffer, size_t buffer_size, framecontent *fc);
+int emitter(int fd, framecontent *fc);
+int send_bytes(int fd, char *frame, size_t frame_size);
+int frame_to_bytes(char *buffer, size_t buffer_size, framecontent *fc);
 
 void sig_handler(int signum);
 void setup_sigalarm();
 void emit_until_response(int fd, uint8_t control_byte, uint8_t expected_response);
+
+uint8_t calculate_bcc(char *data, size_t data_len);
+
+framecontent create_non_information_frame(uint8_t control);
+
+framecontent create_information_frame(char *data, size_t data_len, int S);
+
+int emitter_information(int fd, char *data, uint8_t data_len, int S);
+
+void emit_information_until_response(int fd, char *data, size_t data_len, uint8_t expected_response);
