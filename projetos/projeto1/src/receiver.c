@@ -13,7 +13,15 @@ int main(int argc, char *argv[]){
 	int fd = setup_serial(&oldtio, argv[1]);
 	
 	receive_frame(fd);
-	emitter(fd, CTL_UA);
+
+	framecontent fc = create_non_information_frame(CTL_UA);
+	emitter(fd, &fc);
+
+	while(true){
+		receive_frame(fd);
+		fc = create_non_information_frame(CTL_RR);
+		emitter(fd, &fc);
+	}
 	
 	disconnect_serial(fd, &oldtio);
 	return 0;

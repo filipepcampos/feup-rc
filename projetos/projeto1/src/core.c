@@ -14,7 +14,18 @@
 #include <signal.h>
 
 
-int create_frame(char *buffer, size_t buffer_size, framecontent *fc) {
+uint8_t calculate_bcc(char *data, size_t data_len){
+  if(data_len <= 0){
+  	return 0; // TODO: Add proper error return
+  }
+	uint8_t result = 0;
+  for(size_t i = 0; i < data_len; ++i){
+  	result ^= data[i];
+  }
+  return result;
+}
+
+int frame_to_bytes(char *buffer, size_t buffer_size, framecontent *fc) {
 	if (buffer_size < 5) {
 		return -1;
 	}
@@ -22,12 +33,19 @@ int create_frame(char *buffer, size_t buffer_size, framecontent *fc) {
 	buffer[1] = fc->address;
 	buffer[2] = fc->control;
 	buffer[3] = (fc->address) ^ (fc->control);
-	buffer[4] = FLAG;
+  int i = 4;
+  if(fc->data_len > 0){
+  	strncpy(buffer, fc->data, fc->data_len);
+    uint8_t bcc = calculate_bcc(fc->data, fc->data_len);
+    i += fc->data_len;
+    buffer[i++] = bcc;
+  }
+	buffer[i] = FLAG;
 	return 0;
 }
 
-int send_frame(int fd, char *frame, size_t frame_size) {
-	int res = write(fd, frame, frame_size);
+int send_bytes(int fd, char *buffer, size_t buffer_size) {
+	int res = write(fd, buffer, buffer_size);
 	if (res == -1) {
 		perror("write");
 		exit(-1);
@@ -36,13 +54,40 @@ int send_frame(int fd, char *frame, size_t frame_size) {
 	return 0;
 }
 
-int emitter(int fd, uint8_t control_byte) {
-	framecontent fc = DEFAULT_FC; //TODO Change name
-	fc.address = ADDRESS1;  // TODO: Confirmar
-	fc.control = control_byte;
-	char buffer[5];
-	create_frame(buffer, 5, &fc);
-	send_frame(fd, buffer, 5);
+int emitter(int fd, framecontent *fc) {
+	size_t buffer_size = 5 + (fc->data_len > 0 ? 1 : 0) + fc->data_len;
+	char buffer[buffer_size];
+	frame_to_bytes(buffer, buffer_size, fc);
+	send_bytes(fd, buffer, buffer_size);
+	return 0;
+}
+
+framecontent create_non_information_frame(uint8_t control){
+  framecontent fc = DEFAULT_FC;
+  fc.control = control;
+  fc.address = ADDRESS1; // TODO: This may be changed
+  return fc;
+}
+
+framecontent create_information_frame(char *data, size_t data_len, int S){
+	framecontent fc = DEFAULT_FC;
+	fc.control = INFORMATION_FRAME_CONTROL_BYTE(S);
+	fc.address = ADDRESS1; // TODO:
+	fc.data = data;
+	fc.data_len = data_len;
+	return fc;
+}
+
+int emitter_information(int fd, char *data, uint8_t data_len, int S) {
+	framecontent fc = DEFAULT_FC;
+	fc.address = ADDRESS1;
+	fc.control = INFORMATION_FRAME_CONTROL_BYTE(S);
+	fc.data = data;
+	fc.data_len = data_len;
+	size_t buffer_size = 6 + data_len;
+	char *buffer = malloc ((sizeof (char)) * buffer_size);
+	frame_to_bytes(buffer, buffer_size, &fc);
+	send_bytes(fd, buffer, buffer_size);
 	return 0;
 }
 
@@ -122,7 +167,8 @@ void setup_sigalarm(){
 }
 
 void emit_until_response(int fd, uint8_t control_byte, uint8_t expected_response){
-	emitter(fd, control_byte);
+	framecontent fc = create_non_information_frame(control_byte);
+	emitter(fd, &fc);
 	alarm(FRAME_RESEND_TIMEOUT);
 	while(true){
 		framecontent fc = receive_frame(fd);
@@ -131,8 +177,25 @@ void emit_until_response(int fd, uint8_t control_byte, uint8_t expected_response
 		}
 		if(RESEND_FRAME){
 			RESEND_FRAME = false;
-			emitter(fd, control_byte);
+			emitter(fd, &fc);
 			alarm(FRAME_RESEND_TIMEOUT);
 		}
 	}
+}
+void emit_information_until_response(int fd, char *data, size_t data_len, uint8_t expected_response){
+	framecontent fc = create_information_frame(data, data_len, 0); // TODO: Change 0
+	emitter(fd, &fc);
+	alarm(FRAME_RESEND_TIMEOUT);
+	while(true){
+		framecontent fc = receive_frame(fd);
+		if(fc.control == expected_response){
+			break;
+		}
+		if(RESEND_FRAME){
+			RESEND_FRAME = false;
+			emitter(fd, &fc);
+			alarm(FRAME_RESEND_TIMEOUT);
+		}
+	}
+	alarm(0);
 }

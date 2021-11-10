@@ -23,18 +23,23 @@ receiver_state statemachine_addressrcv(uint8_t byte) {
 
 receiver_state statemachine_cRcv(uint8_t byte, framecontent *fc) {
 	if (((fc->control) ^ (fc->address)) == byte) {
+		if( (fc->control) & 0xBF) { // TODO: Change 0xBF to define
+			return INFO;
+		}
 		return BCC_OK;
 	}
 	return START;
 }
 
 framecontent receive_frame(int fd) {
-	char buffer[255];
+	char *buffer = malloc ((sizeof (char)) * 255); // TODO: Verify
+	size_t buffer_pos = 0;
+	uint8_t current_byte;
 	receiver_state state = START;
 	framecontent fc = DEFAULT_FC;
 
 	while (state != STOP) {              /* loop for input */
-		int res = read(fd, buffer, 1); /* returns after 5 chars have been input */
+		int res = read(fd, &current_byte, 1); /* returns after 5 chars have been input */
 		if (res == -1) {
 			if(errno == EINTR){
 				fc.control = 0; // TODO: Make sure there's no other Command with this value, and that this is properly documented
@@ -43,21 +48,28 @@ framecontent receive_frame(int fd) {
 			perror("read");
 			exit(-1);
 		}
-		uint8_t byte = buffer[0];
-		if(byte == FLAG){
+		if(current_byte == FLAG){
 			if(state == BCC_OK){
+				state = STOP;
+				break;
+			}
+			if(state == INFO){
+				// TODO: verificar BCC
+				fc.data = buffer;
+				fc.data_len = buffer_pos;
 				state = STOP;
 				break;
 			}
 			state = FLAG_RCV;
 		} else {
 			switch (state) {
-				case FLAG_RCV: state = statemachine_flag(byte); 
-					fc.address = byte; break;
-				case A_RCV:	state = statemachine_addressrcv(byte); 
-					fc.control = byte; break;
-				case C_RCV:	state = statemachine_cRcv(byte, &fc); break;
+				case FLAG_RCV: state = statemachine_flag(current_byte); 
+					fc.address = current_byte; break;
+				case A_RCV:	state = statemachine_addressrcv(current_byte); 
+					fc.control = current_byte; break;
+				case C_RCV:	state = statemachine_cRcv(current_byte, &fc); break;
 					default: state = START;
+				case INFO: buffer[buffer_pos++] = current_byte; break;
 			}
 		}
 	}
