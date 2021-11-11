@@ -58,7 +58,7 @@ int emitter(int fd, framecontent *fc) {
 	size_t buffer_size = 5 + (fc->data_len > 0 ? 1 : 0) + fc->data_len;
 	char buffer[buffer_size];
 	frame_to_bytes(buffer, buffer_size, fc);
-	printf("DEBUG: sending the following message:");
+	printf("sending the following message:");
 	for(int i = 0; i < buffer_size; ++i){
 		printf(" %x", buffer[i]);
 	}

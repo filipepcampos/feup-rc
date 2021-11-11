@@ -27,14 +27,10 @@ int main(int argc, char *argv[]){
 
 	int fd2 = open("./file", 2); // TODO This may stupid
 	char buffer[5];
-	printf("Reading\n");
 	while(read(fd2, &buffer, 5) == 5){
-		printf("Emitting info\n");
 		fc = create_information_frame(buffer, 5, 1);
 		emit_until_response(fd, &fc, CTL_RR);
-		printf("Finished emit\n");
 	}
-
 	disconnect_serial(fd, &oldtio);
 	return 0;
 }

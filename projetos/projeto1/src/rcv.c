@@ -42,18 +42,7 @@ framecontent receive_frame(int fd) {
 	framecontent fc = DEFAULT_FC;
 
 	while (state != STOP) {              /* loop for input */
-		printf("	debug: going to read a byte\n");
 		int res = read(fd, &current_byte, 1); /* returns after 5 chars have been input */
-		printf("	got %x\n", current_byte);
-		switch(state){
-			case START : printf("START\n"); break;
-			case FLAG_RCV : printf("FLAGRCV\n"); break;
-			case A_RCV : printf("A_RCV\n"); break;
-			case C_RCV : printf("C_RCV\n"); break;
-			case BCC_OK : printf("BCC_OK\n"); break;
-			case INFO : printf("INFO\n"); break;
-			case STOP : printf("STOP\n"); break;
-		}
 		if (res == -1) {
 			if(errno == EINTR){
 				fc.control = 0; // TODO: Make sure there's no other Command with this value, and that this is properly documented
@@ -92,5 +81,12 @@ framecontent receive_frame(int fd) {
 		free(buffer);
 	}
 	printf("Read successful. (Address=%x and Control=%x)\n", fc.address, fc.control);
+	if(has_info){
+		printf("  ");
+		for(int i = 0; i < fc.data_len; ++i){
+			printf("%x ", fc.data[i]);
+		}
+		printf("\n");
+	}
 	return fc;
 }
