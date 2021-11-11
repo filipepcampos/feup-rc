@@ -32,8 +32,9 @@ receiver_state statemachine_cRcv(uint8_t byte, framecontent *fc) {
 }
 
 framecontent receive_frame(int fd) {
-	char *buffer = malloc ((sizeof (char)) * 255); // TODO: Verify
+	char *buffer = malloc ((sizeof (char)) * 255); // TODO: Verify, also make sure there's no memory leak
 	size_t buffer_pos = 0;
+	bool has_info = false;
 	uint8_t current_byte;
 	receiver_state state = START;
 	framecontent fc = DEFAULT_FC;
@@ -58,6 +59,7 @@ framecontent receive_frame(int fd) {
 				fc.data = buffer;
 				fc.data_len = buffer_pos;
 				state = STOP;
+				has_info = true;
 				break;
 			}
 			state = FLAG_RCV;
@@ -72,6 +74,9 @@ framecontent receive_frame(int fd) {
 				case INFO: buffer[buffer_pos++] = current_byte; break;
 			}
 		}
+	}
+	if(!has_info){
+		free(buffer);
 	}
 	printf("Read successful. (Address=%x and Control=%x)\n", fc.address, fc.control);
 	return fc;

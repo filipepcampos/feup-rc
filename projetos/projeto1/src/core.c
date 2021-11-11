@@ -88,6 +88,7 @@ int emitter_information(int fd, char *data, uint8_t data_len, int S) {
 	char *buffer = malloc ((sizeof (char)) * buffer_size);
 	frame_to_bytes(buffer, buffer_size, &fc);
 	send_bytes(fd, buffer, buffer_size);
+	free (buffer);
 	return 0;
 }
 

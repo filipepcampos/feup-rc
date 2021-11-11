@@ -12,13 +12,19 @@ int main(int argc, char *argv[]){
 	struct termios oldtio;
 	int fd = setup_serial(&oldtio, argv[1]);
 	
-	receive_frame(fd);
+	framecontent received_fc = receive_frame(fd);
+	if(received_fc.data != NULL){
+		free(received_fc.data);
+	}
 
 	framecontent fc = create_non_information_frame(CTL_UA);
 	emitter(fd, &fc);
 
 	while(true){
-		receive_frame(fd);
+		received_fc = receive_frame(fd);
+		if(received_fc.data != NULL){
+			free(received_fc.data);
+		}
 		fc = create_non_information_frame(CTL_RR);
 		emitter(fd, &fc);
 	}
