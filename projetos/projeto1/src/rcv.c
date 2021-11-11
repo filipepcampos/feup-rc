@@ -11,7 +11,8 @@ receiver_state statemachine_flag(uint8_t byte) {
 }
 
 bool valid_ctl_byte(uint8_t byte) {
-	if (byte == CTL_SET || byte == CTL_UA) { //TODO: Add all control 
+	
+	if (byte == CTL_SET || byte == CTL_UA || byte == CTL_RR || byte == CTL_DISC || byte == CTL_REJ|| ((byte & 0xBF) == 0)) { //TODO: Add all control, change 0xBF
 		return true;
 	}
 	return false;
@@ -23,7 +24,7 @@ receiver_state statemachine_addressrcv(uint8_t byte) {
 
 receiver_state statemachine_cRcv(uint8_t byte, framecontent *fc) {
 	if (((fc->control) ^ (fc->address)) == byte) {
-		if( (fc->control) & 0xBF) { // TODO: Change 0xBF to define
+		if( ((fc->control) & 0xBF) == 0) { // TODO: Change 0xBF to define
 			return INFO;
 		}
 		return BCC_OK;
@@ -37,10 +38,22 @@ framecontent receive_frame(int fd) {
 	bool has_info = false;
 	uint8_t current_byte;
 	receiver_state state = START;
+	
 	framecontent fc = DEFAULT_FC;
 
 	while (state != STOP) {              /* loop for input */
+		printf("	debug: going to read a byte\n");
 		int res = read(fd, &current_byte, 1); /* returns after 5 chars have been input */
+		printf("	got %x\n", current_byte);
+		switch(state){
+			case START : printf("START\n"); break;
+			case FLAG_RCV : printf("FLAGRCV\n"); break;
+			case A_RCV : printf("A_RCV\n"); break;
+			case C_RCV : printf("C_RCV\n"); break;
+			case BCC_OK : printf("BCC_OK\n"); break;
+			case INFO : printf("INFO\n"); break;
+			case STOP : printf("STOP\n"); break;
+		}
 		if (res == -1) {
 			if(errno == EINTR){
 				fc.control = 0; // TODO: Make sure there's no other Command with this value, and that this is properly documented

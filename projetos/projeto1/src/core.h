@@ -42,7 +42,7 @@ int frame_to_bytes(char *buffer, size_t buffer_size, framecontent *fc);
 
 void sig_handler(int signum);
 void setup_sigalarm();
-void emit_until_response(int fd, uint8_t control_byte, uint8_t expected_response);
+void emit_until_response(int fd, framecontent *fc, uint8_t expected_response);
 
 uint8_t calculate_bcc(char *data, size_t data_len);
 
@@ -51,5 +51,3 @@ framecontent create_non_information_frame(uint8_t control);
 framecontent create_information_frame(char *data, size_t data_len, int S);
 
 int emitter_information(int fd, char *data, uint8_t data_len, int S);
-
-void emit_information_until_response(int fd, char *data, size_t data_len, uint8_t expected_response);

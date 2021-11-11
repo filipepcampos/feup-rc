@@ -15,14 +15,14 @@
 
 
 uint8_t calculate_bcc(char *data, size_t data_len){
-  if(data_len <= 0){
-  	return 0; // TODO: Add proper error return
-  }
+	if(data_len <= 0){
+		return 0; // TODO: Add proper error return
+	}
 	uint8_t result = 0;
-  for(size_t i = 0; i < data_len; ++i){
-  	result ^= data[i];
-  }
-  return result;
+	for(size_t i = 0; i < data_len; ++i){
+		result ^= data[i];
+	}
+	return result;
 }
 
 int frame_to_bytes(char *buffer, size_t buffer_size, framecontent *fc) {
@@ -33,13 +33,13 @@ int frame_to_bytes(char *buffer, size_t buffer_size, framecontent *fc) {
 	buffer[1] = fc->address;
 	buffer[2] = fc->control;
 	buffer[3] = (fc->address) ^ (fc->control);
-  int i = 4;
-  if(fc->data_len > 0){
-  	strncpy(buffer, fc->data, fc->data_len);
-    uint8_t bcc = calculate_bcc(fc->data, fc->data_len);
-    i += fc->data_len;
-    buffer[i++] = bcc;
-  }
+	int i = 4;
+	if(fc->data_len > 0){
+		strncpy(buffer+4, fc->data, fc->data_len);
+		uint8_t bcc = calculate_bcc(fc->data, fc->data_len);
+		i += fc->data_len;
+		buffer[i++] = bcc;
+	}
 	buffer[i] = FLAG;
 	return 0;
 }
@@ -58,6 +58,11 @@ int emitter(int fd, framecontent *fc) {
 	size_t buffer_size = 5 + (fc->data_len > 0 ? 1 : 0) + fc->data_len;
 	char buffer[buffer_size];
 	frame_to_bytes(buffer, buffer_size, fc);
+	printf("DEBUG: sending the following message:");
+	for(int i = 0; i < buffer_size; ++i){
+		printf(" %x", buffer[i]);
+	}
+	printf("\n");
 	send_bytes(fd, buffer, buffer_size);
 	return 0;
 }
@@ -167,34 +172,17 @@ void setup_sigalarm(){
 	sigaction(SIGALRM, &a, NULL);
 }
 
-void emit_until_response(int fd, uint8_t control_byte, uint8_t expected_response){
-	framecontent fc = create_non_information_frame(control_byte);
-	emitter(fd, &fc);
+void emit_until_response(int fd, framecontent *fc, uint8_t expected_response){
+	emitter(fd, fc);
 	alarm(FRAME_RESEND_TIMEOUT);
 	while(true){
-		framecontent fc = receive_frame(fd);
-		if(fc.control == expected_response){
+		framecontent response_fc = receive_frame(fd);
+		if(response_fc.control == expected_response){
 			break;
 		}
 		if(RESEND_FRAME){
 			RESEND_FRAME = false;
-			emitter(fd, &fc);
-			alarm(FRAME_RESEND_TIMEOUT);
-		}
-	}
-}
-void emit_information_until_response(int fd, char *data, size_t data_len, uint8_t expected_response){
-	framecontent fc = create_information_frame(data, data_len, 0); // TODO: Change 0
-	emitter(fd, &fc);
-	alarm(FRAME_RESEND_TIMEOUT);
-	while(true){
-		framecontent fc = receive_frame(fd);
-		if(fc.control == expected_response){
-			break;
-		}
-		if(RESEND_FRAME){
-			RESEND_FRAME = false;
-			emitter(fd, &fc);
+			emitter(fd, fc);
 			alarm(FRAME_RESEND_TIMEOUT);
 		}
 	}

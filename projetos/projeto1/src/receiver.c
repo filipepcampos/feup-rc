@@ -20,6 +20,8 @@ int main(int argc, char *argv[]){
 	framecontent fc = create_non_information_frame(CTL_UA);
 	emitter(fd, &fc);
 
+	
+	fc = create_non_information_frame(CTL_RR);
 	while(true){
 		received_fc = receive_frame(fd);
 		if(received_fc.data != NULL){
