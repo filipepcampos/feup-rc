@@ -12,8 +12,7 @@ receiver_state statemachine_flag(uint8_t byte) {
 }
 
 bool valid_ctl_byte(uint8_t byte) {
-	
-	if (byte == CTL_SET || byte == CTL_UA || byte == CTL_RR || byte == CTL_DISC || byte == CTL_REJ|| ((byte & 0xBF) == 0)) { //TODO: Add all control, change 0xBF
+	if (byte == CTL_SET || byte == CTL_UA || byte == CTL_RR || byte == CTL_DISC || byte == CTL_REJ|| IS_INFO_CONTROL_BYTE(byte)) { //TODO: Add all control, change 0xBF
 		return true;
 	}
 	return false;
@@ -59,11 +58,6 @@ framecontent receive_frame(int fd) {
 			}
 			if(state == INFO){
 				if(buffer[buffer_pos-1] == calculate_bcc(buffer, buffer_pos-1) ){  // TODO: Make sure this is totally safe
-					printf("  received INFO: ");
-					for(int i = 0; i < buffer_pos; ++i){
-						printf(" %x ", buffer[i]);
-					}
-					printf("\n");
 					fc.data = buffer;
 					fc.data_len = buffer_pos - 1; // TODO: Make sure this is totally safe
 					state = STOP;
@@ -89,5 +83,6 @@ framecontent receive_frame(int fd) {
 	if(!has_info){
 		free(buffer);
 	}
+	log_receival(&fc);
 	return fc;
 }

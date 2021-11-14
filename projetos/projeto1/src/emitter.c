@@ -5,8 +5,6 @@
 #include "rcv.h"
 
 
-
-
 #include <fcntl.h> // TODO maybe remove
 
 
@@ -37,6 +35,10 @@ int main(int argc, char *argv[]){
 			exit(1);
 		}
 	}
+	fc = create_non_information_frame(CTL_DISC);
+	emit_until_response(fd, &fc, CTL_DISC);
+	fc = create_non_information_frame(CTL_UA);
+	emitter(fd, &fc);
 	disconnect_serial(fd, &oldtio);
 	return 0;
 }

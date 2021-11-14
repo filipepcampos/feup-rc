@@ -32,6 +32,13 @@ typedef struct {
 
 #define INFORMATION_FRAME_CONTROL_BYTE(S) (S << 6)
 
+#define IS_INFO_CONTROL_BYTE(b) ((b & 0xBF) == 0)
+
+void print_address_byte(uint8_t byte);
+void print_control_byte(uint8_t byte);
+void log_emission(framecontent *fc);
+void log_receival(framecontent *fc);
+
 int setup_serial(struct termios *oldtio, char *serial_device);
 int disconnect_serial(int fd, struct termios *oldtio);
 

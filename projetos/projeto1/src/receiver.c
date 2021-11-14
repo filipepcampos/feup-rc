@@ -27,6 +27,11 @@ int main(int argc, char *argv[]){
 		if(received_fc.data != NULL){
 			free(received_fc.data);
 		}
+		if(received_fc.control == CTL_DISC){
+			fc = create_non_information_frame(CTL_DISC);
+			emit_until_response(fd, &fc, CTL_UA);
+			break;
+		}
 		fc = create_non_information_frame(CTL_RR);
 		emitter(fd, &fc);
 	}

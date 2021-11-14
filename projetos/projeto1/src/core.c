@@ -14,8 +14,54 @@
 #include <unistd.h>
 #include <signal.h>
 
-
-
+void print_control_byte(uint8_t byte){
+	switch(byte){
+		case CTL_SET : printf("SET"); return;
+		case CTL_UA : printf("UA"); return;
+		case CTL_DISC : printf("DISC"); return;
+		case CTL_RR : printf("RR"); return;
+		case CTL_REJ : printf("REJ"); return;
+	}
+	if(IS_INFO_CONTROL_BYTE(byte)){
+		printf("INFO");
+		return;
+	}
+	printf("INVALID");
+	return;
+}
+void print_address_byte(uint8_t byte){
+	switch(byte){
+		case ADDRESS1 : printf("ADRESS1"); break;
+		case ADDRESS2 : printf("ADDRESS2"); break;
+		default: printf("INVALID"); break;
+	}
+}
+void log_emission(framecontent *fc){
+	printf(" emit: CTL=");
+	print_control_byte(fc->control);
+	printf(" ADR=");
+	print_address_byte(fc->address);
+	if(IS_INFO_CONTROL_BYTE(fc->control)){
+		printf(" INFO=");
+		for(int i = 0;  i < fc->data_len; ++i){
+			printf(" %x ", fc->data[i]);
+		}
+	}
+	printf("\n");
+}
+void log_receival(framecontent *fc){
+	printf(" receive: CTL=");
+	print_control_byte(fc->control);
+	printf(" ADR=");
+	print_address_byte(fc->address);
+	if(IS_INFO_CONTROL_BYTE(fc->control)){
+		printf(" INFO=");
+		for(int i = 0;  i < fc->data_len; ++i){
+			printf(" %x ", fc->data[i]);
+		}
+	}
+	printf("\n");
+}
 
 int frame_to_bytes(char *buffer, size_t buffer_size, framecontent *fc) {
 	if (buffer_size < 5) {
@@ -41,12 +87,7 @@ int send_bytes(int fd, char *buffer, size_t buffer_size) {
 	if (res == -1) {
 		perror("write");
 		exit(-1);
-	} 
-	printf("  %d bytes written: ", res);
-	for(int i = 0; i < buffer_size; ++i){
-		printf(" %x ", buffer[i]);
 	}
-	printf("\n");
 	return 0;
 }
 
@@ -55,6 +96,7 @@ int emitter(int fd, framecontent *fc) {
 	char buffer[buffer_size];
 	frame_to_bytes(buffer, buffer_size, fc);
 	send_bytes(fd, buffer, buffer_size);
+	log_emission(fc);
 	return 0;
 }
 
@@ -84,6 +126,7 @@ int emitter_information(int fd, char *data, uint8_t data_len, int S) {
 	char *buffer = malloc ((sizeof (char)) * buffer_size);
 	frame_to_bytes(buffer, buffer_size, &fc);
 	send_bytes(fd, buffer, buffer_size);
+	log_emission(&fc);
 	free (buffer);
 	return 0;
 }
@@ -164,8 +207,8 @@ void setup_sigalarm(){
 }
 
 int emit_until_response(int fd, framecontent *fc, uint8_t expected_response){ // TODO: Check this in the proper places
-	int attempts = MAX_EMIT_ATTEMPTS;
 	emitter(fd, fc);
+	int attempts = MAX_EMIT_ATTEMPTS - 1;
 	alarm(FRAME_RESEND_TIMEOUT);
 	while(attempts > 0){
 		framecontent response_fc = receive_frame(fd);
