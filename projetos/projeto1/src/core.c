@@ -1,5 +1,6 @@
 #include "core.h"
 #include "rcv.h"
+#include "util.h"
 #include <fcntl.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -14,16 +15,7 @@
 #include <signal.h>
 
 
-uint8_t calculate_bcc(char *data, size_t data_len){
-	if(data_len <= 0){
-		return 0; // TODO: Add proper error return
-	}
-	uint8_t result = 0;
-	for(size_t i = 0; i < data_len; ++i){
-		result ^= data[i];
-	}
-	return result;
-}
+
 
 int frame_to_bytes(char *buffer, size_t buffer_size, framecontent *fc) {
 	if (buffer_size < 5) {
@@ -50,7 +42,11 @@ int send_bytes(int fd, char *buffer, size_t buffer_size) {
 		perror("write");
 		exit(-1);
 	} 
-	printf("%d bytes written\n", res);
+	printf("  %d bytes written: ", res);
+	for(int i = 0; i < buffer_size; ++i){
+		printf(" %x ", buffer[i]);
+	}
+	printf("\n");
 	return 0;
 }
 
@@ -58,11 +54,6 @@ int emitter(int fd, framecontent *fc) {
 	size_t buffer_size = 5 + (fc->data_len > 0 ? 1 : 0) + fc->data_len;
 	char buffer[buffer_size];
 	frame_to_bytes(buffer, buffer_size, fc);
-	printf("sending the following message:");
-	for(int i = 0; i < buffer_size; ++i){
-		printf(" %x", buffer[i]);
-	}
-	printf("\n");
 	send_bytes(fd, buffer, buffer_size);
 	return 0;
 }
@@ -115,7 +106,7 @@ int setup_serial(struct termios *oldtio, char *serial_device) {
 	struct termios newtio;
 	bzero(&newtio, sizeof(newtio)); // Set contents of newtio to zero.
 	newtio.c_cflag = BAUDRATE | CS8 | CLOCAL | CREAD; /*
-      BAUDRATE => B38400, I don't understand this #TODO
+      BAUDRATE => B38400
       CS8 => Character size mask
       CLOCAL => Ignore modem control lines
       CREAD => Enable receiver

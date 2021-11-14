@@ -44,8 +44,6 @@ void sig_handler(int signum);
 void setup_sigalarm();
 void emit_until_response(int fd, framecontent *fc, uint8_t expected_response);
 
-uint8_t calculate_bcc(char *data, size_t data_len);
-
 framecontent create_non_information_frame(uint8_t control);
 
 framecontent create_information_frame(char *data, size_t data_len, int S);

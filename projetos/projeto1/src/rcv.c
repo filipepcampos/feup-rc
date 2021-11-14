@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include "core.h"
 #include "rcv.h"
+#include "util.h"
 
 
 receiver_state statemachine_flag(uint8_t byte) {
@@ -57,12 +58,20 @@ framecontent receive_frame(int fd) {
 				break;
 			}
 			if(state == INFO){
-				// TODO: verificar BCC
-				fc.data = buffer;
-				fc.data_len = buffer_pos;
-				state = STOP;
-				has_info = true;
-				break;
+				if(buffer[buffer_pos-1] == calculate_bcc(buffer, buffer_pos-1) ){  // TODO: Make sure this is totally safe
+					printf("  received INFO: ");
+					for(int i = 0; i < buffer_pos; ++i){
+						printf(" %x ", buffer[i]);
+					}
+					printf("\n");
+					fc.data = buffer;
+					fc.data_len = buffer_pos - 1; // TODO: Make sure this is totally safe
+					state = STOP;
+					has_info = true;
+					break;
+				}
+				buffer_pos = 0;
+				state = START;  // TODO: Is this the correct behaviour?				
 			}
 			state = FLAG_RCV;
 		} else {
@@ -79,14 +88,6 @@ framecontent receive_frame(int fd) {
 	}
 	if(!has_info){
 		free(buffer);
-	}
-	printf("Read successful. (Address=%x and Control=%x)\n", fc.address, fc.control);
-	if(has_info){
-		printf("  ");
-		for(int i = 0; i < fc.data_len; ++i){
-			printf("%x ", fc.data[i]);
-		}
-		printf("\n");
 	}
 	return fc;
 }
