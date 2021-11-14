@@ -163,10 +163,11 @@ void setup_sigalarm(){
 	sigaction(SIGALRM, &a, NULL);
 }
 
-void emit_until_response(int fd, framecontent *fc, uint8_t expected_response){
+int emit_until_response(int fd, framecontent *fc, uint8_t expected_response){ // TODO: Check this in the proper places
+	int attempts = MAX_EMIT_ATTEMPTS;
 	emitter(fd, fc);
 	alarm(FRAME_RESEND_TIMEOUT);
-	while(true){
+	while(attempts > 0){
 		framecontent response_fc = receive_frame(fd);
 		if(response_fc.control == expected_response){
 			break;
@@ -176,6 +177,11 @@ void emit_until_response(int fd, framecontent *fc, uint8_t expected_response){
 			emitter(fd, fc);
 			alarm(FRAME_RESEND_TIMEOUT);
 		}
+		attempts--;
 	}
 	alarm(0);
+	if(attempts == 0){
+		return 1;
+	}
+	return 0;
 }

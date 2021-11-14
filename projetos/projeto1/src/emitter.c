@@ -23,13 +23,19 @@ int main(int argc, char *argv[]){
 
 	framecontent fc = create_non_information_frame(CTL_SET);
 
-	emit_until_response(fd, &fc, CTL_UA);
+	if(emit_until_response(fd, &fc, CTL_UA) != 0){
+		printf("Maximum emit attempts reached\n");
+		exit(1);
+	}
 
 	int fd2 = open("./file", 2); // TODO This may stupid
 	char buffer[5];
 	while(read(fd2, &buffer, 5) == 5){
 		fc = create_information_frame(buffer, 5, 1);
-		emit_until_response(fd, &fc, CTL_RR);
+		if(emit_until_response(fd, &fc, CTL_RR) != 0){
+			printf("Maximum emit attempts reached\n");
+			exit(1);
+		}
 	}
 	disconnect_serial(fd, &oldtio);
 	return 0;

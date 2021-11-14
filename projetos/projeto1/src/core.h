@@ -7,6 +7,7 @@
 #define _POSIX_SOURCE 1 /* POSIX compliant source */
 
 #define FRAME_RESEND_TIMEOUT 3
+#define MAX_EMIT_ATTEMPTS 3
 
 #define FLAG 0x7e
 #define ADDRESS1 0x03  // TODO: Change name
@@ -42,7 +43,7 @@ int frame_to_bytes(char *buffer, size_t buffer_size, framecontent *fc);
 
 void sig_handler(int signum);
 void setup_sigalarm();
-void emit_until_response(int fd, framecontent *fc, uint8_t expected_response);
+int emit_until_response(int fd, framecontent *fc, uint8_t expected_response);
 
 framecontent create_non_information_frame(uint8_t control);
 
