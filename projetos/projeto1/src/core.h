@@ -30,7 +30,8 @@ typedef struct {
 
 #define DEFAULT_FC {0, 0, NULL, 0};
 
-#define INFORMATION_FRAME_CONTROL_BYTE(S) (S << 6)
+#define CREATE_INFO_FRAME_CTL_BYTE(S) (S << 6)
+#define GET_INFO_FRAME_CTL_BIT(b) (b >> 6)
 
 #define IS_INFO_CONTROL_BYTE(b) ((b & 0xBF) == 0)
 
@@ -56,4 +57,4 @@ framecontent create_non_information_frame(uint8_t control);
 
 framecontent create_information_frame(char *data, size_t data_len, int S);
 
-int emitter_information(int fd, char *data, uint8_t data_len, int S);
+

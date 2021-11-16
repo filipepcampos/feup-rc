@@ -28,12 +28,14 @@ int main(int argc, char *argv[]){
 
 	int fd2 = open("./file", 2); // TODO This may stupid
 	char buffer[5];
+	int S = 0;
 	while(read(fd2, &buffer, 5) == 5){
-		fc = create_information_frame(buffer, 5, 1);
+		fc = create_information_frame(buffer, 5, S);
 		if(emit_until_response(fd, &fc, CTL_RR) != 0){
 			printf("Maximum emit attempts reached\n");
 			exit(1);
 		}
+		S = 1 - S;
 	}
 	fc = create_non_information_frame(CTL_DISC);
 	emit_until_response(fd, &fc, CTL_DISC);
