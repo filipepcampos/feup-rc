@@ -37,6 +37,9 @@ void print_address_byte(uint8_t byte){
 	}
 }
 void log_emission(framecontent *fc){
+    if(DEBUG == false){
+        return;
+    }
 	printf(" emit: CTL=");
 	print_control_byte(fc->control);
 	printf(" ADR=");
@@ -51,6 +54,9 @@ void log_emission(framecontent *fc){
 	printf("\n");
 }
 void log_receival(framecontent *fc){
+    if(DEBUG == false){
+        return;
+    }
 	printf(" receive: CTL=");
 	print_control_byte(fc->control);
 	printf(" ADR=");
@@ -76,9 +82,7 @@ int frame_to_bytes(char *buffer, size_t buffer_size, framecontent *fc) {
 	int i = 4;
 	if(fc->data_len > 0){
 		strncpy(buffer+4, fc->data, fc->data_len);
-		uint8_t bcc = calculate_bcc(fc->data, fc->data_len);
-		i += fc->data_len;
-		buffer[i++] = bcc;
+		i += fc->data_len;	
 	}
 	buffer[i] = FLAG;
 	return 0;
@@ -113,8 +117,15 @@ framecontent create_information_frame(char *data, size_t data_len, int S){
 	framecontent fc = DEFAULT_FC;
 	fc.control = CREATE_INFO_FRAME_CTL_BYTE(S);
 	fc.address = ADDRESS1; // TODO:
+
+	uint8_t bcc = calculate_bcc(data, data_len);
+	printf("Going to stuff\n");
+	size_t stuffed_bytes_size = byte_stuffing(data, data_len);
+	printf("Out of stuff\n");
 	fc.data = data;
-	fc.data_len = data_len;
+	fc.data_len = stuffed_bytes_size + 1;
+	fc.data[fc.data_len] = bcc;
+	printf("Out of stuff2\n");
 	return fc;
 }
 
@@ -216,20 +227,56 @@ int emit_until_response(int fd, framecontent *fc, uint8_t expected_response){ //
 	return 0;
 }
 
-framecontent byte_stuffing(framecontent *fc) {
-	int counter = 0;
-	for (int i = 0;  i < fc->data_len; ++i) {
-		if (fc->data[i] == 0x7e) {
+size_t byte_stuffing(char *data, size_t data_len) {
+	size_t counter = 0;
+	for (int i = 0;  i < data_len; ++i) {
+		if (data[i] == 0x7e || data[i] == 0x7d) {
 			counter++;
 		}
 	}
-	char *buffer = malloc ((sizeof (char)) * (fc->data_len + counter));
-	for (int n = 0;  n < fc->data_len; ++n) {
-		buffer[n] = fc->data[n];
-		if (fc->data[n] == 0x7e) {
+	printf("Counter = %ld\n", counter);
+	char *buffer = malloc ((sizeof (char)) * (data_len + counter));
+	for (int n = 0;  n < data_len; ++n) {
+		buffer[n] = data[n];
+		if (data[n] == 0x7e) {
 			buffer[n] = 0x7d;
 			buffer[n+1] = 0x7e ^ 0x20;
 			n++;
 		}
+       	if (data[n] == 0x7d) {
+            buffer[n] = 0x7d;
+            buffer[n+1] = 0x7d ^ 0x20;
+			n++;
+        }
 	}
+	printf("Freeing data\n");
+	free(data);
+	printf("Free data\n");
+	data = buffer;
+	return data_len + counter;
+}
+
+size_t byte_destuffing(char* buffer, size_t buf_size) {
+	int counter = 0;
+	for (int i = 0; i < buf_size; ++i) {
+		if (buffer[i] == 0x7d){
+			i++;
+			counter++;
+		}
+	}
+	char *data = malloc ((sizeof (char)) * (buf_size - counter));
+	
+	int current = 0;
+	for (int i = 0; i < buf_size; ++i){
+		if( buffer[i] == 0x7d ){
+			i++;
+			data[current] = buffer[i] ^ 0x20;
+		} else {
+			data[current] = buffer[i];
+		}
+		current++;
+	}
+	buffer = data;
+	free(data);
+	return buf_size - counter;
 }

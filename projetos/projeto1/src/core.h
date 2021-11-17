@@ -5,6 +5,10 @@
 
 #define BAUDRATE B38400
 #define _POSIX_SOURCE 1 /* POSIX compliant source */
+#define DEBUG true
+
+#define INFO_FRAME_SIZE 512
+#define BUFFER_SIZE 1025
 
 #define FRAME_RESEND_TIMEOUT 3
 #define MAX_EMIT_ATTEMPTS 3
@@ -57,4 +61,5 @@ framecontent create_non_information_frame(uint8_t control);
 
 framecontent create_information_frame(char *data, size_t data_len, int S);
 
-
+size_t byte_stuffing(char *data, size_t data_len);
+size_t byte_destuffing(char* buffer, size_t buf_size);

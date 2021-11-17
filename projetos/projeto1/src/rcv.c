@@ -33,7 +33,7 @@ receiver_state statemachine_cRcv(uint8_t byte, framecontent *fc) {
 }
 
 framecontent receive_frame(int fd) {
-	char *buffer = malloc ((sizeof (char)) * 255); // TODO: Verify, also make sure there's no memory leak
+	char *buffer = malloc ((sizeof (char)) * BUFFER_SIZE); // TODO: Verify, also make sure there's no memory leak
 	size_t buffer_pos = 0;
 	bool has_info = false;
 	uint8_t current_byte;
@@ -58,9 +58,11 @@ framecontent receive_frame(int fd) {
 			}
 			if(state == INFO){
 				state = STOP;
-				if(buffer[buffer_pos-1] == calculate_bcc(buffer, buffer_pos-1) ){  // TODO: Make sure this is totally safe
+				uint8_t bcc = buffer[buffer_pos-1];
+				size_t destuffed_size = byte_destuffing(buffer, buffer_pos-1);
+				if(bcc == calculate_bcc(buffer, destuffed_size)){  // TODO: Make sure this is totally safe
 					fc.data = buffer;
-					fc.data_len = buffer_pos - 1; // TODO: Make sure this is totally safe
+					fc.data_len = destuffed_size; // TODO: Make sure this is totally safe
 					state = STOP;
 					has_info = true;
 					break;
