@@ -1,3 +1,6 @@
+#ifndef __RCV__
+#define __RCV__
+
 typedef enum {
 	START,
 	FLAG_RCV,
@@ -13,3 +16,5 @@ bool is_valid_control_byte(uint8_t byte);
 receiver_state statemachine_addressrcv(uint8_t byte);
 receiver_state statemachine_control_received(uint8_t byte, framecontent *fc);
 framecontent receive_frame(int fd, char *buffer, size_t size);
+
+#endif

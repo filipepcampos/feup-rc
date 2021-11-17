@@ -5,6 +5,7 @@
 #include "core.h"
 #include "rcv.h"
 #include "util.h"
+#include "logger.h"
 
 
 receiver_state statemachine_flag_received(uint8_t byte) {
