@@ -9,6 +9,8 @@ int main(int argc, char *argv[]){
 		exit(1);
 	}
 
+	setup_sigalarm();
+
 	struct termios oldtio;
 	int fd = setup_serial(&oldtio, argv[1]);
 	
