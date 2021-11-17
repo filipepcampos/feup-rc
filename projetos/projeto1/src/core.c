@@ -190,8 +190,6 @@ size_t byte_destuffing(char* buffer, size_t buf_size) {
 			i++;
 			size_dif++;
 			buffer[current] = buffer[i] ^ 0x20;
-			// buffer  A B ESCAPE (EscapedFlag) C
-			// A B EscapedFlag  
 		} else {
 			buffer[current] = buffer[i];
 		}
