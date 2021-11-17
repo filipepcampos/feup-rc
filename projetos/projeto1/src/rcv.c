@@ -60,21 +60,13 @@ framecontent receive_frame(int fd, char *buffer, size_t size) {
 			if(state == INFO){
 				state = STOP;
 				uint8_t bcc = buffer[buffer_pos-1];
-				//size_t destuffed_size = byte_destuffing(buffer, buffer_pos-1);
-				printf("Destuffed into:\n");
-				size_t destuffed_size = buffer_pos - 1; // TODO: Remove
-				for(int i = 0 ; i < destuffed_size; ++i){
-					printf(" %x ", buffer[i]);
-				}
-				printf("\n");
+				size_t destuffed_size = byte_destuffing(buffer, buffer_pos-1);
 				if(bcc == calculate_bcc(buffer, destuffed_size)){  // TODO: Make sure this is totally safe
-					printf("BCC is equal\n");
 					fc.data = buffer;
 					fc.data_len = destuffed_size; // TODO: Make sure this is totally safe
 					state = STOP;
 					break;
 				} 
-				printf("Wrong BCC, it should be %x but it was %x \n", calculate_bcc(buffer, destuffed_size), bcc);
 				// If an error occurs, in data (wrong BCC) the data is discarded.
 				// TODO: Document this behaviour
 			}

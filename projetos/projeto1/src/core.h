@@ -5,7 +5,7 @@
 
 #define BAUDRATE B38400
 #define _POSIX_SOURCE 1 /* POSIX compliant source */
-#define DEBUG true
+#define VERBOSE true
 
 #define INFO_FRAME_SIZE 512
 #define BUFFER_SIZE 1025

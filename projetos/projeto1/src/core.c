@@ -39,7 +39,7 @@ void log_address_byte(uint8_t byte){
 	}
 }
 void log_emission(framecontent *fc){
-    if(DEBUG == false){
+    if(VERBOSE == false){
         return;
     }
 	printf(" emit: CTL=");
@@ -56,7 +56,7 @@ void log_emission(framecontent *fc){
 	printf("\n");
 }
 void log_receival(framecontent *fc){
-    if(DEBUG == false){
+    if(VERBOSE == false){
         return;
     }
 	printf(" receive: CTL=");
@@ -156,7 +156,7 @@ framecontent create_information_frame(char *data, size_t data_len, int S){
 	uint8_t bcc = calculate_bcc(data, data_len);
 	size_t stuffed_bytes_size = byte_stuffing(data, data_len);
 	fc.data = data;
-	fc.data_len = stuffed_bytes_size + 1;
+	fc.data_len = stuffed_bytes_size + 2;
 	fc.data[fc.data_len-1] = bcc;
 	return fc;
 }
@@ -197,11 +197,6 @@ int frame_to_bytes(char *buffer, size_t buffer_size, framecontent *fc) {
 }
 
 int send_bytes(int fd, char *buffer, size_t buffer_size) {
-	printf("\n\nDebug, sending bytes: ");
-	for(int i = 0; i < buffer_size; ++i){
-		printf(" %x ", buffer[i]);
-	}
-	printf("\n");
 	int res = write(fd, buffer, buffer_size);
 	if (res == -1) {
 		perror("write");
@@ -211,8 +206,8 @@ int send_bytes(int fd, char *buffer, size_t buffer_size) {
 }
 
 int emit_frame(int fd, framecontent *fc) {
-	size_t buffer_size = 5 + (fc->data_len > 0 ? 1 : 0) + fc->data_len;
-	char buffer[buffer_size];
+	size_t buffer_size = 5 + fc->data_len;
+	char buffer[buffer_size]; // TODO: How does this even work?
 	frame_to_bytes(buffer, buffer_size, fc);
 	send_bytes(fd, buffer, buffer_size);
 	log_emission(fc);
@@ -225,9 +220,7 @@ int emit_frame_until_response(int fd, framecontent *fc, uint8_t expected_respons
 	int attempts = MAX_EMIT_ATTEMPTS - 1;
 	alarm(FRAME_RESEND_TIMEOUT);
 	while(attempts > 0){
-		printf("Attempt %d\n", MAX_EMIT_ATTEMPTS - attempts);
 		framecontent response_fc = receive_frame(fd, buffer, BUFFER_SIZE);
-		printf("	> Got %x\n", response_fc.control);
 
 		if(response_fc.control == expected_response){
 			break;

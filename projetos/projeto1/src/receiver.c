@@ -23,7 +23,6 @@ int main(int argc, char *argv[]){
 	int S = 1;
 	while(true){
 		received_fc = receive_frame(fd, buffer, BUFFER_SIZE);
-		printf("	> RCV fc\n");
 		if(IS_INFO_CONTROL_BYTE(received_fc.control)){
 			bool is_new_frame = S != GET_INFO_FRAME_CTL_BIT(received_fc.control);
 			if(received_fc.data_len > 0){
