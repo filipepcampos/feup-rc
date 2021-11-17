@@ -228,3 +228,21 @@ int emit_until_response(int fd, framecontent *fc, uint8_t expected_response){ //
 	}
 	return 0;
 }
+
+framecontent byte_stuffing(framecontent *fc) {
+	int counter = 0;
+	for (int i = 0;  i < fc->data_len; ++i) {
+		if (fc->data[i] == 0x7e) {
+			counter++;
+		}
+	}
+	char *buffer = malloc ((sizeof (char)) * (fc->data_len + counter));
+	for (int n = 0;  n < fc->data_len; ++n) {
+		buffer[n] = fc->data[n];
+		if (fc->data[n] == 0x7e) {
+			buffer[n] = 0x7d;
+			buffer[n+1] = 0x7e ^ 0x20;
+			n++;
+		}
+	}
+}
