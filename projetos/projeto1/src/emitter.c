@@ -22,7 +22,7 @@ int main(int argc, char *argv[]){
 
 	framecontent fc = create_non_information_frame(CTL_SET);
 
-	if(emit_until_response(fd, &fc, CTL_UA) != 0){
+	if(emit_frame_until_response(fd, &fc, CTL_UA) != 0){
 		printf("Maximum emit attempts reached\n");
 		exit(1);
 	}
@@ -33,16 +33,16 @@ int main(int argc, char *argv[]){
 	int read_res = 0;
 	while((read_res = read(fd2, &buffer, INFO_FRAME_SIZE)) > 0){
 		fc = create_information_frame(buffer, read_res, S);
-		if(emit_until_response(fd, &fc, CTL_RR) != 0){
+		if(emit_frame_until_response(fd, &fc, CTL_RR) != 0){
 			printf("Maximum emit attempts reached\n");
 			exit(1);
 		}
 		S = 1 - S;
 	}
 	fc = create_non_information_frame(CTL_DISC);
-	emit_until_response(fd, &fc, CTL_DISC);
+	emit_frame_until_response(fd, &fc, CTL_DISC);
 	fc = create_non_information_frame(CTL_UA);
-	emitter(fd, &fc);
+	emit_frame(fd, &fc);
 	disconnect_serial(fd, &oldtio);
 	return 0;
 }

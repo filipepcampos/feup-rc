@@ -18,7 +18,7 @@ int main(int argc, char *argv[]){
 	framecontent received_fc = receive_frame(fd, buffer, BUFFER_SIZE);
 
 	framecontent fc = create_non_information_frame(CTL_UA);
-	emitter(fd, &fc);
+	emit_frame(fd, &fc);
 
 	int S = 1;
 	while(true){
@@ -42,10 +42,10 @@ int main(int argc, char *argv[]){
 		}
 		if(received_fc.control == CTL_DISC){
 			fc.control = CTL_DISC;
-			emit_until_response(fd, &fc, CTL_UA);
+			emit_frame_until_response(fd, &fc, CTL_UA);
 			break;
 		}
-		emitter(fd, &fc);
+		emit_frame(fd, &fc);
 	}
 	
 	disconnect_serial(fd, &oldtio);

@@ -12,7 +12,10 @@ receiver_state statemachine_flag(uint8_t byte) {
 }
 
 bool valid_ctl_byte(uint8_t byte) {
-	if (byte == CTL_SET || byte == CTL_UA || byte == CTL_RR || byte == CTL_DISC || byte == CTL_REJ|| IS_INFO_CONTROL_BYTE(byte)) { //TODO: Add all control, change 0xBF
+	if (byte == CTL_SET || byte == CTL_UA || 
+			byte == CTL_RR || byte == CTL_DISC || 
+			byte == CTL_REJ|| IS_INFO_CONTROL_BYTE(byte)
+		) { 
 		return true;
 	}
 	return false;
@@ -39,8 +42,8 @@ framecontent receive_frame(int fd, char *buffer, size_t size) {
 	
 	framecontent fc = DEFAULT_FC;
 
-	while (state != STOP) {              /* loop for input */
-		int res = read(fd, &current_byte, 1); /* returns after 5 chars have been input */
+	while (state != STOP) {
+		int res = read(fd, &current_byte, 1);
 		if (res == -1) {
 			if(errno == EINTR){
 				fc.control = 0; // TODO: Make sure there's no other Command with this value, and that this is properly documented

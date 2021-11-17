@@ -37,11 +37,10 @@ typedef struct {
 
 #define CREATE_INFO_FRAME_CTL_BYTE(S) (S << 6)
 #define GET_INFO_FRAME_CTL_BIT(b) (b >> 6)
-
 #define IS_INFO_CONTROL_BYTE(b) ((b & 0xBF) == 0)
 
-void print_address_byte(uint8_t byte);
-void print_control_byte(uint8_t byte);
+void log_address_byte(uint8_t byte);
+void log_control_byte(uint8_t byte);
 void log_emission(framecontent *fc);
 void log_receival(framecontent *fc);
 
@@ -50,13 +49,13 @@ int disconnect_serial(int fd, struct termios *oldtio);
 
 int verifyargv(int argc, char **argv);
 
-int emitter(int fd, framecontent *fc);
+int emit_frame(int fd, framecontent *fc);
 int send_bytes(int fd, char *frame, size_t frame_size);
 int frame_to_bytes(char *buffer, size_t buffer_size, framecontent *fc);
 
 void sig_handler(int signum);
 void setup_sigalarm();
-int emit_until_response(int fd, framecontent *fc, uint8_t expected_response);
+int emit_frame_until_response(int fd, framecontent *fc, uint8_t expected_response);
 
 framecontent create_non_information_frame(uint8_t control);
 
