@@ -9,6 +9,8 @@ int main(int argc, char *argv[]){
 		exit(1);
 	}
 
+	setup_sigalarm();
+
 	struct termios oldtio;
 	int fd = setup_serial(&oldtio, argv[1]);
 	
@@ -20,19 +22,33 @@ int main(int argc, char *argv[]){
 	framecontent fc = create_non_information_frame(CTL_UA);
 	emitter(fd, &fc);
 
-	
-	fc = create_non_information_frame(CTL_RR);
+	int S = 1;
 	while(true){
 		received_fc = receive_frame(fd);
 		if(received_fc.data != NULL){
 			free(received_fc.data);
 		}
+		if(IS_INFO_CONTROL_BYTE(received_fc.control)){
+			bool is_new_frame = S != GET_INFO_FRAME_CTL_BIT(received_fc.control);
+			if(received_fc.data_len > 0){
+				if(is_new_frame){
+					// Store data
+					S = 1 - S;
+				}
+				fc.control = CTL_RR;
+			} else {
+				if(is_new_frame){
+					fc.control = CTL_REJ;
+				} else {
+					fc.control = CTL_RR;
+				}
+			}
+		}
 		if(received_fc.control == CTL_DISC){
-			fc = create_non_information_frame(CTL_DISC);
+			fc.control = CTL_DISC;
 			emit_until_response(fd, &fc, CTL_UA);
 			break;
 		}
-		fc = create_non_information_frame(CTL_RR);
 		emitter(fd, &fc);
 	}
 	

@@ -46,6 +46,7 @@ void log_emission(framecontent *fc){
 		for(int i = 0;  i < fc->data_len; ++i){
 			printf(" %x ", fc->data[i]);
 		}
+		printf(" S=%d", GET_INFO_FRAME_CTL_BIT(fc->control));
 	}
 	printf("\n");
 }
@@ -59,6 +60,7 @@ void log_receival(framecontent *fc){
 		for(int i = 0;  i < fc->data_len; ++i){
 			printf(" %x ", fc->data[i]);
 		}
+		printf(" S=%d", GET_INFO_FRAME_CTL_BIT(fc->control));
 	}
 	printf("\n");
 }
@@ -109,26 +111,11 @@ framecontent create_non_information_frame(uint8_t control){
 
 framecontent create_information_frame(char *data, size_t data_len, int S){
 	framecontent fc = DEFAULT_FC;
-	fc.control = INFORMATION_FRAME_CONTROL_BYTE(S);
+	fc.control = CREATE_INFO_FRAME_CTL_BYTE(S);
 	fc.address = ADDRESS1; // TODO:
 	fc.data = data;
 	fc.data_len = data_len;
 	return fc;
-}
-
-int emitter_information(int fd, char *data, uint8_t data_len, int S) {
-	framecontent fc = DEFAULT_FC;
-	fc.address = ADDRESS1;
-	fc.control = INFORMATION_FRAME_CONTROL_BYTE(S);
-	fc.data = data;
-	fc.data_len = data_len;
-	size_t buffer_size = 6 + data_len;
-	char *buffer = malloc ((sizeof (char)) * buffer_size);
-	frame_to_bytes(buffer, buffer_size, &fc);
-	send_bytes(fd, buffer, buffer_size);
-	log_emission(&fc);
-	free (buffer);
-	return 0;
 }
 
 int setup_serial(struct termios *oldtio, char *serial_device) {

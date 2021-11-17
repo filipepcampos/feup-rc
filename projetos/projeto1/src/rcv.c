@@ -57,15 +57,16 @@ framecontent receive_frame(int fd) {
 				break;
 			}
 			if(state == INFO){
+				state = STOP;
 				if(buffer[buffer_pos-1] == calculate_bcc(buffer, buffer_pos-1) ){  // TODO: Make sure this is totally safe
 					fc.data = buffer;
 					fc.data_len = buffer_pos - 1; // TODO: Make sure this is totally safe
 					state = STOP;
 					has_info = true;
 					break;
-				}
-				buffer_pos = 0;
-				state = START;  // TODO: Is this the correct behaviour?				
+				} 
+				// If an error occurs, in data (wrong BCC) the data is discarded.
+				// TODO: Document this behaviour
 			}
 			state = FLAG_RCV;
 		} else {
