@@ -7,11 +7,11 @@
 #include "util.h"
 
 
-receiver_state statemachine_flag(uint8_t byte) {
+receiver_state statemachine_flag_received(uint8_t byte) {
 	return (byte == ADDRESS1 || byte == ADDRESS2) ? A_RCV : START;  // TODO: Maybe verify this
 }
 
-bool valid_ctl_byte(uint8_t byte) {
+bool is_valid_control_byte(uint8_t byte) {
 	if (byte == CTL_SET || byte == CTL_UA || 
 			byte == CTL_RR || byte == CTL_DISC || 
 			byte == CTL_REJ|| IS_INFO_CONTROL_BYTE(byte)
@@ -22,10 +22,10 @@ bool valid_ctl_byte(uint8_t byte) {
 }
 
 receiver_state statemachine_addressrcv(uint8_t byte) {
-	return valid_ctl_byte(byte) ? C_RCV : START;
+	return is_valid_control_byte(byte) ? C_RCV : START;
 }
 
-receiver_state statemachine_cRcv(uint8_t byte, framecontent *fc) {
+receiver_state statemachine_control_received(uint8_t byte, framecontent *fc) {
 	if (((fc->control) ^ (fc->address)) == byte) {
 		if( ((fc->control) & 0xBF) == 0) { // TODO: Change 0xBF to define
 			return INFO;
@@ -45,26 +45,25 @@ framecontent receive_frame(int fd, char *buffer, size_t size) {
 	while (state != STOP) {
 		int res = read(fd, &current_byte, 1);
 		if (res == -1) {
-			if(errno == EINTR){
+			if(errno == EINTR){ // Read was interrupted by an alarm.
 				fc.control = 0; // TODO: Make sure there's no other Command with this value, and that this is properly documented
-				return fc;  // TODO: There is a risk of data loss doing this, although it's kinda small
+				return fc;
 			}
 			perror("read");
 			exit(-1);
 		}
 		if(current_byte == FLAG){
-			if(state == BCC_OK){
+			if(state == BCC_OK){ // Marks the end of an non-information frame
 				state = STOP;
 				break;
 			}
 			if(state == INFO){
 				state = STOP;
-				uint8_t bcc = buffer[buffer_pos-1];
-				size_t destuffed_size = byte_destuffing(buffer, buffer_pos-1);
-				if(bcc == calculate_bcc(buffer, destuffed_size)){  // TODO: Make sure this is totally safe
+				uint8_t bcc = buffer[buffer_pos-1]; // The last byte of the buffer is the BCC. We can't distinguish it from the data until we hit a flag.
+				size_t destuffed_size = byte_destuffing(buffer, buffer_pos-1); // Destuff data (excluding BCC)
+				if(bcc == calculate_bcc(buffer, destuffed_size)){
 					fc.data = buffer;
-					fc.data_len = destuffed_size; // TODO: Make sure this is totally safe
-					state = STOP;
+					fc.data_len = destuffed_size;
 					break;
 				} 
 				// If an error occurs, in data (wrong BCC) the data is discarded.
@@ -73,11 +72,11 @@ framecontent receive_frame(int fd, char *buffer, size_t size) {
 			state = FLAG_RCV;
 		} else {
 			switch (state) {
-				case FLAG_RCV: state = statemachine_flag(current_byte); 
+				case FLAG_RCV: state = statemachine_flag_received(current_byte); 
 					fc.address = current_byte; break;
 				case A_RCV:	state = statemachine_addressrcv(current_byte); 
 					fc.control = current_byte; break;
-				case C_RCV:	state = statemachine_cRcv(current_byte, &fc); break;
+				case C_RCV:	state = statemachine_control_received(current_byte, &fc); break;
 					default: state = START;
 				case INFO: buffer[buffer_pos++] = current_byte; break;
 			}

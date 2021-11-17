@@ -3,7 +3,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define BAUDRATE B38400
 #define _POSIX_SOURCE 1 /* POSIX compliant source */
 #define VERBOSE true
 

@@ -4,6 +4,7 @@
 #include <string.h>
 #include "core.h"
 #include "rcv.h"
+#include "config.h"
 
 
 #include <fcntl.h> // TODO maybe remove
