@@ -14,6 +14,7 @@
 #define MAX_EMIT_ATTEMPTS 3
 
 #define FLAG 0x7e
+#define ESCAPE 0x7d
 #define ADDRESS1 0x03  // TODO: Change name
 #define ADDRESS2 0x01
 

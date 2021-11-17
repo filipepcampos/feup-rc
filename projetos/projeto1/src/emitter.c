@@ -32,18 +32,11 @@ int main(int argc, char *argv[]){
 	int S = 0;
 	int read_res = 0;
 	while((read_res = read(fd2, &buffer, INFO_FRAME_SIZE)) > 0){
-		char *new_buffer = malloc((sizeof (char))*BUFFER_SIZE);
-		strncpy(new_buffer, buffer, read_res);
-		fc = create_information_frame(new_buffer, read_res, S);
+		fc = create_information_frame(buffer, read_res, S);
 		if(emit_until_response(fd, &fc, CTL_RR) != 0){
 			printf("Maximum emit attempts reached\n");
 			exit(1);
 		}
-		printf("DEBUG: ");
-		for(int i = 0; i < fc.data_len; ++i){
-			printf(" %x ", fc.data[i]);
-		}
-		printf("\n");
 		S = 1 - S;
 	}
 	fc = create_non_information_frame(CTL_DISC);

@@ -89,6 +89,11 @@ int frame_to_bytes(char *buffer, size_t buffer_size, framecontent *fc) {
 }
 
 int send_bytes(int fd, char *buffer, size_t buffer_size) {
+	printf("\n\nDebug, sending bytes: ");
+	for(int i = 0; i < buffer_size; ++i){
+		printf(" %x ", buffer[i]);
+	}
+	printf("\n");
 	int res = write(fd, buffer, buffer_size);
 	if (res == -1) {
 		perror("write");
@@ -119,13 +124,10 @@ framecontent create_information_frame(char *data, size_t data_len, int S){
 	fc.address = ADDRESS1; // TODO:
 
 	uint8_t bcc = calculate_bcc(data, data_len);
-	printf("Going to stuff\n");
 	size_t stuffed_bytes_size = byte_stuffing(data, data_len);
-	printf("Out of stuff\n");
 	fc.data = data;
 	fc.data_len = stuffed_bytes_size + 1;
-	fc.data[fc.data_len] = bcc;
-	printf("Out of stuff2\n");
+	fc.data[fc.data_len-1] = bcc;
 	return fc;
 }
 
@@ -205,11 +207,15 @@ void setup_sigalarm(){
 }
 
 int emit_until_response(int fd, framecontent *fc, uint8_t expected_response){ // TODO: Check this in the proper places
+	char buffer[BUFFER_SIZE]; // TODO This is weird
 	emitter(fd, fc);
 	int attempts = MAX_EMIT_ATTEMPTS - 1;
 	alarm(FRAME_RESEND_TIMEOUT);
 	while(attempts > 0){
-		framecontent response_fc = receive_frame(fd);
+		printf("Attempt %d\n", MAX_EMIT_ATTEMPTS - attempts);
+		framecontent response_fc = receive_frame(fd, buffer, BUFFER_SIZE);
+		printf("	> Got %x\n", response_fc.control);
+
 		if(response_fc.control == expected_response){
 			break;
 		}
@@ -228,55 +234,39 @@ int emit_until_response(int fd, framecontent *fc, uint8_t expected_response){ //
 }
 
 size_t byte_stuffing(char *data, size_t data_len) {
-	size_t counter = 0;
-	for (int i = 0;  i < data_len; ++i) {
-		if (data[i] == 0x7e || data[i] == 0x7d) {
-			counter++;
+	char aux_buffer[BUFFER_SIZE];
+	strncpy(aux_buffer, data, data_len);
+	
+	int k = 0; // TODO: Change name
+	for(int i = 0; i < data_len; ++i){
+		if (aux_buffer[i] == FLAG) {
+			data[k++] = ESCAPE;
+			data[k++] = FLAG ^ 0x20;
+		}
+		else if (aux_buffer[i] == ESCAPE) {
+			data[k++] = ESCAPE;
+			data[k++] = ESCAPE ^ 0x20;
+		} else {
+			data[k++] = aux_buffer[i];
 		}
 	}
-	printf("Counter = %ld\n", counter);
-	char *buffer = malloc ((sizeof (char)) * (data_len + counter));
-	for (int n = 0;  n < data_len; ++n) {
-		buffer[n] = data[n];
-		if (data[n] == 0x7e) {
-			buffer[n] = 0x7d;
-			buffer[n+1] = 0x7e ^ 0x20;
-			n++;
-		}
-       	if (data[n] == 0x7d) {
-            buffer[n] = 0x7d;
-            buffer[n+1] = 0x7d ^ 0x20;
-			n++;
-        }
-	}
-	printf("Freeing data\n");
-	free(data);
-	printf("Free data\n");
-	data = buffer;
-	return data_len + counter;
+	return k-1;
 }
 
-size_t byte_destuffing(char* buffer, size_t buf_size) {
-	int counter = 0;
-	for (int i = 0; i < buf_size; ++i) {
-		if (buffer[i] == 0x7d){
-			i++;
-			counter++;
-		}
-	}
-	char *data = malloc ((sizeof (char)) * (buf_size - counter));
-	
+size_t byte_destuffing(char* buffer, size_t buf_size) {	
+	int size_dif = 0;
 	int current = 0;
 	for (int i = 0; i < buf_size; ++i){
-		if( buffer[i] == 0x7d ){
+		if( buffer[i] == ESCAPE ){
 			i++;
-			data[current] = buffer[i] ^ 0x20;
+			size_dif++;
+			buffer[current] = buffer[i] ^ 0x20;
+			// buffer  A B ESCAPE (EscapedFlag) C
+			// A B EscapedFlag  
 		} else {
-			data[current] = buffer[i];
+			buffer[current] = buffer[i];
 		}
 		current++;
 	}
-	buffer = data;
-	free(data);
-	return buf_size - counter;
+	return buf_size - size_dif;
 }

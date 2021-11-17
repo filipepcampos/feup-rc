@@ -32,10 +32,8 @@ receiver_state statemachine_cRcv(uint8_t byte, framecontent *fc) {
 	return START;
 }
 
-framecontent receive_frame(int fd) {
-	char *buffer = malloc ((sizeof (char)) * BUFFER_SIZE); // TODO: Verify, also make sure there's no memory leak
+framecontent receive_frame(int fd, char *buffer, size_t size) {
 	size_t buffer_pos = 0;
-	bool has_info = false;
 	uint8_t current_byte;
 	receiver_state state = START;
 	
@@ -59,14 +57,21 @@ framecontent receive_frame(int fd) {
 			if(state == INFO){
 				state = STOP;
 				uint8_t bcc = buffer[buffer_pos-1];
-				size_t destuffed_size = byte_destuffing(buffer, buffer_pos-1);
+				//size_t destuffed_size = byte_destuffing(buffer, buffer_pos-1);
+				printf("Destuffed into:\n");
+				size_t destuffed_size = buffer_pos - 1; // TODO: Remove
+				for(int i = 0 ; i < destuffed_size; ++i){
+					printf(" %x ", buffer[i]);
+				}
+				printf("\n");
 				if(bcc == calculate_bcc(buffer, destuffed_size)){  // TODO: Make sure this is totally safe
+					printf("BCC is equal\n");
 					fc.data = buffer;
 					fc.data_len = destuffed_size; // TODO: Make sure this is totally safe
 					state = STOP;
-					has_info = true;
 					break;
 				} 
+				printf("Wrong BCC, it should be %x but it was %x \n", calculate_bcc(buffer, destuffed_size), bcc);
 				// If an error occurs, in data (wrong BCC) the data is discarded.
 				// TODO: Document this behaviour
 			}
@@ -82,9 +87,6 @@ framecontent receive_frame(int fd) {
 				case INFO: buffer[buffer_pos++] = current_byte; break;
 			}
 		}
-	}
-	if(!has_info){
-		free(buffer);
 	}
 	log_receival(&fc);
 	return fc;

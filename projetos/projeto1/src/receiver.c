@@ -14,20 +14,16 @@ int main(int argc, char *argv[]){
 	struct termios oldtio;
 	int fd = setup_serial(&oldtio, argv[1]);
 	
-	framecontent received_fc = receive_frame(fd);
-	if(received_fc.data != NULL){
-		free(received_fc.data);
-	}
+	char buffer[BUFFER_SIZE];
+	framecontent received_fc = receive_frame(fd, buffer, BUFFER_SIZE);
 
 	framecontent fc = create_non_information_frame(CTL_UA);
 	emitter(fd, &fc);
 
 	int S = 1;
 	while(true){
-		received_fc = receive_frame(fd);
-		if(received_fc.data != NULL){
-			free(received_fc.data);
-		}
+		received_fc = receive_frame(fd, buffer, BUFFER_SIZE);
+		printf("	> RCV fc\n");
 		if(IS_INFO_CONTROL_BYTE(received_fc.control)){
 			bool is_new_frame = S != GET_INFO_FRAME_CTL_BIT(received_fc.control);
 			if(received_fc.data_len > 0){
