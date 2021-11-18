@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include "core.h"
-#include "rcv.h"
+#include "datalink_receiver.h"
 #include "config.h"
 #include "datalink_emitter.h"
 

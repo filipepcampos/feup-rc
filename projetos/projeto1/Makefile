@@ -2,7 +2,7 @@ CC=gcc
 CFLAGS=-Wall
 
 EXEC = receiver emitter
-OBJ = ./src/core.o ./src/rcv.o ./src/util.o ./src/config.o ./src/logger.o ./src/datalink_emitter.o
+OBJ = ./src/core.o ./src/datalink_receiver.o ./src/util.o ./src/config.o ./src/logger.o ./src/datalink_emitter.o
 
 .SILENT: clean
 .INTERMEDIATE: $(OBJ)
