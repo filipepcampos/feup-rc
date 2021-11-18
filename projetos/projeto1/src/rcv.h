@@ -1,6 +1,8 @@
 #ifndef __RCV__
 #define __RCV__
 
+#include <stdbool.h>
+
 typedef enum {
 	START,
 	FLAG_RCV,

@@ -12,13 +12,8 @@ int disconnect_serial(int fd, struct termios *oldtio);
 
 int verifyargv(int argc, char **argv);
 
-int emit_frame(int fd, framecontent *fc);
-int send_bytes(int fd, char *frame, size_t frame_size);
-int frame_to_bytes(char *buffer, size_t buffer_size, framecontent *fc);
-
 void sig_handler(int signum);
 void setup_sigalarm();
-int emit_frame_until_response(int fd, framecontent *fc, uint8_t expected_response);
 
 framecontent create_non_information_frame(uint8_t control);
 

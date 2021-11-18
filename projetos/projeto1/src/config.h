@@ -3,6 +3,8 @@
 
 #define BAUDRATE B38400
 
+#include <termios.h>
+
 int verifyargv(int argc, char **argv);
 
 int setup_serial(struct termios *oldtio, char *serial_device);

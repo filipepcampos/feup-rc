@@ -3,6 +3,7 @@
 #include "core.h"
 #include "rcv.h"
 #include "config.h"
+#include "datalink_emitter.h"
 
 int main(int argc, char *argv[]){
 	if (verifyargv(argc, argv)) {
