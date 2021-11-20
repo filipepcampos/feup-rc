@@ -30,7 +30,7 @@ int main(int argc, char *argv[]){
 	}
 
 	int fd2 = open("./file", 2); // TODO This may stupid
-	unsigned char buffer[BUFFER_SIZE]; 
+	uint8_t buffer[BUFFER_SIZE]; 
 	int S = 0;
 	int read_res = 0;
 	while((read_res = read(fd2, &buffer, INFO_FRAME_SIZE)) > 0){

@@ -33,13 +33,14 @@ void log_emission(framecontent *fc){
 	printf(" ADR=");
 	log_address_byte(fc->address);
 	if(IS_INFO_CONTROL_BYTE(fc->control)){
-		printf(" INFO=");
+		printf(" INFO=\n");
 		for(int i = 0;  i < fc->data_len; ++i){
-			printf(" %x ", fc->data[i]);
+			printf(" %02x ", fc->data[i]);
 		}
+		printf("\n");
 		printf(" S=%d", GET_INFO_FRAME_CTL_BIT(fc->control));
 	}
-	printf("\n");
+	printf("\n\n");
 }
 void log_receival(framecontent *fc){
     if(VERBOSE == false){
@@ -50,11 +51,12 @@ void log_receival(framecontent *fc){
 	printf(" ADR=");
 	log_address_byte(fc->address);
 	if(IS_INFO_CONTROL_BYTE(fc->control)){
-		printf(" INFO=");
+		printf(" INFO=\n");
 		for(int i = 0;  i < fc->data_len; ++i){
-			printf(" %x ", fc->data[i]);
+			printf(" %02x ", fc->data[i]);
 		}
+		printf("\n");
 		printf(" S=%d", GET_INFO_FRAME_CTL_BIT(fc->control));
 	}
-	printf("\n");
+	printf("\n\n");
 }

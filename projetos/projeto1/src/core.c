@@ -28,10 +28,22 @@ framecontent create_non_information_frame(uint8_t control){
   return fc;
 }
 
-framecontent create_information_frame(unsigned char *data, size_t data_len, int S){
+framecontent create_information_frame(uint8_t *data, size_t data_len, int S){
 	uint8_t bcc = calculate_bcc(data, data_len);
 	data[data_len] = bcc;
+	printf("==== DEBUG (PRE-STUFFING) ====\n");
+		for(int i = 0; i < data_len+1; ++i){
+			printf("%02x ", data[i]);
+		}
+		printf("\n\n\n");
+
 	size_t stuffed_bytes_size = byte_stuffing(data, data_len+1);
+
+	printf("==== DEBUG (POST-STUFFING) ====\n");
+		for(int i = 0; i < stuffed_bytes_size; ++i){
+			printf("%02x ", data[i]);
+		}
+		printf("\n\n\n");
 
 	framecontent fc = DEFAULT_FC;
 	fc.control = CREATE_INFO_FRAME_CTL_BYTE(S);
@@ -43,9 +55,19 @@ framecontent create_information_frame(unsigned char *data, size_t data_len, int 
 
 // ========= [Byte stuffing] ========= //
 
-size_t byte_stuffing(unsigned char *data, size_t data_len) {
-	unsigned char aux_buffer[BUFFER_SIZE];
-	strncpy((char *) aux_buffer, (char *) data, data_len); // TODO: This is not a good idea, maybe use memcpy instead
+size_t byte_stuffing(uint8_t *data, size_t data_len) {
+	uint8_t aux_buffer[BUFFER_SIZE];
+	printf("==== DEBUG (1) ====\n");
+		for(int i = 0; i < data_len; ++i){
+			printf("%02x ", data[i]);
+		}
+		printf("\n\n\n");
+	memcpy(aux_buffer, data, data_len);
+	printf("==== DEBUG (1) ====\n");
+		for(int i = 0; i < data_len; ++i){
+			printf("%02x ", aux_buffer[i]);
+		}
+		printf("\n\n\n");
 	
 	int k = 0; // TODO: Change name
 	for(int i = 0; i < data_len; ++i){
@@ -63,7 +85,7 @@ size_t byte_stuffing(unsigned char *data, size_t data_len) {
 	return k;
 }
 
-size_t byte_destuffing(unsigned char* buffer, size_t buf_size) {	
+size_t byte_destuffing(uint8_t* buffer, size_t buf_size) {	
 	int size_dif = 0;
 	int current = 0;
 	for (int i = 0; i < buf_size; ++i){

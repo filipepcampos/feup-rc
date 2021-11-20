@@ -36,7 +36,7 @@ receiver_state statemachine_control_received(uint8_t byte, framecontent *fc) {
 	return START;
 }
 
-framecontent receive_frame(int fd, unsigned char *buffer, size_t size) {
+framecontent receive_frame(int fd, uint8_t *buffer, size_t size) {
 	size_t buffer_pos = 0;
 	uint8_t current_byte;
 	receiver_state state = START;

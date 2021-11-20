@@ -4,6 +4,6 @@
 #include <stdint.h>
 #include <stddef.h>
 
-uint8_t calculate_bcc(unsigned char *data, size_t data_len);
+uint8_t calculate_bcc(uint8_t *data, size_t data_len);
 
 #endif
