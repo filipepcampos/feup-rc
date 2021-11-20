@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
 #include "core.h"
 #include "datalink_receiver.h"
 #include "config.h"
@@ -22,6 +24,8 @@ int main(int argc, char *argv[]){
 	framecontent fc = create_non_information_frame(CTL_UA);
 	emit_frame(fd, &fc);
 
+	int fd2 = open("./out", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR); // TODO This may stupid
+
 	int S = 1;
 	while(true){
 		received_fc = receive_frame(fd, buffer, BUFFER_SIZE);
@@ -29,7 +33,7 @@ int main(int argc, char *argv[]){
 			bool is_new_frame = S != GET_INFO_FRAME_CTL_BIT(received_fc.control);
 			if(received_fc.data_len > 0){
 				if(is_new_frame){
-					// Store data
+					write(fd2, received_fc.data, received_fc.data_len);
 					S = 1 - S;
 				}
 				fc.control = CTL_RR;
@@ -48,6 +52,7 @@ int main(int argc, char *argv[]){
 		}
 		emit_frame(fd, &fc);
 	}
+	close(fd2);
 	
 	disconnect_serial(fd, &oldtio);
 	return 0;
