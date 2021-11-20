@@ -10,7 +10,7 @@
 #include <stdlib.h>
 
 
-int frame_to_bytes(char *buffer, size_t buffer_size, framecontent *fc) {
+int frame_to_bytes(unsigned char *buffer, size_t buffer_size, framecontent *fc) {
 	if (buffer_size < 5) {
 		return -1;
 	}
@@ -20,14 +20,14 @@ int frame_to_bytes(char *buffer, size_t buffer_size, framecontent *fc) {
 	buffer[3] = (fc->address) ^ (fc->control); // BCC
 	int i = 4;
 	if(fc->data_len > 0){
-		strncpy(buffer+4, fc->data, fc->data_len);
+		strncpy((char *) buffer+4, (char *) fc->data, fc->data_len); // TODO: This is not a good idea, maybe use memcpy instead
 		i += fc->data_len;	
 	}
 	buffer[i] = FLAG;
 	return 0;
 }
 
-int send_bytes(int fd, char *buffer, size_t buffer_size) {
+int send_bytes(int fd, unsigned char *buffer, size_t buffer_size) {
 	int res = write(fd, buffer, buffer_size);
 	if (res == -1) {
 		perror("write");
@@ -38,7 +38,7 @@ int send_bytes(int fd, char *buffer, size_t buffer_size) {
 
 int emit_frame(int fd, framecontent *fc) {
 	size_t buffer_size = 5 + fc->data_len;
-	char buffer[buffer_size]; // TODO: How does this even work?
+	unsigned char buffer[buffer_size]; // TODO: How does this even work?
 	frame_to_bytes(buffer, buffer_size, fc);
 	send_bytes(fd, buffer, buffer_size);
 	log_emission(fc);
@@ -46,7 +46,7 @@ int emit_frame(int fd, framecontent *fc) {
 }
 
 int emit_frame_until_response(int fd, framecontent *fc, uint8_t expected_response){ // TODO: Check this in the proper places
-	char buffer[BUFFER_SIZE]; // TODO This is weird
+	unsigned char buffer[BUFFER_SIZE]; // TODO This is weird
 	emit_frame(fd, fc);
 	int attempts = MAX_EMIT_ATTEMPTS - 1;
 	alarm(FRAME_RESEND_TIMEOUT);

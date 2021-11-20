@@ -36,7 +36,7 @@ receiver_state statemachine_control_received(uint8_t byte, framecontent *fc) {
 	return START;
 }
 
-framecontent receive_frame(int fd, char *buffer, size_t size) {
+framecontent receive_frame(int fd, unsigned char *buffer, size_t size) {
 	size_t buffer_pos = 0;
 	uint8_t current_byte;
 	receiver_state state = START;
@@ -60,11 +60,11 @@ framecontent receive_frame(int fd, char *buffer, size_t size) {
 			}
 			if(state == INFO){
 				state = STOP;
-				uint8_t bcc = buffer[buffer_pos-1]; // The last byte of the buffer is the BCC. We can't distinguish it from the data until we hit a flag.
-				size_t destuffed_size = byte_destuffing(buffer, buffer_pos-1); // Destuff data (excluding BCC)
-				if(bcc == calculate_bcc(buffer, destuffed_size)){
+				size_t destuffed_size = byte_destuffing(buffer, buffer_pos);
+				uint8_t bcc = buffer[destuffed_size-1]; // The last byte of the buffer is the BCC. We can't distinguish it from the data until we hit a flag.
+				if(bcc == calculate_bcc(buffer, destuffed_size-1)){
 					fc.data = buffer;
-					fc.data_len = destuffed_size;
+					fc.data_len = destuffed_size-1;
 					break;
 				} 
 				// If an error occurs, in data (wrong BCC) the data is discarded.

@@ -28,24 +28,24 @@ framecontent create_non_information_frame(uint8_t control){
   return fc;
 }
 
-framecontent create_information_frame(char *data, size_t data_len, int S){
+framecontent create_information_frame(unsigned char *data, size_t data_len, int S){
+	uint8_t bcc = calculate_bcc(data, data_len);
+	data[data_len] = bcc;
+	size_t stuffed_bytes_size = byte_stuffing(data, data_len+1);
+
 	framecontent fc = DEFAULT_FC;
 	fc.control = CREATE_INFO_FRAME_CTL_BYTE(S);
 	fc.address = ADDRESS1; // TODO:
-
-	uint8_t bcc = calculate_bcc(data, data_len);
-	size_t stuffed_bytes_size = byte_stuffing(data, data_len);
 	fc.data = data;
-	fc.data_len = stuffed_bytes_size + 1;
-	fc.data[fc.data_len-1] = bcc;
+	fc.data_len = stuffed_bytes_size;
 	return fc;
 }
 
 // ========= [Byte stuffing] ========= //
 
-size_t byte_stuffing(char *data, size_t data_len) {
-	char aux_buffer[BUFFER_SIZE];
-	strncpy(aux_buffer, data, data_len);
+size_t byte_stuffing(unsigned char *data, size_t data_len) {
+	unsigned char aux_buffer[BUFFER_SIZE];
+	strncpy((char *) aux_buffer, (char *) data, data_len); // TODO: This is not a good idea, maybe use memcpy instead
 	
 	int k = 0; // TODO: Change name
 	for(int i = 0; i < data_len; ++i){
@@ -63,7 +63,7 @@ size_t byte_stuffing(char *data, size_t data_len) {
 	return k;
 }
 
-size_t byte_destuffing(char* buffer, size_t buf_size) {	
+size_t byte_destuffing(unsigned char* buffer, size_t buf_size) {	
 	int size_dif = 0;
 	int current = 0;
 	for (int i = 0; i < buf_size; ++i){

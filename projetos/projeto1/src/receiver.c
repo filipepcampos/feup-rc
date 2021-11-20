@@ -16,7 +16,7 @@ int main(int argc, char *argv[]){
 	struct termios oldtio;
 	int fd = setup_serial(&oldtio, argv[1]);
 	
-	char buffer[BUFFER_SIZE];
+	unsigned char buffer[BUFFER_SIZE];
 	framecontent received_fc = receive_frame(fd, buffer, BUFFER_SIZE);
 
 	framecontent fc = create_non_information_frame(CTL_UA);

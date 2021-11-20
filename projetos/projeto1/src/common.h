@@ -29,7 +29,7 @@
 typedef struct {
 	uint8_t address;
 	uint8_t control;
-	char *data;
+	unsigned char *data;
 	size_t data_len;
 } framecontent;
 

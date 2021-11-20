@@ -42,8 +42,8 @@ int setup_serial(struct termios *oldtio, char *serial_device) {
 
 	/* set input mode (non-canonical, no echo,...) */
 	newtio.c_lflag = 0;
-	newtio.c_cc[VTIME] = 5; /* inter-character timer unused (in deciseconds) */
-	newtio.c_cc[VMIN] = 5;  /* blocking read until 5 chars received */
+	newtio.c_cc[VTIME] = 5; /* inter-unsigned character timer unused (in deciseconds) */
+	newtio.c_cc[VMIN] = 5;  /* blocking read until 5 unsigned chars received */
 
 	if (tcflush(fd, TCIOFLUSH) == -1) { // Clear the data that might be present in the fd
 		perror("tcflush");
