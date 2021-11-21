@@ -9,8 +9,12 @@ int llopen(int port, int flag){
     return 0;
 }
 int llwrite(int fd, uint8_t *buffer, int length){
-    printf("llwrite: ");
-    for(int i = 0; i< length; ++i){
+    int debug_fd = open("./out", O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR);
+    write(debug_fd, buffer, length);
+    close(debug_fd);
+
+    printf("llwrite:");
+    for(int i = 0; i < length; ++i){
         printf("%02x ", buffer[i]);
     }
     printf("\n");
@@ -77,7 +81,7 @@ int emitter(int argc, char *argv[]){
 	uint8_t buffer[MAX_PACKET_DATA_SIZE]; 
 	
     // --- Create control packet --- //
-    printf("Creating ctl_byte\n");
+    //printf("Creating ctl_byte\n");
     control_packet ctl_packet;
     ctl_packet.control = CTL_BYTE_START;
     uint8_t size_value = 1;
@@ -119,9 +123,12 @@ int receiver(int argc, char *argv[]){
 	uint8_t buffer[MAX_PACKET_SIZE]; 
     int read_res = 0;
     int sequence = 0;
-    while((read_res = llread(fd, buffer)) > 0){
+
+    /* DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG */
+    while((read_res = read(STDIN_FILENO, buffer, 17)) > 0){
         int buf_pos = 0;
         uint8_t control_byte = buffer[buf_pos++];
+        printf("Got control_byte=%02x\n", control_byte);
 
         if(control_byte == CTL_BYTE_START || control_byte == CTL_BYTE_END){
             printf("start/end\n");
@@ -129,7 +136,7 @@ int receiver(int argc, char *argv[]){
                 uint8_t type = buffer[buf_pos++];
                 uint8_t len = buffer[buf_pos++];
                 uint8_t value[len];
-                memcpy(buffer, value, len);
+                memcpy(value, buffer + buf_pos, len);
                 printf("Got parameter T=%d L=%d V=%s\n", type, len, value);
                 buf_pos += len;
             }
@@ -148,11 +155,91 @@ int receiver(int argc, char *argv[]){
             printf("error\n");
             return 1;
         }
+        break;
     }
+
+    printf("Starting to get data\n");
+
+    while((read_res = read(STDIN_FILENO, buffer, MAX_PACKET_SIZE)) > 0){
+        int buf_pos = 0;
+        uint8_t control_byte = buffer[buf_pos++];
+        printf("Got control_byte=%02x\n", control_byte);
+
+        if(control_byte == CTL_BYTE_START || control_byte == CTL_BYTE_END){
+            printf("start/end\n");
+            for(int i = 0; i < CONTROL_PACKET_PARAMETER_COUNT; ++i){
+                uint8_t type = buffer[buf_pos++];
+                uint8_t len = buffer[buf_pos++];
+                uint8_t value[len];
+                memcpy(value, buffer + buf_pos, len);
+                printf("Got parameter T=%d L=%d V=%s\n", type, len, value);
+                buf_pos += len;
+            }
+        } else if (control_byte == CTL_BYTE_DATA){
+            uint8_t packet_sequence_number = buffer[buf_pos++];
+            if(sequence != packet_sequence_number){
+                return 1;
+            }
+            sequence++;
+            uint8_t L2 = buffer[buf_pos++];
+            uint8_t L1 = buffer[buf_pos++];
+
+            write(fd2, buffer+buf_pos, (L2*256)+L1);
+            printf("data with S=%d and len=%d\n", sequence, L2*256 + L1);
+        } else {
+            printf("error\n");
+            return 1;
+        }
+    }
+
+    /* Correct version
+    while((read_res = llread(fd, buffer)) > 0){
+        int buf_pos = 0;
+        uint8_t control_byte = buffer[buf_pos++];
+        printf("Got control_byte=%02x\n", control_byte);
+
+        if(control_byte == CTL_BYTE_START || control_byte == CTL_BYTE_END){
+            printf("start/end\n");
+            for(int i = 0; i < CONTROL_PACKET_PARAMETER_COUNT; ++i){
+                uint8_t type = buffer[buf_pos++];
+                uint8_t len = buffer[buf_pos++];
+                uint8_t value[len];
+                memcpy(value, buffer + buf_pos, len);
+                printf("Got parameter T=%d L=%d V=%s\n", type, len, value);
+                buf_pos += len;
+            }
+        } else if (control_byte == CTL_BYTE_DATA){
+            uint8_t packet_sequence_number = buffer[buf_pos++];
+            if(sequence != packet_sequence_number){
+                return 1;
+            }
+            sequence++;
+            uint8_t L2 = buffer[buf_pos++];
+            uint8_t L1 = buffer[buf_pos++];
+
+            write(fd2, buffer+buf_pos, (L2*256)+L1);
+            printf("data\n");
+        } else {
+            printf("error\n");
+            return 1;
+        }
+    }*/
     llclose(fd);
 }
 
 int main(int argc, char *argv[]){
-    emitter(argc, argv);
-    receiver(argc, argv);
+    if(argc < 3){
+        printf("./%s filename emitter/receiver\n", argv[0]);
+        return 1;
+    }
+    if(strcmp(argv[2],"emitter") == 0){
+        emitter(argc, argv);
+        return 0;
+    }
+    if(strcmp(argv[2], "receiver") == 0){
+        receiver(argc, argv);
+        return 0;
+    }
+    printf("./%s filename emitter/receiver\n", argv[0]);
+    return 1;
 }
