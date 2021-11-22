@@ -1,3 +1,6 @@
+#ifndef __INTERFACE_
+#define __INTERFACE_
+
 #define MAX_SIZE 1025
 
 typedef struct {
@@ -5,17 +8,14 @@ typedef struct {
     int status; // TRANSMITTER | RECEIVER
 } applicationLayer;
 
-/*typedef struct {
-    char port[20]; // Dispositivo /dev/ttySx, x = 0, 1
-    int baudRate; // Velocidade de transmissão
-    unsigned int sequenceNumber; // Número de sequência da trama: 0, 1
-    unsigned int timeout; // Valor do temporizador: 1 s
-    unsigned int numTransmissions; // Número de tentativas em caso de falha
-    char frame[MAX_SIZE]; // Trama
-} linkLayer; */
+typedef enum{
+    EMITTER,
+    RECEIVER
+} flag_t;
 
-
-// int llopen(int port, ...);
-int llwrite(int fd, char * buffer, int length);
-int llread(int fd, char * buffer);
+int llopen(int port, flag_t flag);
+int llwrite(int fd, uint8_t * buffer, int length);
+int llread(int fd, uint8_t * buffer);
 int llclose(int fd);
+
+#endif

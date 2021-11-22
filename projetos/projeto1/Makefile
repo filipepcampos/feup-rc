@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-Wall
 
-EXEC = receiver emitter
+EXEC = application
 OBJ = ./src/core.o ./src/datalink_receiver.o ./src/util.o ./src/config.o ./src/logger.o ./src/datalink_emitter.o ./src/interface.o
 
 .SILENT: clean
@@ -18,6 +18,3 @@ $(EXEC) : $(OBJ)
 clean:
 	-rm -rf ./build/*
 
-test:
-	./build/receiver /dev/ttyS1 &
-	./build/emitter /dev/ttyS0

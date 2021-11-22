@@ -4,6 +4,7 @@
 #define BAUDRATE B38400
 
 #include <termios.h>
+#include <stdbool.h>
 
 int verifyargv(int argc, char **argv);
 
