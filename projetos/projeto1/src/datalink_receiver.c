@@ -22,7 +22,7 @@ bool is_valid_control_byte(uint8_t byte) {
 	return false;
 }
 
-receiver_state statemachine_addressrcv(uint8_t byte) {
+receiver_state statemachine_address_received(uint8_t byte) {
 	return is_valid_control_byte(byte) ? C_RCV : START;
 }
 
@@ -75,7 +75,7 @@ framecontent receive_frame(int fd, uint8_t *buffer, size_t size) {
 			switch (state) {
 				case FLAG_RCV: state = statemachine_flag_received(current_byte); 
 					fc.address = current_byte; break;
-				case A_RCV:	state = statemachine_addressrcv(current_byte); 
+				case A_RCV:	state = statemachine_address_received(current_byte); 
 					fc.control = current_byte; break;
 				case C_RCV:	state = statemachine_control_received(current_byte, &fc); break;
 					default: state = START;
