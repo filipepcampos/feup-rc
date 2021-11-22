@@ -1,6 +1,7 @@
 #include "application.h"
 #include "interface.h"
 #include <string.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -99,13 +100,13 @@ int receiver(int argc, char *argv[]){
     int read_res = 0;
     int sequence = 0;
 
+    bool started = false;
     while((read_res = llread(fd, buffer)) > 0){
         int buf_pos = 0;
         uint8_t control_byte = buffer[buf_pos++];
         printf("Got control_byte=%02x (sequence=%d)\n", control_byte, sequence);
 
         if(control_byte == CTL_BYTE_START || control_byte == CTL_BYTE_END){
-            printf("start/end\n");
             for(int i = 0; i < CONTROL_PACKET_PARAMETER_COUNT; ++i){
                 uint8_t type = buffer[buf_pos++];
                 uint8_t len = buffer[buf_pos++];
@@ -114,6 +115,10 @@ int receiver(int argc, char *argv[]){
                 printf("Got parameter T=%d L=%d V=%s\n", type, len, value);
                 buf_pos += len;
             }
+            if(started){
+                break;
+            }
+            started = true;
         } else if (control_byte == CTL_BYTE_DATA){
             uint8_t packet_sequence_number = buffer[buf_pos++];
             if(sequence != packet_sequence_number){

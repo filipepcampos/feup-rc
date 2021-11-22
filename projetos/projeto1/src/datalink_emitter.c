@@ -48,7 +48,7 @@ int emit_frame(int fd, framecontent *fc) {
 int emit_frame_until_response(int fd, framecontent *fc, uint8_t expected_response){ // TODO: Check this in the proper places
 	uint8_t buffer[BUFFER_SIZE]; // TODO This is weird
 	emit_frame(fd, fc);
-	int attempts = MAX_EMIT_ATTEMPTS - 1;
+	int attempts = MAX_EMIT_ATTEMPTS;
 	alarm(FRAME_RESEND_TIMEOUT);
 	while(attempts > 0){
 		framecontent response_fc = receive_frame(fd, buffer, BUFFER_SIZE);
