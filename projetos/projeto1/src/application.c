@@ -52,22 +52,20 @@ int emitter(int argc, char *argv[]){
         printf("Usage: %s filename\n", argv[0]);
         return 1;
     }
-    int fd = 0;
-    llopen(fd, 0);
+    int fd = llopen(1, EMITTER); // todo remove hard coded port
     int fd2 = open(argv[1], 2); // TODO This may stupid
-	//uint8_t buffer[MAX_PACKET_DATA_SIZE]; 
-	
+
     // --- Create control packet --- //
-    //printf("Creating ctl_byte\n");
     control_packet ctl_packet;
     ctl_packet.control = CTL_BYTE_START;
     uint8_t size_value = 1;
     if(control_packet_fill_parameter(&ctl_packet, 0, SIZE, 1, &size_value) < 0){
         return 1;
     }
-    if(control_packet_fill_parameter(&ctl_packet, 1, NAME, strlen(argv[1]), (uint8_t *) argv[1]) < 0){  // TODO: Could strlen be dangerous?
+    if(control_packet_fill_parameter(&ctl_packet, 1, NAME, strlen(argv[1])+1, argv[1]) < 0){  // TODO: Could strlen be dangerous?
         return 1;
     }
+    printf("ctl_param[1] (%d, %s)", ctl_packet.parameters[1].length, ctl_packet.parameters[1].value);
     write_control_packet(fd, &ctl_packet);
     // ---
 
@@ -79,6 +77,7 @@ int emitter(int argc, char *argv[]){
 		dt_packet.sequence_number = sequence++;
         dt_packet.L2 = read_res / 256;
         dt_packet.L1 = read_res % 256;
+        printf("Write sequence=%d\n", sequence);
         write_data_packet(fd, &dt_packet);
 	}
 
@@ -93,8 +92,7 @@ int receiver(int argc, char *argv[]){
         printf("Usage: %s filename\n", argv[0]);
         return 1;
     }
-    int fd = 0;
-    llopen(fd, 1);
+    int fd = llopen(0, RECEIVER); // TODO: remove hardcoded port
     int fd2 = open(argv[1], O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR); // TODO This may stupid
 
 	uint8_t buffer[MAX_PACKET_SIZE]; 
@@ -104,7 +102,7 @@ int receiver(int argc, char *argv[]){
     while((read_res = llread(fd, buffer)) > 0){
         int buf_pos = 0;
         uint8_t control_byte = buffer[buf_pos++];
-        printf("Got control_byte=%02x\n", control_byte);
+        printf("Got control_byte=%02x (sequence=%d)\n", control_byte, sequence);
 
         if(control_byte == CTL_BYTE_START || control_byte == CTL_BYTE_END){
             printf("start/end\n");

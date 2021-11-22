@@ -26,6 +26,7 @@ int llopen(int port, flag_t flag) {
 	int fd = setup_serial(&oldtio, device_name);
 
     if (flag == EMITTER) {
+        S = 0;
         framecontent fc = create_non_information_frame(CTL_SET);
         if(emit_frame_until_response(fd, &fc, CTL_UA) != 0){
             printf("Maximum emit attempts reached\n");
@@ -33,6 +34,7 @@ int llopen(int port, flag_t flag) {
 	    }
     }
     else if (flag == RECEIVER) {
+        S = 1;
         uint8_t buffer[BUFFER_SIZE];
         framecontent received_fc = receive_frame(fd, buffer, BUFFER_SIZE);
         if(received_fc.control != CTL_SET){
@@ -64,7 +66,7 @@ int llread(int fd, uint8_t * buffer) {
     if (status != RECEIVER) {
         return -1;
     }
-    framecontent sent_fc = DEFAULT_FC;
+    framecontent sent_fc = create_non_information_frame(CTL_RR);
     framecontent received_fc = receive_frame(fd, buffer, BUFFER_SIZE);
     bool received = false;
     while(!received){ // TODO: review this whole loop
@@ -87,6 +89,8 @@ int llread(int fd, uint8_t * buffer) {
                     received = true;
                 }
             }
+        } else {
+            return -1;
         }
         emit_frame(fd, &sent_fc);
     }

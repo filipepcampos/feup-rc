@@ -52,7 +52,6 @@ int emit_frame_until_response(int fd, framecontent *fc, uint8_t expected_respons
 	alarm(FRAME_RESEND_TIMEOUT);
 	while(attempts > 0){
 		framecontent response_fc = receive_frame(fd, buffer, BUFFER_SIZE);
-
 		if(response_fc.control == expected_response){
 			break;
 		}
