@@ -13,9 +13,10 @@ receiver_state statemachine_flag_received(uint8_t byte) {
 }
 
 bool is_valid_control_byte(uint8_t byte) {
-	if (byte == CTL_SET || byte == CTL_UA || 
-			byte == CTL_RR || byte == CTL_DISC || 
-			byte == CTL_REJ|| IS_INFO_CONTROL_BYTE(byte)
+	if (byte == CTL_SET || byte == CTL_UA || byte == CTL_DISC 
+			|| (APPLY_RESPONSE_CTL_MASK(byte) == _CTL_RR) 
+			|| (APPLY_RESPONSE_CTL_MASK(byte) == _CTL_REJ)
+			|| IS_INFO_CONTROL_BYTE(byte)
 		) { 
 		return true;
 	}

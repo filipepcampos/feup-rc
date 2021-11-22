@@ -7,11 +7,17 @@ void log_control_byte(uint8_t byte){
 		case CTL_SET : printf("SET"); return;
 		case CTL_UA : printf("UA"); return;
 		case CTL_DISC : printf("DISC"); return;
-		case CTL_RR : printf("RR"); return;
-		case CTL_REJ : printf("REJ"); return;
 	}
 	if(IS_INFO_CONTROL_BYTE(byte)){
 		printf("INFO");
+		return;
+	}
+	else if(APPLY_RESPONSE_CTL_MASK(byte) == _CTL_RR){
+		printf("RR");
+		return;
+	}
+	else if(APPLY_RESPONSE_CTL_MASK(byte) == _CTL_REJ) {
+		printf("REJ");
 		return;
 	}
 	printf("INVALID");

@@ -12,7 +12,6 @@ static int S = 0;
 static struct termios oldtio;
 
 int llopen(int port, flag_t flag) {
-    printf("DEBUG: Opening port=%d with flag=%d\n", port, flag);
     if(port < 0 || port > 999){
         return -1;
     }
@@ -54,7 +53,7 @@ int llwrite(int fd, uint8_t * buffer, int length) {
         return -1;
     }
     framecontent fc = create_information_frame(buffer, length, S);
-    if(emit_frame_until_response(fd, &fc, CTL_RR) != 0){
+    if(emit_frame_until_response(fd, &fc, CREATE_RR_FRAME_CTL_BYTE(S)) != 0){
         printf("Maximum emit attempts reached\n");
         return -1;
     }
@@ -66,33 +65,36 @@ int llread(int fd, uint8_t * buffer) {
     if (status != RECEIVER) {
         return -1;
     }
-    framecontent sent_fc = create_non_information_frame(CTL_RR);
+
     framecontent received_fc = receive_frame(fd, buffer, BUFFER_SIZE);
     bool received = false;
     while(!received){ // TODO: review this whole loop
         if(IS_INFO_CONTROL_BYTE(received_fc.control)){
+            uint8_t control = 0;
+
             bool is_new_frame = S != GET_INFO_FRAME_CTL_BIT(received_fc.control);
             if(received_fc.data_len > 0){
                 if(is_new_frame){
                     S = 1 - S;
                 } else {
-                    sent_fc.data_len = -1;
+                    received_fc.data_len = -1;
                 }
-                sent_fc.control = CTL_RR;
+                control = CREATE_RR_FRAME_CTL_BYTE(S);
                 received = true;
             } else {
                 if(is_new_frame){
-                    sent_fc.control = CTL_REJ;
+                    control = CREATE_REJ_FRAME_CTL_BYTE(1-S);
                 } else {
-                    sent_fc.control = CTL_RR;
-                    sent_fc.data_len = -1;
+                    control = CREATE_RR_FRAME_CTL_BYTE(S);
+                    received_fc.data_len = -1;
                     received = true;
                 }
             }
+            framecontent response_fc = create_non_information_frame(control);
+            emit_frame(fd, &response_fc);
         } else {
             return -1;
         }
-        emit_frame(fd, &sent_fc);
     }
     return received_fc.data_len;
 }

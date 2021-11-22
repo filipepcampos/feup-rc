@@ -5,7 +5,7 @@
 #include <stddef.h>
 
 #define _POSIX_SOURCE 1 /* POSIX compliant source */
-#define VERBOSE true
+#define VERBOSE false
 
 #define INFO_FRAME_SIZE 512
 #define BUFFER_SIZE 1025
@@ -22,8 +22,8 @@
 #define CTL_SET 0x03
 #define CTL_UA 0x07
 #define CTL_DISC 0X0B
-#define CTL_RR 0x05
-#define CTL_REJ 0x01
+#define _CTL_RR 0x05 // TODO(_): change, this is just to root out some bugs
+#define _CTL_REJ 0x01
 
 // Representation of a frame, after flags have been removed
 typedef struct {
@@ -38,5 +38,12 @@ typedef struct {
 #define CREATE_INFO_FRAME_CTL_BYTE(S) (S << 6)
 #define GET_INFO_FRAME_CTL_BIT(b) (b >> 6)
 #define IS_INFO_CONTROL_BYTE(b) ((b & 0xBF) == 0)
+
+#define CREATE_RR_FRAME_CTL_BYTE(R) ((R << 7) | _CTL_RR)
+#define CREATE_REJ_FRAME_CTL_BYTE(R) ((R << 7) | _CTL_REJ)
+#define GET_RESPONSE_FRAME_CTL_BIT(b) (b >> 7)
+#define RESPONSE_CTL_MASK 0b00000111
+#define APPLY_RESPONSE_CTL_MASK(b) (b && RESPONSE_CTL_MASK)
+
 
 #endif

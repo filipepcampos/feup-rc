@@ -2,6 +2,7 @@
 #define __APPLICATION_
 
 #include <stdint.h>
+#include <stddef.h>
 
 #define MAX_PACKET_SIZE 512
 #define MAX_PACKET_DATA_SIZE MAX_PACKET_SIZE - 4
@@ -33,5 +34,12 @@ typedef struct {
     uint8_t control;
     control_parameter parameters[CONTROL_PACKET_PARAMETER_COUNT];
 } control_packet;
+
+void print_usage(char *name);
+int receiver(int argc, char *argv[]);
+int write_control_packet(int fd, control_packet *packet);
+int write_data_packet(int fd, data_packet *packet);
+int control_packet_fill_parameter(control_packet *packet, size_t parameter_index, parameter_type type, size_t length, uint8_t *value);
+int emitter(int argc, char *argv[]);
 
 #endif
