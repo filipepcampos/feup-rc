@@ -35,11 +35,8 @@ int write_data_packet(int fd, data_packet *packet){
     buffer[2] = packet->L2;
     buffer[3] = packet->L1;
     size_t len = (packet->L2)*256 + (packet->L1);
-    printf("(debug 1)\n");
     memcpy(buffer + 4, packet->data, len);
-    printf("(debug 2)\n");
     llwrite(fd, buffer, len + 4);
-    printf("(debug 3)\n");
     return 0;
 }
 
@@ -101,6 +98,7 @@ int emitter(int argc, char *argv[], int port_number){
         return 1;
     }    
     write_control_packet(output_fd, &ctl_packet);
+    printf("Sent START packet\n");
 
     int read_res = 0;
     uint8_t sequence = 0;
@@ -112,14 +110,13 @@ int emitter(int argc, char *argv[], int port_number){
         current_num_packets++;
         dt_packet.L2 = read_res / 256;
         dt_packet.L1 = read_res % 256;
-        printf("Write DATA packet [%ld/%ld]\n", current_num_packets, total_packets);
-        printf("[debug] size = %d", (256*dt_packet.L2)+dt_packet.L1);
+        printf("Sent DATA packet [%ld/%ld]\n", current_num_packets, total_packets);
         write_data_packet(output_fd, &dt_packet);
-        printf("written\n");
 	}
 
     ctl_packet.control = CTL_BYTE_END;
     write_control_packet(output_fd, &ctl_packet);
+    printf("Sent END packet\n");
     free_control_packet(&ctl_packet);
     llclose(output_fd);
     close(input_fd);

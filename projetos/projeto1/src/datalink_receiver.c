@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include "common.h"
+#include <string.h>
 #include "core.h"
 #include "datalink_receiver.h"
 #include "logger.h"
@@ -37,6 +39,7 @@ receiver_state statemachine_control_received(uint8_t byte, framecontent *fc) {
 }
 
 framecontent receive_frame(int fd, uint8_t *buffer, size_t size) {
+	uint8_t temporary_buffer[BUFFER_SIZE];
 	size_t buffer_pos = 0;
 	uint8_t current_byte;
 	receiver_state state = START;
@@ -59,8 +62,9 @@ framecontent receive_frame(int fd, uint8_t *buffer, size_t size) {
 			}
 			if(state == INFO){
 				state = STOP;
-				size_t destuffed_size = byte_destuffing(buffer, buffer_pos);
-				uint8_t bcc = buffer[destuffed_size-1]; // The last byte of the buffer is the BCC. We can't distinguish it from the data until we hit a flag.
+				size_t destuffed_size = byte_destuffing(temporary_buffer, buffer_pos);
+				memcpy(buffer, temporary_buffer, destuffed_size);
+				uint8_t bcc = temporary_buffer[destuffed_size-1]; // The last byte of the buffer is the BCC. We can't distinguish it from the data until we hit a flag.
 				if(bcc == calculate_bcc(buffer, destuffed_size-1)){
 					fc.data = buffer;
 					fc.data_len = destuffed_size-1;
@@ -78,7 +82,7 @@ framecontent receive_frame(int fd, uint8_t *buffer, size_t size) {
 					fc.control = current_byte; break;
 				case C_RCV:	state = statemachine_control_received(current_byte, &fc); break;
 					default: state = START;
-				case INFO: buffer[buffer_pos++] = current_byte; break;
+				case INFO: temporary_buffer[buffer_pos++] = current_byte; break;
 			}
 		}
 	}

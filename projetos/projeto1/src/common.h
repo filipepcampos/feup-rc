@@ -5,7 +5,7 @@
 #include <stddef.h>
 
 #define _POSIX_SOURCE 1 /* POSIX compliant source */
-#define VERBOSE true
+#define VERBOSE false
 
 #define INFO_FRAME_SIZE 512
 #define BUFFER_SIZE 1026

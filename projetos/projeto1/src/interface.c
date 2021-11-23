@@ -6,6 +6,7 @@
 
 #include "interface.h"
 #include <stdio.h>
+#include <string.h>
 
 static flag_t status;
 static int S = 0;
@@ -46,10 +47,12 @@ int llopen(int port, flag_t flag) {
     return fd;   
 }
 
-int llwrite(int fd, uint8_t * buffer, int length) {
+int llwrite(int fd, uint8_t * input_buffer, int length) {
     if(status != EMITTER || length > MAX_INFO_SIZE){
         return -1;
     }
+    uint8_t buffer[MAX_SIZE];
+    memcpy(buffer, input_buffer, length);
     framecontent fc = create_information_frame(buffer, length, S,  ADDRESS1);
     if(emit_frame_until_response(fd, &fc, CREATE_RR_FRAME_CTL_BYTE(S)) != 0){
         printf("Maximum emit attempts reached\n");
@@ -59,13 +62,12 @@ int llwrite(int fd, uint8_t * buffer, int length) {
     return INFO_FRAME_SIZE_WITHOUT_DATA + fc.data_len;
 }
 
-int llread(int fd, uint8_t * buffer) {
-    printf("debug: llread\n");
+int llread(int fd, uint8_t * output_buffer) {
     if (status != RECEIVER) {
         return -1;
     }
 
-    framecontent received_fc = receive_frame(fd, buffer, BUFFER_SIZE);
+    framecontent received_fc = receive_frame(fd, output_buffer, BUFFER_SIZE);
     bool received = false;
     while(!received){
         if(IS_INFO_CONTROL_BYTE(received_fc.control)){

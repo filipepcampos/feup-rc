@@ -51,7 +51,6 @@ int emit_frame(int fd, framecontent *fc) {
 
 int emit_frame_until_response(int fd, framecontent *fc, uint8_t expected_response){
 	uint8_t buffer[BUFFER_SIZE];
-	printf("debug: emitting_frame\n");
 	if(emit_frame(fd, fc) < 0){
 		return -1;
 	}
@@ -61,11 +60,9 @@ int emit_frame_until_response(int fd, framecontent *fc, uint8_t expected_respons
 		
 		framecontent response_fc = receive_frame(fd, buffer, BUFFER_SIZE);
 		if(response_fc.control == expected_response){
-			printf("debug:expected response\n");
 			break;
 		}
 		if(RESEND_FRAME){
-			printf("debug:resend\n");
 			RESEND_FRAME = false;
 			if(emit_frame(fd, fc) < 0){
 				return -1;
@@ -76,9 +73,7 @@ int emit_frame_until_response(int fd, framecontent *fc, uint8_t expected_respons
 	}
 	alarm(0);
 	if(attempts == 0){
-		printf("debug:failed to resend\n");
 		return 1;
 	}
-	printf("debug: success\n");
 	return 0;
 }
