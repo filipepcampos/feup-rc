@@ -35,8 +35,11 @@ int write_data_packet(int fd, data_packet *packet){
     buffer[2] = packet->L2;
     buffer[3] = packet->L1;
     size_t len = (packet->L2)*256 + (packet->L1);
+    printf("(debug 1)\n");
     memcpy(buffer + 4, packet->data, len);
+    printf("(debug 2)\n");
     llwrite(fd, buffer, len + 4);
+    printf("(debug 3)\n");
     return 0;
 }
 
@@ -101,13 +104,18 @@ int emitter(int argc, char *argv[], int port_number){
 
     int read_res = 0;
     uint8_t sequence = 0;
+    uint64_t current_num_packets = 0;
+
     data_packet dt_packet;
     while((read_res = read(input_fd, &(dt_packet.data), MAX_PACKET_DATA_SIZE)) > 0){
 		dt_packet.sequence_number = sequence++;
+        current_num_packets++;
         dt_packet.L2 = read_res / 256;
         dt_packet.L1 = read_res % 256;
-        printf("Write DATA packet [%d/%ld]\n", sequence, total_packets);
+        printf("Write DATA packet [%ld/%ld]\n", current_num_packets, total_packets);
+        printf("[debug] size = %d", (256*dt_packet.L2)+dt_packet.L1);
         write_data_packet(output_fd, &dt_packet);
+        printf("written\n");
 	}
 
     ctl_packet.control = CTL_BYTE_END;
@@ -135,7 +143,9 @@ int receiver(int argc, char *argv[], int port_number){
 
 	uint8_t buffer[MAX_PACKET_SIZE]; 
     int read_res = 0;
-    int sequence = 0;
+
+    uint8_t sequence = 0;
+    uint64_t current_num_packets = 0;
     uint64_t total_packets = 0;
 
     bool started = false;
@@ -182,11 +192,12 @@ int receiver(int argc, char *argv[], int port_number){
                 return 1;
             }
             sequence++;
+            current_num_packets++;
             uint8_t L2 = buffer[buf_pos++];
             uint8_t L1 = buffer[buf_pos++];
 
             write(output_fd, buffer+buf_pos, (L2*256)+L1);
-            printf("Received DATA packet [%d/%ld]\n", sequence, total_packets);
+            printf("Received DATA packet [%ld/%ld]\n", current_num_packets, total_packets);
         } else {
             printf("error\n");
             return 1;
@@ -211,22 +222,25 @@ int main(int argc, char *argv[]){
     }
 
     int port_number;
-    if(sscanf(argv[1], "%d", &port_number) != 1){
+    if(sscanf(argv[2], "%d", &port_number) != 1){
+        printf("Invalid port number\n");
         return 1;
     }
 
-    if(strcmp(argv[2],"emitter") == 0){
+    if(strcmp(argv[1],"emitter") == 0){
         if(argc != 4){
             print_usage(argv[0]);
             return 1;
         }
         return emitter(argc, argv, port_number);
     }
-    if(strcmp(argv[2], "receiver") == 0){
+    if(strcmp(argv[1], "receiver") == 0){
         if(argc > 4){
             print_usage(argv[0]);
         }
         return receiver(argc, argv, port_number);
     }
+    printf("Invalid arguments");
+    print_usage(argv[0]);
     return 1;
 }
