@@ -1,7 +1,9 @@
 #ifndef __INTERFACE_
 #define __INTERFACE_
 
-#define MAX_SIZE 1025
+
+#define MAX_INFO_SIZE 512
+#define MAX_SIZE (MAX_INFO_SIZE*2 + 2)
 
 typedef struct {
     int fileDescriptor; // Descritor correspondente à porta série

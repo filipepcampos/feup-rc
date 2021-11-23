@@ -42,20 +42,17 @@ int setup_serial(struct termios *oldtio, char *serial_device) {
 
 	/* set input mode (non-canonical, no echo,...) */
 	newtio.c_lflag = 0;
-	newtio.c_cc[VTIME] = 5; /* inter-uint8_tacter timer unused (in deciseconds) */
-	newtio.c_cc[VMIN] = 5;  /* blocking read until 5 uint8_ts received */
+	newtio.c_cc[VTIME] = DEFAULT_VTIME; /* inter-uint8_tacter timer unused (in deciseconds) */
+	newtio.c_cc[VMIN] = DEFAULT_VMIN;  /* blocking read until 5 uint8_ts received */
 
 	if (tcflush(fd, TCIOFLUSH) == -1) { // Clear the data that might be present in the fd
 		perror("tcflush");
 		exit(-1);
 	} 
-
 	if (tcsetattr(fd, TCSANOW, &newtio) == -1) {  // TCSANOW -> set attr takes place immediately
 		perror("tcsetattr");
 		exit(-1);
 	}
-	printf("New termios structure set\n");
-
 	return fd;
 }
 
@@ -70,13 +67,6 @@ int disconnect_serial(int fd, struct termios *oldtio) {
 	}
 	return 0;
 }
-
-
-// TODO: Move this to a better place maybe
-int verifyargv(int argc, char **argv) {
-	return (argc < 2) || ((strcmp("/dev/ttyS0", argv[1]) != 0) && (strcmp("/dev/ttyS1", argv[1]) != 0));
-}
-
 
 // ========= [Alarm setup] ========= //
 volatile bool RESEND_FRAME = false;

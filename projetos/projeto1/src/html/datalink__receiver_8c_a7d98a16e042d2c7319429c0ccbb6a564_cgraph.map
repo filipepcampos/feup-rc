@@ -1,0 +1,12 @@
+<map id="receive_frame" name="receive_frame">
+<area shape="rect" id="node1" title=" " alt="" coords="5,136,121,163"/>
+<area shape="rect" id="node2" href="$core_8c.html#aa857abb102fe078a192a6d1da849e0d0" title=" " alt="" coords="211,5,335,32"/>
+<area shape="rect" id="node3" href="$core_8c.html#ab08cfb49b03eb4fae2b437ed69eb0f5e" title=" " alt="" coords="217,56,328,83"/>
+<area shape="rect" id="node4" href="$logger_8c.html#a3817f01f7955ea49aa0b2546ca3eb7cc" title=" " alt="" coords="222,107,323,133"/>
+<area shape="rect" id="node7" href="$datalink__receiver_8c.html#ac459fbe1174ec0a0297d7eedad8161ff" title=" " alt="" coords="188,158,357,199"/>
+<area shape="rect" id="node9" href="$datalink__receiver_8c.html#a3897847735eefbf12504c4479c397c50" title=" " alt="" coords="191,223,354,265"/>
+<area shape="rect" id="node10" href="$datalink__receiver_8c.html#abef44ae435398c515fd21f5942855fb8" title=" " alt="" coords="169,289,376,316"/>
+<area shape="rect" id="node5" href="$logger_8c.html#a2643a4de6799409f0c148a62ab3bc028" title=" " alt="" coords="436,60,572,87"/>
+<area shape="rect" id="node6" href="$logger_8c.html#a7c3cb26ef790a76027b5378f0302aba3" title=" " alt="" coords="439,111,569,137"/>
+<area shape="rect" id="node8" href="$datalink__receiver_8c.html#a4ae375faca8d89a57d922611753532a4" title=" " alt="" coords="424,165,584,192"/>
+</map>

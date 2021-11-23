@@ -1,0 +1,26 @@
+<map id="receiver" name="receiver">
+<area shape="rect" id="node1" title=" " alt="" coords="5,281,80,307"/>
+<area shape="rect" id="node2" href="$interface_8c.html#a343e4b5928516727236a390a25f28c77" title=" " alt="" coords="128,281,192,307"/>
+<area shape="rect" id="node20" href="$interface_8c.html#af5970f2b2f9d47da5e26134aa0e78400" title=" " alt="" coords="129,441,191,467"/>
+<area shape="rect" id="node24" href="$interface_8c.html#ac07ed6589299e568efb5fa7ddbc4e0d9" title=" " alt="" coords="131,201,189,227"/>
+<area shape="rect" id="node3" href="$core_8c.html#a22d5b5f4eb6995d07e6eddbf81121e15" title=" " alt="" coords="251,273,429,315"/>
+<area shape="rect" id="node4" href="$config_8c.html#aacbe2e51f1e012dd9a10bfe2b9c9ac3c" title=" " alt="" coords="273,222,407,249"/>
+<area shape="rect" id="node5" href="$datalink__emitter_8c.html#a1c377d2b0dd061df9f0d686e628f4ad4" title=" " alt="" coords="497,390,595,417"/>
+<area shape="rect" id="node11" href="$datalink__emitter_8c.html#a0856e46451ec34be3150e238d229a5eb" title=" " alt="" coords="240,441,440,467"/>
+<area shape="rect" id="node12" href="$datalink__receiver_8c.html#a7d98a16e042d2c7319429c0ccbb6a564" title=" " alt="" coords="488,162,604,189"/>
+<area shape="rect" id="node6" href="$datalink__emitter_8c.html#a25fa88f226755bfd999f743d4eb82052" title=" " alt="" coords="693,390,817,417"/>
+<area shape="rect" id="node7" href="$logger_8c.html#ab86e54443cb3d8af3fca1aa9f22ee67b" title=" " alt="" coords="701,339,809,366"/>
+<area shape="rect" id="node10" href="$datalink__emitter_8c.html#a141404f4eac905cc53383742b98e5c6f" title=" " alt="" coords="707,441,803,467"/>
+<area shape="rect" id="node8" href="$logger_8c.html#a2643a4de6799409f0c148a62ab3bc028" title=" " alt="" coords="919,339,1055,366"/>
+<area shape="rect" id="node9" href="$logger_8c.html#a7c3cb26ef790a76027b5378f0302aba3" title=" " alt="" coords="921,289,1052,315"/>
+<area shape="rect" id="node13" href="$core_8c.html#aa857abb102fe078a192a6d1da849e0d0" title=" " alt="" coords="693,187,817,214"/>
+<area shape="rect" id="node14" href="$util_8c.html#ab08cfb49b03eb4fae2b437ed69eb0f5e" title=" " alt="" coords="700,238,811,265"/>
+<area shape="rect" id="node15" href="$logger_8c.html#a3817f01f7955ea49aa0b2546ca3eb7cc" title=" " alt="" coords="705,289,806,315"/>
+<area shape="rect" id="node16" href="$datalink__receiver_8c.html#ac459fbe1174ec0a0297d7eedad8161ff" title=" " alt="" coords="671,5,840,47"/>
+<area shape="rect" id="node18" href="$datalink__receiver_8c.html#a3897847735eefbf12504c4479c397c50" title=" " alt="" coords="674,71,837,112"/>
+<area shape="rect" id="node19" href="$datalink__receiver_8c.html#abef44ae435398c515fd21f5942855fb8" title=" " alt="" coords="652,137,859,163"/>
+<area shape="rect" id="node17" href="$datalink__receiver_8c.html#a4ae375faca8d89a57d922611753532a4" title=" " alt="" coords="907,13,1067,39"/>
+<area shape="rect" id="node21" href="$config_8c.html#aa161fa7b4ff75b0143a71bc6a8f35218" title=" " alt="" coords="289,542,391,569"/>
+<area shape="rect" id="node22" href="$config_8c.html#a9140b0e8ae85b6b386670471b183a39d" title=" " alt="" coords="279,593,401,619"/>
+<area shape="rect" id="node23" href="$config_8c.html#a83e1379f5adf4452f72fcc0be266a7b5" title=" " alt="" coords="497,593,595,619"/>
+</map>

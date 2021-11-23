@@ -12,11 +12,11 @@ void log_control_byte(uint8_t byte){
 		printf("INFO");
 		return;
 	}
-	else if(APPLY_RESPONSE_CTL_MASK(byte) == _CTL_RR){
+	else if(APPLY_RESPONSE_CTL_MASK(byte) == CTL_RR){
 		printf("RR");
 		return;
 	}
-	else if(APPLY_RESPONSE_CTL_MASK(byte) == _CTL_REJ) {
+	else if(APPLY_RESPONSE_CTL_MASK(byte) == CTL_REJ) {
 		printf("REJ");
 		return;
 	}

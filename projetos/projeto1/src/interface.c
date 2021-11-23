@@ -16,17 +16,15 @@ int llopen(int port, flag_t flag) {
         return -1;
     }
     status = flag;
-
     setup_sigalarm();
 
     char device_name[10 + 3];
     snprintf(device_name, 10 + 3, "/dev/ttyS%d", port);
-
 	int fd = setup_serial(&oldtio, device_name);
 
     if (flag == EMITTER) {
         S = 0;
-        framecontent fc = create_non_information_frame(CTL_SET);
+        framecontent fc = create_non_information_frame(CTL_SET, ADDRESS1);
         if(emit_frame_until_response(fd, &fc, CTL_UA) != 0){
             printf("Maximum emit attempts reached\n");
             return -1;
@@ -37,9 +35,9 @@ int llopen(int port, flag_t flag) {
         uint8_t buffer[BUFFER_SIZE];
         framecontent received_fc = receive_frame(fd, buffer, BUFFER_SIZE);
         if(received_fc.control != CTL_SET){
-            return -1; // todo: check this
+            return -1;
         }
-	    framecontent fc = create_non_information_frame(CTL_UA);
+	    framecontent fc = create_non_information_frame(CTL_UA, ADDRESS1);
 	    emit_frame(fd, &fc);
     } else {
         perror("Invalid flag");
@@ -49,16 +47,16 @@ int llopen(int port, flag_t flag) {
 }
 
 int llwrite(int fd, uint8_t * buffer, int length) {
-    if(status != EMITTER){
+    if(status != EMITTER || length > MAX_INFO_SIZE){
         return -1;
     }
-    framecontent fc = create_information_frame(buffer, length, S);
+    framecontent fc = create_information_frame(buffer, length, S,  ADDRESS1);
     if(emit_frame_until_response(fd, &fc, CREATE_RR_FRAME_CTL_BYTE(S)) != 0){
         printf("Maximum emit attempts reached\n");
         return -1;
     }
     S = 1 - S;
-    return 5 + fc.data_len; // TODO: This looks a bit ugly
+    return INFO_FRAME_SIZE_WITHOUT_DATA + fc.data_len;
 }
 
 int llread(int fd, uint8_t * buffer) {
@@ -68,7 +66,7 @@ int llread(int fd, uint8_t * buffer) {
 
     framecontent received_fc = receive_frame(fd, buffer, BUFFER_SIZE);
     bool received = false;
-    while(!received){ // TODO: review this whole loop
+    while(!received){
         if(IS_INFO_CONTROL_BYTE(received_fc.control)){
             uint8_t control = 0;
 
@@ -90,7 +88,7 @@ int llread(int fd, uint8_t * buffer) {
                     received = true;
                 }
             }
-            framecontent response_fc = create_non_information_frame(control);
+            framecontent response_fc = create_non_information_frame(control, ADDRESS1);
             emit_frame(fd, &response_fc);
         } else {
             return -1;
@@ -100,15 +98,16 @@ int llread(int fd, uint8_t * buffer) {
 }
 
 int llclose(int fd){
-    framecontent fc = create_non_information_frame(CTL_DISC);
     if(status == EMITTER){
+        framecontent fc = create_non_information_frame(CTL_DISC, ADDRESS1);
         emit_frame_until_response(fd, &fc, CTL_DISC);
-        fc = create_non_information_frame(CTL_UA);
+        fc = create_non_information_frame(CTL_UA, ADDRESS2);
         emit_frame(fd, &fc);
     } else if (status == RECEIVER){
         uint8_t buffer[BUFFER_SIZE];
         framecontent received_fc = receive_frame(fd, buffer, BUFFER_SIZE);
         if(received_fc.control == CTL_DISC){
+            framecontent fc = create_non_information_frame(CTL_DISC, ADDRESS2);
             emit_frame_until_response(fd, &fc, CTL_UA);
         } else {
             return -1;

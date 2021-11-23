@@ -1,6 +1,7 @@
 #include "application.h"
 #include "interface.h"
 #include <string.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -45,42 +46,62 @@ int control_packet_fill_parameter(control_packet *packet, size_t parameter_index
     }
     packet->parameters[parameter_index].type = type;
     packet->parameters[parameter_index].length = length;
-    packet->parameters[parameter_index].value = value;
+    packet->parameters[parameter_index].value = malloc((sizeof (uint8_t)) * length);
+    memcpy(packet->parameters[parameter_index].value, value, length);
     return 0;
 }
 
-int emitter(int argc, char *argv[]){
-    if(argc < 2){
-        printf("Usage: %s filename\n", argv[0]);
-        return 1;
+int free_control_packet(control_packet *packet){
+    for(int i = 0; i < CONTROL_PACKET_PARAMETER_COUNT; ++i){
+        free(packet->parameters[i].value);
     }
-    int output_fd = llopen(1, EMITTER); // todo remove hard coded port
-    int input_fd = open(argv[2], 2); // TODO This may stupid
+    return 0;
+}
 
-    // --- Create control packet --- //
-    control_packet ctl_packet;
-    ctl_packet.control = CTL_BYTE_START;
+uint64_t create_control_packet(control_packet *ctl_packet, int fd, char *filename){
+    ctl_packet->control = CTL_BYTE_START;
 
     struct stat statbuf;
-    if(fstat(input_fd, &statbuf) < 0){
-        return -1;
+    if(fstat(fd, &statbuf) < 0){
+        return 0;
     }
     uint64_t size_value = statbuf.st_size;
+    if(size_value == 0){
+        perror("empty file\n"); // TODO: Check this
+        return 0;
+    }
     uint64_t total_packets = size_value / ((uint64_t) MAX_PACKET_DATA_SIZE);
     total_packets += (size_value % ((uint64_t) MAX_PACKET_DATA_SIZE)) == 0 ? 0 : 1;
-    if(control_packet_fill_parameter(&ctl_packet, 0, SIZE, 8, (uint8_t *) &size_value) < 0){
-        return 1;
+    if(control_packet_fill_parameter(ctl_packet, 0, SIZE, 8, (uint8_t *) &size_value) < 0){
+        return 0;
     }
-    if(control_packet_fill_parameter(&ctl_packet, 1, NAME, strlen(argv[2])+1, argv[2]) < 0){  // TODO: Could strlen be dangerous?
-        return 1;
+    if(control_packet_fill_parameter(ctl_packet, 1, NAME, strlen(filename)+1, filename) < 0){  // TODO: Could strlen be dangerous?
+        return 0;
     }
-    write_control_packet(output_fd, &ctl_packet);
-    // ---
+    return total_packets;
+}
 
+int emitter(int argc, char *argv[], int port_number){
+    
+    int output_fd = llopen(port_number, EMITTER);
+    if (output_fd < 0){
+        return 1;
+    }
+    int input_fd = open(argv[3], O_RDONLY);
+    if(input_fd < 0){
+        return 1;
+    }
+
+    control_packet ctl_packet;
+    uint64_t total_packets = 0;
+    if((total_packets = create_control_packet(&ctl_packet, input_fd, argv[3])) <= 0){
+        return 1;
+    }    
+    write_control_packet(output_fd, &ctl_packet);
 
     int read_res = 0;
     uint8_t sequence = 0;
-    data_packet dt_packet; // TODO: name could be better
+    data_packet dt_packet;
     while((read_res = read(input_fd, &(dt_packet.data), MAX_PACKET_DATA_SIZE)) > 0){
 		dt_packet.sequence_number = sequence++;
         dt_packet.L2 = read_res / 256;
@@ -91,21 +112,25 @@ int emitter(int argc, char *argv[]){
 
     ctl_packet.control = CTL_BYTE_END;
     write_control_packet(output_fd, &ctl_packet);
+    free_control_packet(&ctl_packet);
     llclose(output_fd);
     close(input_fd);
     return 0;
 }
 
-int receiver(int argc, char *argv[]){
-    if(argc < 2){
-        printf("Usage: %s filename\n", argv[0]);
+int receiver(int argc, char *argv[], int port_number){
+    
+    int input_fd = llopen(port_number, RECEIVER); // TODO: remove hardcoded port
+    if(input_fd < 0){
         return 1;
     }
-    int input_fd = llopen(0, RECEIVER); // TODO: remove hardcoded port
 
     int output_fd;
-    if(argc == 3){
-        output_fd = open(argv[2], O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+    if(argc == 4){
+        output_fd = open(argv[3], O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+        if(output_fd < 0){
+            return 1;
+        }
     }
 
 	uint8_t buffer[MAX_PACKET_SIZE]; 
@@ -132,6 +157,9 @@ int receiver(int argc, char *argv[]){
                 memcpy(value, buffer + buf_pos, len);
                 if(type == NAME && argc == 2){
                     output_fd = open(value, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+                    if(output_fd < 0){
+                        return 1;
+                    }
                 } 
                 if(len == 8 && type == SIZE){
                     uint64_t size_value;
@@ -171,31 +199,34 @@ int receiver(int argc, char *argv[]){
 
 void print_usage(char *name){
     printf("Usage:\n");
-    printf("    %s emitter input_filename\n", name);
-    printf("    %s receiver\n", name);
-    printf("    %s receiver output_filename\n", name);
+    printf("    %s emitter port_number input_filename\n", name);
+    printf("    %s receiver port_number\n", name);
+    printf("    %s receiver port_number output_filename\n", name);
 }
 
 int main(int argc, char *argv[]){
-    if(argc < 2){
+    if(argc < 3){
         print_usage(argv[0]);
         return 1;
     }
 
-    if(strcmp(argv[1],"emitter") == 0){
-        if(argc != 3){
+    int port_number;
+    if(sscanf(argv[1], "%d", &port_number) != 1){
+        return 1;
+    }
+
+    if(strcmp(argv[2],"emitter") == 0){
+        if(argc != 4){
             print_usage(argv[0]);
             return 1;
         }
-        emitter(argc, argv);
-        return 0;
+        return emitter(argc, argv, port_number);
     }
-    if(strcmp(argv[1], "receiver") == 0){
-        if(argc > 3){
+    if(strcmp(argv[2], "receiver") == 0){
+        if(argc > 4){
             print_usage(argv[0]);
         }
-        receiver(argc, argv);
-        return 0;
+        return receiver(argc, argv, port_number);
     }
     return 1;
 }

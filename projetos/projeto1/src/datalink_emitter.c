@@ -11,7 +11,7 @@
 
 
 int frame_to_bytes(uint8_t *buffer, size_t buffer_size, framecontent *fc) {
-	if (buffer_size < 5) {
+	if (buffer_size < 5 + fc->data_len) {
 		return -1;
 	}
 	buffer[0] = FLAG;
@@ -38,16 +38,22 @@ int send_bytes(int fd, uint8_t *buffer, size_t buffer_size) {
 
 int emit_frame(int fd, framecontent *fc) {
 	size_t buffer_size = 5 + fc->data_len;
-	uint8_t buffer[buffer_size]; // TODO: How does this even work?
-	frame_to_bytes(buffer, buffer_size, fc);
-	send_bytes(fd, buffer, buffer_size);
+	uint8_t buffer[buffer_size];
+	if(frame_to_bytes(buffer, buffer_size, fc) < 0){
+		return -1;
+	}
+	if(send_bytes(fd, buffer, buffer_size) < 0){
+		return -1;
+	}
 	log_emission(fc);
 	return 0;
 }
 
-int emit_frame_until_response(int fd, framecontent *fc, uint8_t expected_response){ // TODO: Check this in the proper places
-	uint8_t buffer[BUFFER_SIZE]; // TODO This is weird
-	emit_frame(fd, fc);
+int emit_frame_until_response(int fd, framecontent *fc, uint8_t expected_response){
+	uint8_t buffer[BUFFER_SIZE];
+	if(emit_frame(fd, fc) < 0){
+		return -1;
+	}
 	int attempts = MAX_EMIT_ATTEMPTS;
 	alarm(FRAME_RESEND_TIMEOUT);
 	while(attempts > 0){
@@ -57,7 +63,9 @@ int emit_frame_until_response(int fd, framecontent *fc, uint8_t expected_respons
 		}
 		if(RESEND_FRAME){
 			RESEND_FRAME = false;
-			emit_frame(fd, fc);
+			if(emit_frame(fd, fc) < 0){
+				return -1;
+			}
 			alarm(FRAME_RESEND_TIMEOUT);
 		}
 		attempts--;

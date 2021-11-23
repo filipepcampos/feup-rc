@@ -1,0 +1,103 @@
+\hypertarget{datalink__emitter_8c}{}\doxysection{datalink\+\_\+emitter.\+c File Reference}
+\label{datalink__emitter_8c}\index{datalink\_emitter.c@{datalink\_emitter.c}}
+{\ttfamily \#include \char`\"{}datalink\+\_\+emitter.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}datalink\+\_\+receiver.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}logger.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+Include dependency graph for datalink\+\_\+emitter.\+c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{datalink__emitter_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{datalink__emitter_8c_a25fa88f226755bfd999f743d4eb82052}{frame\+\_\+to\+\_\+bytes}} (uint8\+\_\+t $\ast$buffer, size\+\_\+t buffer\+\_\+size, \mbox{\hyperlink{structframecontent}{framecontent}} $\ast$fc)
+\item 
+int \mbox{\hyperlink{datalink__emitter_8c_a141404f4eac905cc53383742b98e5c6f}{send\+\_\+bytes}} (int fd, uint8\+\_\+t $\ast$buffer, size\+\_\+t buffer\+\_\+size)
+\item 
+int \mbox{\hyperlink{datalink__emitter_8c_a1c377d2b0dd061df9f0d686e628f4ad4}{emit\+\_\+frame}} (int fd, \mbox{\hyperlink{structframecontent}{framecontent}} $\ast$fc)
+\item 
+int \mbox{\hyperlink{datalink__emitter_8c_a0856e46451ec34be3150e238d229a5eb}{emit\+\_\+frame\+\_\+until\+\_\+response}} (int fd, \mbox{\hyperlink{structframecontent}{framecontent}} $\ast$fc, uint8\+\_\+t expected\+\_\+response)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{datalink__emitter_8c_a1c377d2b0dd061df9f0d686e628f4ad4}\label{datalink__emitter_8c_a1c377d2b0dd061df9f0d686e628f4ad4}} 
+\index{datalink\_emitter.c@{datalink\_emitter.c}!emit\_frame@{emit\_frame}}
+\index{emit\_frame@{emit\_frame}!datalink\_emitter.c@{datalink\_emitter.c}}
+\doxysubsubsection{\texorpdfstring{emit\_frame()}{emit\_frame()}}
+{\footnotesize\ttfamily int emit\+\_\+frame (\begin{DoxyParamCaption}\item[{int}]{fd,  }\item[{\mbox{\hyperlink{structframecontent}{framecontent}} $\ast$}]{fc }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{datalink__emitter_8c_a1c377d2b0dd061df9f0d686e628f4ad4_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{datalink__emitter_8c_a1c377d2b0dd061df9f0d686e628f4ad4_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{datalink__emitter_8c_a0856e46451ec34be3150e238d229a5eb}\label{datalink__emitter_8c_a0856e46451ec34be3150e238d229a5eb}} 
+\index{datalink\_emitter.c@{datalink\_emitter.c}!emit\_frame\_until\_response@{emit\_frame\_until\_response}}
+\index{emit\_frame\_until\_response@{emit\_frame\_until\_response}!datalink\_emitter.c@{datalink\_emitter.c}}
+\doxysubsubsection{\texorpdfstring{emit\_frame\_until\_response()}{emit\_frame\_until\_response()}}
+{\footnotesize\ttfamily int emit\+\_\+frame\+\_\+until\+\_\+response (\begin{DoxyParamCaption}\item[{int}]{fd,  }\item[{\mbox{\hyperlink{structframecontent}{framecontent}} $\ast$}]{fc,  }\item[{uint8\+\_\+t}]{expected\+\_\+response }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{datalink__emitter_8c_a0856e46451ec34be3150e238d229a5eb_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{datalink__emitter_8c_a0856e46451ec34be3150e238d229a5eb_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{datalink__emitter_8c_a25fa88f226755bfd999f743d4eb82052}\label{datalink__emitter_8c_a25fa88f226755bfd999f743d4eb82052}} 
+\index{datalink\_emitter.c@{datalink\_emitter.c}!frame\_to\_bytes@{frame\_to\_bytes}}
+\index{frame\_to\_bytes@{frame\_to\_bytes}!datalink\_emitter.c@{datalink\_emitter.c}}
+\doxysubsubsection{\texorpdfstring{frame\_to\_bytes()}{frame\_to\_bytes()}}
+{\footnotesize\ttfamily int frame\+\_\+to\+\_\+bytes (\begin{DoxyParamCaption}\item[{uint8\+\_\+t $\ast$}]{buffer,  }\item[{size\+\_\+t}]{buffer\+\_\+size,  }\item[{\mbox{\hyperlink{structframecontent}{framecontent}} $\ast$}]{fc }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{datalink__emitter_8c_a25fa88f226755bfd999f743d4eb82052_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{datalink__emitter_8c_a141404f4eac905cc53383742b98e5c6f}\label{datalink__emitter_8c_a141404f4eac905cc53383742b98e5c6f}} 
+\index{datalink\_emitter.c@{datalink\_emitter.c}!send\_bytes@{send\_bytes}}
+\index{send\_bytes@{send\_bytes}!datalink\_emitter.c@{datalink\_emitter.c}}
+\doxysubsubsection{\texorpdfstring{send\_bytes()}{send\_bytes()}}
+{\footnotesize\ttfamily int send\+\_\+bytes (\begin{DoxyParamCaption}\item[{int}]{fd,  }\item[{uint8\+\_\+t $\ast$}]{buffer,  }\item[{size\+\_\+t}]{buffer\+\_\+size }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{datalink__emitter_8c_a141404f4eac905cc53383742b98e5c6f_icgraph}
+\end{center}
+\end{figure}

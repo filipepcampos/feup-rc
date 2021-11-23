@@ -4,18 +4,17 @@
 #include <unistd.h>
 #include "core.h"
 #include "datalink_receiver.h"
-#include "util.h"
 #include "logger.h"
 
 
 receiver_state statemachine_flag_received(uint8_t byte) {
-	return (byte == ADDRESS1 || byte == ADDRESS2) ? A_RCV : START;  // TODO: Maybe verify this
+	return (byte == ADDRESS1 || byte == ADDRESS2) ? A_RCV : START;
 }
 
 bool is_valid_control_byte(uint8_t byte) {
 	if (byte == CTL_SET || byte == CTL_UA || byte == CTL_DISC 
-			|| (APPLY_RESPONSE_CTL_MASK(byte) == _CTL_RR) 
-			|| (APPLY_RESPONSE_CTL_MASK(byte) == _CTL_REJ)
+			|| (APPLY_RESPONSE_CTL_MASK(byte) == CTL_RR) 
+			|| (APPLY_RESPONSE_CTL_MASK(byte) == CTL_REJ)
 			|| IS_INFO_CONTROL_BYTE(byte)
 		) { 
 		return true;
@@ -29,7 +28,7 @@ receiver_state statemachine_address_received(uint8_t byte) {
 
 receiver_state statemachine_control_received(uint8_t byte, framecontent *fc) {
 	if (((fc->control) ^ (fc->address)) == byte) {
-		if( ((fc->control) & 0xBF) == 0) { // TODO: Change 0xBF to define
+		if(IS_INFO_CONTROL_BYTE(fc->control)) {
 			return INFO;
 		}
 		return BCC_OK;
@@ -43,12 +42,11 @@ framecontent receive_frame(int fd, uint8_t *buffer, size_t size) {
 	receiver_state state = START;
 	
 	framecontent fc = DEFAULT_FC;
-
 	while (state != STOP) {
 		int res = read(fd, &current_byte, 1);
 		if (res == -1) {
 			if(errno == EINTR){ // Read was interrupted by an alarm.
-				fc.control = 0; // TODO: Make sure there's no other Command with this value, and that this is properly documented
+				fc.control = 0; // TODO:Document this
 				return fc;
 			}
 			perror("read");
