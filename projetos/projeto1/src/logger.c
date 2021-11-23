@@ -25,7 +25,7 @@ void log_control_byte(uint8_t byte){
 }
 void log_address_byte(uint8_t byte){
 	switch(byte){
-		case ADDRESS1 : printf("ADRESS1"); break;
+		case ADDRESS1 : printf("ADDRESS1"); break;
 		case ADDRESS2 : printf("ADDRESS2"); break;
 		default: printf("INVALID"); break;
 	}
