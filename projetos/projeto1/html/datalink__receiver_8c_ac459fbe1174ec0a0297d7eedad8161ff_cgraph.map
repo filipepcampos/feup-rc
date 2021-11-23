@@ -1,0 +1,4 @@
+<map id="statemachine_address_received" name="statemachine_address_received">
+<area shape="rect" id="node1" title="Process byte when in A_RCV state." alt="" coords="5,5,175,47"/>
+<area shape="rect" id="node2" href="$datalink__receiver_8c.html#a4ae375faca8d89a57d922611753532a4" title="Verify if the given byte is an valid control byte." alt="" coords="223,13,383,39"/>
+</map>

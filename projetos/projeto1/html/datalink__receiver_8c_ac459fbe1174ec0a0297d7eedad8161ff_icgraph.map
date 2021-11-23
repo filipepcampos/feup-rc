@@ -1,0 +1,15 @@
+<map id="statemachine_address_received" name="statemachine_address_received">
+<area shape="rect" id="node1" title="Process byte when in A_RCV state." alt="" coords="1051,125,1220,166"/>
+<area shape="rect" id="node2" href="$datalink__receiver_8h.html#a7d98a16e042d2c7319429c0ccbb6a564" title="Receive a frame from fd and write it on the given buffer." alt="" coords="887,132,1003,159"/>
+<area shape="rect" id="node3" href="$datalink__emitter_8h.html#a0856e46451ec34be3150e238d229a5eb" title=" " alt="" coords="639,56,839,83"/>
+<area shape="rect" id="node4" href="$interface_8h.html#a343e4b5928516727236a390a25f28c77" title=" " alt="" coords="479,157,543,184"/>
+<area shape="rect" id="node8" href="$interface_8h.html#af5970f2b2f9d47da5e26134aa0e78400" title=" " alt="" coords="480,107,543,133"/>
+<area shape="rect" id="node12" href="$interface_8h.html#ac07ed6589299e568efb5fa7ddbc4e0d9" title=" " alt="" coords="709,208,768,235"/>
+<area shape="rect" id="node9" href="$interface_8h.html#a8c54a61220065f1d4d8b08cffd567746" title=" " alt="" coords="480,56,543,83"/>
+<area shape="rect" id="node5" href="$application_8h.html#af346febbb4a3564c98973a5a7dfc1a09" title="Run emitter." alt="" coords="108,107,179,133"/>
+<area shape="rect" id="node7" href="$application_8h.html#a30c9608e49e0443be4a0edd7f2987111" title="Run receiver." alt="" coords="268,208,343,235"/>
+<area shape="rect" id="node6" href="$application_8c.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,157,60,184"/>
+<area shape="rect" id="node10" href="$application_8h.html#a9c51c4085dfff8d166e3bbebe24cc50a" title="Write a control packet using llwrite." alt="" coords="227,56,384,83"/>
+<area shape="rect" id="node11" href="$application_8h.html#a250ca708d31dd843e2e070bd1e51db77" title="Write a data packet using llwrite." alt="" coords="235,5,376,32"/>
+<area shape="rect" id="node13" href="$application_8h.html#a41a9162b33b8e37cb22f795f457ec931" title="Read packets from input_fd and write them onto output_fd." alt="" coords="432,208,591,235"/>
+</map>

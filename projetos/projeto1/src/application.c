@@ -82,7 +82,6 @@ uint64_t create_control_packet(control_packet *ctl_packet, int fd, char *filenam
 }
 
 int emitter(int argc, char *argv[], int port_number){
-    
     int output_fd = llopen(port_number, EMITTER);
     if (output_fd < 0){
         return 1;
@@ -123,21 +122,31 @@ int emitter(int argc, char *argv[], int port_number){
     return 0;
 }
 
-int receiver(int argc, char *argv[], int port_number){
-    
-    int input_fd = llopen(port_number, RECEIVER); // TODO: remove hardcoded port
-    if(input_fd < 0){
+int process_data_packet(uint8_t *buffer, uint8_t *sequence, int output_fd){
+    uint8_t packet_sequence_number = buffer[0];
+    if((*sequence) != packet_sequence_number){
+        return -1;
+    }
+    (*sequence)++;
+    uint8_t L2 = buffer[1];
+    uint8_t L1 = buffer[2];
+
+    if(write(output_fd, buffer+3, (L2*256)+L1) < 0){
         return 1;
     }
+    return 0;
+}
 
-    int output_fd;
-    if(argc == 4){
-        output_fd = open(argv[3], O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
-        if(output_fd < 0){
-            return 1;
-        }
-    }
+uint64_t process_size_parameter(uint8_t *value){
+    uint64_t size_value;
+    memcpy(&size_value, value, 8);
+    printf("  parameter T=%d L=%d V=%ld\n", SIZE, 8, size_value);
+    uint64_t total_packets = size_value / ((uint64_t) MAX_PACKET_DATA_SIZE);
+    total_packets += (size_value % ((uint64_t) MAX_PACKET_DATA_SIZE)) == 0 ? 0 : 1;
+    return total_packets;
+}
 
+int receiver_read_to_file(int input_fd, int output_fd, int argc){
 	uint8_t buffer[MAX_PACKET_SIZE]; 
     int read_res = 0;
 
@@ -169,37 +178,43 @@ int receiver(int argc, char *argv[], int port_number){
                     }
                 } 
                 if(len == 8 && type == SIZE){
-                    uint64_t size_value;
-                    memcpy(&size_value, value, 8);
-                    printf("  parameter T=%d L=%d V=%ld\n", type, len, size_value);
-                    total_packets = size_value / ((uint64_t) MAX_PACKET_DATA_SIZE);
-                    total_packets += (size_value % ((uint64_t) MAX_PACKET_DATA_SIZE)) == 0 ? 0 : 1;
+                    total_packets = process_size_parameter(value);
                 } else {
                     printf("  parameter T=%d L=%d V=%s\n", type, len, value);
                 }
                 buf_pos += len;
             }
-            if(started){
+            if(started){ // END packet received
                 break;
             }
             started = true;
         } else if (control_byte == CTL_BYTE_DATA){
-            uint8_t packet_sequence_number = buffer[buf_pos++];
-            if(sequence != packet_sequence_number){
-                return 1;
-            }
-            sequence++;
-            current_num_packets++;
-            uint8_t L2 = buffer[buf_pos++];
-            uint8_t L1 = buffer[buf_pos++];
-
-            write(output_fd, buffer+buf_pos, (L2*256)+L1);
+            process_data_packet(buffer+buf_pos, &sequence, output_fd);
             printf("Received DATA packet [%ld/%ld]\n", current_num_packets, total_packets);
+            current_num_packets++;
         } else {
             printf("error\n");
             return 1;
         }
     }
+}
+
+int receiver(int argc, char *argv[], int port_number){    
+    int input_fd = llopen(port_number, RECEIVER);
+    if(input_fd < 0){
+        return 1;
+    }
+
+    int output_fd;
+    if(argc == 4){
+        output_fd = open(argv[3], O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+        if(output_fd < 0){
+            return 1;
+        }
+    }
+
+    receiver_read_to_file(input_fd, output_fd, argc);
+
     llclose(input_fd);
     close(output_fd);
     return 0;
