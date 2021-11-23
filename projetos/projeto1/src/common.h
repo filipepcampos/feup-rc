@@ -5,10 +5,10 @@
 #include <stddef.h>
 
 #define _POSIX_SOURCE 1 /* POSIX compliant source */
-#define VERBOSE false
+#define VERBOSE true
 
 #define INFO_FRAME_SIZE 512
-#define BUFFER_SIZE 1025
+#define BUFFER_SIZE 1026
 
 #define FRAME_RESEND_TIMEOUT 3
 #define MAX_EMIT_ATTEMPTS 3
@@ -44,7 +44,7 @@ typedef struct {
 #define CREATE_REJ_FRAME_CTL_BYTE(R) ((R << 7) | CTL_REJ)
 #define GET_RESPONSE_FRAME_CTL_BIT(b) (b >> 7)
 #define RESPONSE_CTL_MASK 0b00000111
-#define APPLY_RESPONSE_CTL_MASK(b) (b && RESPONSE_CTL_MASK)
+#define APPLY_RESPONSE_CTL_MASK(b) (b & RESPONSE_CTL_MASK)
 
 
 #endif

@@ -60,6 +60,7 @@ int llwrite(int fd, uint8_t * buffer, int length) {
 }
 
 int llread(int fd, uint8_t * buffer) {
+    printf("debug: llread\n");
     if (status != RECEIVER) {
         return -1;
     }
