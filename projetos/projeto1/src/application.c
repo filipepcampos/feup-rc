@@ -155,7 +155,10 @@ int receiver_read_to_file(int input_fd, int output_fd, int argc){
     uint64_t total_packets = 0;
 
     bool started = false;
-    while((read_res = llread(input_fd, buffer)) > 0){
+    while((read_res = llread(input_fd, buffer)) >= 0){
+        if(read_res == 0){
+            continue; 
+        }
         int buf_pos = 0;
         uint8_t control_byte = buffer[buf_pos++];
 
