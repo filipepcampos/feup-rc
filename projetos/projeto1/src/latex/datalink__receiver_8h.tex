@@ -1,0 +1,240 @@
+\hypertarget{datalink__receiver_8h}{}\doxysection{datalink\+\_\+receiver.\+h File Reference}
+\label{datalink__receiver_8h}\index{datalink\_receiver.h@{datalink\_receiver.h}}
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+Include dependency graph for datalink\+\_\+receiver.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=190pt]{datalink__receiver_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{datalink__receiver_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178}{receiver\+\_\+state}} \{ \newline
+\mbox{\hyperlink{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178a13d000b4d7dc70d90239b7430d1eb6b2}{S\+T\+A\+RT}}, 
+\mbox{\hyperlink{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178ae750604506ada515654b21b3f8641bbf}{F\+L\+A\+G\+\_\+\+R\+CV}}, 
+\mbox{\hyperlink{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178ae74f26df500e2432ea240c8bb3c82d9f}{A\+\_\+\+R\+CV}}, 
+\mbox{\hyperlink{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178a036dfe132c93a0ee9e92a199d61f0738}{C\+\_\+\+R\+CV}}, 
+\newline
+\mbox{\hyperlink{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178a8020a1ee4032dab98574a58a7ced8b10}{B\+C\+C\+\_\+\+OK}}, 
+\mbox{\hyperlink{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178a748005382152808a72b1a9177d9dc806}{I\+N\+FO}}, 
+\mbox{\hyperlink{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178a679ee5320d66c8322e310daeb2ee99b8}{S\+T\+OP}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178}{receiver\+\_\+state}} \mbox{\hyperlink{datalink__receiver_8h_abef44ae435398c515fd21f5942855fb8}{statemachine\+\_\+flag\+\_\+received}} (uint8\+\_\+t byte)
+\begin{DoxyCompactList}\small\item\em Process byte when in F\+L\+A\+G\+\_\+\+R\+CV state. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{datalink__receiver_8h_a4ae375faca8d89a57d922611753532a4}{is\+\_\+valid\+\_\+control\+\_\+byte}} (uint8\+\_\+t byte)
+\begin{DoxyCompactList}\small\item\em Verify if the given byte is an valid control byte. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178}{receiver\+\_\+state}} \mbox{\hyperlink{datalink__receiver_8h_ac459fbe1174ec0a0297d7eedad8161ff}{statemachine\+\_\+address\+\_\+received}} (uint8\+\_\+t byte)
+\begin{DoxyCompactList}\small\item\em Process byte when in A\+\_\+\+R\+CV state. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178}{receiver\+\_\+state}} \mbox{\hyperlink{datalink__receiver_8h_a3897847735eefbf12504c4479c397c50}{statemachine\+\_\+control\+\_\+received}} (uint8\+\_\+t byte, \mbox{\hyperlink{structframecontent}{framecontent}} $\ast$fc)
+\begin{DoxyCompactList}\small\item\em Process byte when in C\+\_\+\+R\+CV state. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structframecontent}{framecontent}} \mbox{\hyperlink{datalink__receiver_8h_a7d98a16e042d2c7319429c0ccbb6a564}{receive\+\_\+frame}} (int fd, uint8\+\_\+t $\ast$buffer, size\+\_\+t size)
+\begin{DoxyCompactList}\small\item\em Receive a frame from fd and write it on the given buffer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178}\label{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178}} 
+\index{datalink\_receiver.h@{datalink\_receiver.h}!receiver\_state@{receiver\_state}}
+\index{receiver\_state@{receiver\_state}!datalink\_receiver.h@{datalink\_receiver.h}}
+\doxysubsubsection{\texorpdfstring{receiver\_state}{receiver\_state}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178}{receiver\+\_\+state}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{START@{START}!datalink\_receiver.h@{datalink\_receiver.h}}\index{datalink\_receiver.h@{datalink\_receiver.h}!START@{START}}}\mbox{\Hypertarget{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178a13d000b4d7dc70d90239b7430d1eb6b2}\label{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178a13d000b4d7dc70d90239b7430d1eb6b2}} 
+S\+T\+A\+RT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FLAG\_RCV@{FLAG\_RCV}!datalink\_receiver.h@{datalink\_receiver.h}}\index{datalink\_receiver.h@{datalink\_receiver.h}!FLAG\_RCV@{FLAG\_RCV}}}\mbox{\Hypertarget{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178ae750604506ada515654b21b3f8641bbf}\label{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178ae750604506ada515654b21b3f8641bbf}} 
+F\+L\+A\+G\+\_\+\+R\+CV&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{A\_RCV@{A\_RCV}!datalink\_receiver.h@{datalink\_receiver.h}}\index{datalink\_receiver.h@{datalink\_receiver.h}!A\_RCV@{A\_RCV}}}\mbox{\Hypertarget{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178ae74f26df500e2432ea240c8bb3c82d9f}\label{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178ae74f26df500e2432ea240c8bb3c82d9f}} 
+A\+\_\+\+R\+CV&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{C\_RCV@{C\_RCV}!datalink\_receiver.h@{datalink\_receiver.h}}\index{datalink\_receiver.h@{datalink\_receiver.h}!C\_RCV@{C\_RCV}}}\mbox{\Hypertarget{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178a036dfe132c93a0ee9e92a199d61f0738}\label{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178a036dfe132c93a0ee9e92a199d61f0738}} 
+C\+\_\+\+R\+CV&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{BCC\_OK@{BCC\_OK}!datalink\_receiver.h@{datalink\_receiver.h}}\index{datalink\_receiver.h@{datalink\_receiver.h}!BCC\_OK@{BCC\_OK}}}\mbox{\Hypertarget{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178a8020a1ee4032dab98574a58a7ced8b10}\label{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178a8020a1ee4032dab98574a58a7ced8b10}} 
+B\+C\+C\+\_\+\+OK&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{INFO@{INFO}!datalink\_receiver.h@{datalink\_receiver.h}}\index{datalink\_receiver.h@{datalink\_receiver.h}!INFO@{INFO}}}\mbox{\Hypertarget{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178a748005382152808a72b1a9177d9dc806}\label{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178a748005382152808a72b1a9177d9dc806}} 
+I\+N\+FO&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{STOP@{STOP}!datalink\_receiver.h@{datalink\_receiver.h}}\index{datalink\_receiver.h@{datalink\_receiver.h}!STOP@{STOP}}}\mbox{\Hypertarget{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178a679ee5320d66c8322e310daeb2ee99b8}\label{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178a679ee5320d66c8322e310daeb2ee99b8}} 
+S\+T\+OP&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{datalink__receiver_8h_a4ae375faca8d89a57d922611753532a4}\label{datalink__receiver_8h_a4ae375faca8d89a57d922611753532a4}} 
+\index{datalink\_receiver.h@{datalink\_receiver.h}!is\_valid\_control\_byte@{is\_valid\_control\_byte}}
+\index{is\_valid\_control\_byte@{is\_valid\_control\_byte}!datalink\_receiver.h@{datalink\_receiver.h}}
+\doxysubsubsection{\texorpdfstring{is\_valid\_control\_byte()}{is\_valid\_control\_byte()}}
+{\footnotesize\ttfamily bool is\+\_\+valid\+\_\+control\+\_\+byte (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{byte }\end{DoxyParamCaption})}
+
+
+
+Verify if the given byte is an valid control byte. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em byte} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool 
+\end{DoxyReturn}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{datalink__receiver_8h_a4ae375faca8d89a57d922611753532a4_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{datalink__receiver_8h_a7d98a16e042d2c7319429c0ccbb6a564}\label{datalink__receiver_8h_a7d98a16e042d2c7319429c0ccbb6a564}} 
+\index{datalink\_receiver.h@{datalink\_receiver.h}!receive\_frame@{receive\_frame}}
+\index{receive\_frame@{receive\_frame}!datalink\_receiver.h@{datalink\_receiver.h}}
+\doxysubsubsection{\texorpdfstring{receive\_frame()}{receive\_frame()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structframecontent}{framecontent}} receive\+\_\+frame (\begin{DoxyParamCaption}\item[{int}]{fd,  }\item[{uint8\+\_\+t $\ast$}]{buffer,  }\item[{size\+\_\+t}]{size }\end{DoxyParamCaption})}
+
+
+
+Receive a frame from fd and write it on the given buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fd} & \\
+\hline
+{\em buffer} & \\
+\hline
+{\em size} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+framecontent FC filled with the received frame. 
+\end{DoxyReturn}
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{datalink__receiver_8h_a7d98a16e042d2c7319429c0ccbb6a564_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{datalink__receiver_8h_a7d98a16e042d2c7319429c0ccbb6a564_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{datalink__receiver_8h_ac459fbe1174ec0a0297d7eedad8161ff}\label{datalink__receiver_8h_ac459fbe1174ec0a0297d7eedad8161ff}} 
+\index{datalink\_receiver.h@{datalink\_receiver.h}!statemachine\_address\_received@{statemachine\_address\_received}}
+\index{statemachine\_address\_received@{statemachine\_address\_received}!datalink\_receiver.h@{datalink\_receiver.h}}
+\doxysubsubsection{\texorpdfstring{statemachine\_address\_received()}{statemachine\_address\_received()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178}{receiver\+\_\+state}} statemachine\+\_\+address\+\_\+received (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{byte }\end{DoxyParamCaption})}
+
+
+
+Process byte when in A\+\_\+\+R\+CV state. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em byte} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+receiver\+\_\+state Next state 
+\end{DoxyReturn}
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{datalink__receiver_8h_ac459fbe1174ec0a0297d7eedad8161ff_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{datalink__receiver_8h_ac459fbe1174ec0a0297d7eedad8161ff_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{datalink__receiver_8h_a3897847735eefbf12504c4479c397c50}\label{datalink__receiver_8h_a3897847735eefbf12504c4479c397c50}} 
+\index{datalink\_receiver.h@{datalink\_receiver.h}!statemachine\_control\_received@{statemachine\_control\_received}}
+\index{statemachine\_control\_received@{statemachine\_control\_received}!datalink\_receiver.h@{datalink\_receiver.h}}
+\doxysubsubsection{\texorpdfstring{statemachine\_control\_received()}{statemachine\_control\_received()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178}{receiver\+\_\+state}} statemachine\+\_\+control\+\_\+received (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{byte,  }\item[{\mbox{\hyperlink{structframecontent}{framecontent}} $\ast$}]{fc }\end{DoxyParamCaption})}
+
+
+
+Process byte when in C\+\_\+\+R\+CV state. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em byte} & \\
+\hline
+{\em fc} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+receiver\+\_\+state Next state 
+\end{DoxyReturn}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{datalink__receiver_8h_a3897847735eefbf12504c4479c397c50_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{datalink__receiver_8h_abef44ae435398c515fd21f5942855fb8}\label{datalink__receiver_8h_abef44ae435398c515fd21f5942855fb8}} 
+\index{datalink\_receiver.h@{datalink\_receiver.h}!statemachine\_flag\_received@{statemachine\_flag\_received}}
+\index{statemachine\_flag\_received@{statemachine\_flag\_received}!datalink\_receiver.h@{datalink\_receiver.h}}
+\doxysubsubsection{\texorpdfstring{statemachine\_flag\_received()}{statemachine\_flag\_received()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{datalink__receiver_8h_aeb5e52287f5a64a995229e29c736a178}{receiver\+\_\+state}} statemachine\+\_\+flag\+\_\+received (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{byte }\end{DoxyParamCaption})}
+
+
+
+Process byte when in F\+L\+A\+G\+\_\+\+R\+CV state. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em byte} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+receiver\+\_\+state Next state 
+\end{DoxyReturn}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{datalink__receiver_8h_abef44ae435398c515fd21f5942855fb8_icgraph}
+\end{center}
+\end{figure}

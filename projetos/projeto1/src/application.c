@@ -151,7 +151,7 @@ int receiver_read_to_file(int input_fd, int output_fd, int argc){
     int read_res = 0;
 
     uint8_t sequence = 0;
-    uint64_t current_num_packets = 0;
+    uint64_t current_num_packets = 1;
     uint64_t total_packets = 0;
 
     bool started = false;
@@ -174,7 +174,7 @@ int receiver_read_to_file(int input_fd, int output_fd, int argc){
                 uint8_t len = buffer[buf_pos++];
                 uint8_t value[len];
                 memcpy(value, buffer + buf_pos, len);
-                if(type == NAME && argc == 2){
+                if(type == NAME && argc == 3){
                     output_fd = open(value, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
                     if(output_fd < 0){
                         return 1;

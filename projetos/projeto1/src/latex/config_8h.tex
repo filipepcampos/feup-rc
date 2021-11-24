@@ -1,0 +1,142 @@
+\hypertarget{config_8h}{}\doxysection{config.\+h File Reference}
+\label{config_8h}\index{config.h@{config.h}}
+{\ttfamily \#include $<$termios.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+Include dependency graph for config.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=224pt]{config_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{config_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{config_8h_a734bbab06e1a9fd2e5522db0221ff6e3}{B\+A\+U\+D\+R\+A\+TE}}~B38400
+\item 
+\#define \mbox{\hyperlink{config_8h_a2a83e631b0fff25e434aefa099abe18a}{D\+E\+F\+A\+U\+L\+T\+\_\+\+V\+T\+I\+ME}}~5
+\item 
+\#define \mbox{\hyperlink{config_8h_a4ce160acbd454209ef8a9d2bf0bab2c2}{D\+E\+F\+A\+U\+L\+T\+\_\+\+V\+M\+IN}}~5
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{config_8h_aa161fa7b4ff75b0143a71bc6a8f35218}{setup\+\_\+serial}} (struct termios $\ast$\mbox{\hyperlink{interface_8c_a391db8cfdf340336e4e012e67ca21fa9}{oldtio}}, char $\ast$serial\+\_\+device)
+\item 
+int \mbox{\hyperlink{config_8h_aacbe2e51f1e012dd9a10bfe2b9c9ac3c}{disconnect\+\_\+serial}} (int fd, struct termios $\ast$\mbox{\hyperlink{interface_8c_a391db8cfdf340336e4e012e67ca21fa9}{oldtio}})
+\item 
+void \mbox{\hyperlink{config_8h_a83e1379f5adf4452f72fcc0be266a7b5}{sig\+\_\+handler}} (int signum)
+\item 
+void \mbox{\hyperlink{config_8h_a9140b0e8ae85b6b386670471b183a39d}{setup\+\_\+sigalarm}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+volatile bool \mbox{\hyperlink{config_8h_ab2431e59b4c3a7eca855b5802b4c35c1}{R\+E\+S\+E\+N\+D\+\_\+\+F\+R\+A\+ME}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{config_8h_a734bbab06e1a9fd2e5522db0221ff6e3}\label{config_8h_a734bbab06e1a9fd2e5522db0221ff6e3}} 
+\index{config.h@{config.h}!BAUDRATE@{BAUDRATE}}
+\index{BAUDRATE@{BAUDRATE}!config.h@{config.h}}
+\doxysubsubsection{\texorpdfstring{BAUDRATE}{BAUDRATE}}
+{\footnotesize\ttfamily \#define B\+A\+U\+D\+R\+A\+TE~B38400}
+
+\mbox{\Hypertarget{config_8h_a4ce160acbd454209ef8a9d2bf0bab2c2}\label{config_8h_a4ce160acbd454209ef8a9d2bf0bab2c2}} 
+\index{config.h@{config.h}!DEFAULT\_VMIN@{DEFAULT\_VMIN}}
+\index{DEFAULT\_VMIN@{DEFAULT\_VMIN}!config.h@{config.h}}
+\doxysubsubsection{\texorpdfstring{DEFAULT\_VMIN}{DEFAULT\_VMIN}}
+{\footnotesize\ttfamily \#define D\+E\+F\+A\+U\+L\+T\+\_\+\+V\+M\+IN~5}
+
+\mbox{\Hypertarget{config_8h_a2a83e631b0fff25e434aefa099abe18a}\label{config_8h_a2a83e631b0fff25e434aefa099abe18a}} 
+\index{config.h@{config.h}!DEFAULT\_VTIME@{DEFAULT\_VTIME}}
+\index{DEFAULT\_VTIME@{DEFAULT\_VTIME}!config.h@{config.h}}
+\doxysubsubsection{\texorpdfstring{DEFAULT\_VTIME}{DEFAULT\_VTIME}}
+{\footnotesize\ttfamily \#define D\+E\+F\+A\+U\+L\+T\+\_\+\+V\+T\+I\+ME~5}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{config_8h_aacbe2e51f1e012dd9a10bfe2b9c9ac3c}\label{config_8h_aacbe2e51f1e012dd9a10bfe2b9c9ac3c}} 
+\index{config.h@{config.h}!disconnect\_serial@{disconnect\_serial}}
+\index{disconnect\_serial@{disconnect\_serial}!config.h@{config.h}}
+\doxysubsubsection{\texorpdfstring{disconnect\_serial()}{disconnect\_serial()}}
+{\footnotesize\ttfamily int disconnect\+\_\+serial (\begin{DoxyParamCaption}\item[{int}]{fd,  }\item[{struct termios $\ast$}]{oldtio }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{config_8h_aacbe2e51f1e012dd9a10bfe2b9c9ac3c_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{config_8h_aa161fa7b4ff75b0143a71bc6a8f35218}\label{config_8h_aa161fa7b4ff75b0143a71bc6a8f35218}} 
+\index{config.h@{config.h}!setup\_serial@{setup\_serial}}
+\index{setup\_serial@{setup\_serial}!config.h@{config.h}}
+\doxysubsubsection{\texorpdfstring{setup\_serial()}{setup\_serial()}}
+{\footnotesize\ttfamily int setup\+\_\+serial (\begin{DoxyParamCaption}\item[{struct termios $\ast$}]{oldtio,  }\item[{char $\ast$}]{serial\+\_\+device }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{config_8h_aa161fa7b4ff75b0143a71bc6a8f35218_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{config_8h_a9140b0e8ae85b6b386670471b183a39d}\label{config_8h_a9140b0e8ae85b6b386670471b183a39d}} 
+\index{config.h@{config.h}!setup\_sigalarm@{setup\_sigalarm}}
+\index{setup\_sigalarm@{setup\_sigalarm}!config.h@{config.h}}
+\doxysubsubsection{\texorpdfstring{setup\_sigalarm()}{setup\_sigalarm()}}
+{\footnotesize\ttfamily void setup\+\_\+sigalarm (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=281pt]{config_8h_a9140b0e8ae85b6b386670471b183a39d_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{config_8h_a9140b0e8ae85b6b386670471b183a39d_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{config_8h_a83e1379f5adf4452f72fcc0be266a7b5}\label{config_8h_a83e1379f5adf4452f72fcc0be266a7b5}} 
+\index{config.h@{config.h}!sig\_handler@{sig\_handler}}
+\index{sig\_handler@{sig\_handler}!config.h@{config.h}}
+\doxysubsubsection{\texorpdfstring{sig\_handler()}{sig\_handler()}}
+{\footnotesize\ttfamily void sig\+\_\+handler (\begin{DoxyParamCaption}\item[{int}]{signum }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{config_8h_a83e1379f5adf4452f72fcc0be266a7b5_icgraph}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{config_8h_ab2431e59b4c3a7eca855b5802b4c35c1}\label{config_8h_ab2431e59b4c3a7eca855b5802b4c35c1}} 
+\index{config.h@{config.h}!RESEND\_FRAME@{RESEND\_FRAME}}
+\index{RESEND\_FRAME@{RESEND\_FRAME}!config.h@{config.h}}
+\doxysubsubsection{\texorpdfstring{RESEND\_FRAME}{RESEND\_FRAME}}
+{\footnotesize\ttfamily volatile bool R\+E\+S\+E\+N\+D\+\_\+\+F\+R\+A\+ME}
+
