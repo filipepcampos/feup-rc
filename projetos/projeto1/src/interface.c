@@ -7,6 +7,8 @@
 #include "interface.h"
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
+#include <stdlib.h>
 
 static flag_t status;
 static int S = 0;
@@ -69,12 +71,13 @@ int llread(int fd, uint8_t * output_buffer) {
 
     framecontent received_fc = receive_frame(fd, output_buffer, BUFFER_SIZE);
     bool received = false;
+    srand(time(NULL)); // For FER calculation
     while(!received){
         if(IS_INFO_CONTROL_BYTE(received_fc.control)){
             uint8_t control = 0;
 
             bool is_new_frame = S != GET_INFO_FRAME_CTL_BIT(received_fc.control);
-            if(received_fc.data_len > 0){
+            if(received_fc.data_len > 0 && (rand()%101) > INFO_FRAME_FAILURE_RATE){
                 if(is_new_frame){
                     S = 1 - S;
                 } else {
@@ -83,9 +86,12 @@ int llread(int fd, uint8_t * output_buffer) {
                 control = CREATE_RR_FRAME_CTL_BYTE(S);
                 received = true;
             } else {
+                printf("error:");
                 if(is_new_frame){
+                    printf("REJ\n");
                     control = CREATE_REJ_FRAME_CTL_BYTE(1-S);
                 } else {
+                    printf("RR\n");
                     control = CREATE_RR_FRAME_CTL_BYTE(S);
                     received_fc.data_len = -1;
                     received = true;

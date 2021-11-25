@@ -1,7 +1,0 @@
-<map id="datalink_receiver.h" name="datalink_receiver.h">
-<area shape="rect" id="node1" title=" " alt="" coords="172,5,319,32"/>
-<area shape="rect" id="node2" href="$core_8c.html" title=" " alt="" coords="5,80,67,107"/>
-<area shape="rect" id="node3" href="$datalink__emitter_8c.html" title=" " alt="" coords="91,80,232,107"/>
-<area shape="rect" id="node4" href="$datalink__receiver_8c.html" title=" " alt="" coords="256,80,403,107"/>
-<area shape="rect" id="node5" href="$interface_8c.html" title=" " alt="" coords="427,80,517,107"/>
-</map>

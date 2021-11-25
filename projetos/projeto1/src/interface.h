@@ -5,6 +5,8 @@
 #define MAX_INFO_SIZE 512
 #define MAX_SIZE (MAX_INFO_SIZE*2 + 2)
 
+#define INFO_FRAME_FAILURE_RATE 0 // Percentage
+
 typedef struct {
     int fileDescriptor; // Descritor correspondente à porta série
     int status; // TRANSMITTER | RECEIVER

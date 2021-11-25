@@ -36,8 +36,7 @@ int write_data_packet(int fd, data_packet *packet){
     buffer[3] = packet->L1;
     size_t len = (packet->L2)*256 + (packet->L1);
     memcpy(buffer + 4, packet->data, len);
-    llwrite(fd, buffer, len + 4);
-    return 0;
+    return llwrite(fd, buffer, len + 4) >= 0 ? 0 : -1;
 }
 
 int control_packet_fill_parameter(control_packet *packet, size_t parameter_index, parameter_type type, size_t length, uint8_t *value){
@@ -109,8 +108,11 @@ int emitter(int argc, char *argv[], int port_number){
         current_num_packets++;
         dt_packet.L2 = read_res / 256;
         dt_packet.L1 = read_res % 256;
+        if(write_data_packet(output_fd, &dt_packet) < 0){
+            printf("Failed to send DATA packet [%ld/%ld]\n", current_num_packets, total_packets);
+            return 1;
+        }
         printf("Sent DATA packet [%ld/%ld]\n", current_num_packets, total_packets);
-        write_data_packet(output_fd, &dt_packet);
 	}
 
     ctl_packet.control = CTL_BYTE_END;

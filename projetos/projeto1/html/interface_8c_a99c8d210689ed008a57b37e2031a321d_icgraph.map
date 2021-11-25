@@ -1,6 +1,0 @@
-<map id="llread" name="llread">
-<area shape="rect" id="node1" title=" " alt="" coords="437,5,496,32"/>
-<area shape="rect" id="node2" href="$application_8h.html#a41a9162b33b8e37cb22f795f457ec931" title="Read packets from input_fd and write them onto output_fd." alt="" coords="231,5,389,32"/>
-<area shape="rect" id="node3" href="$application_8h.html#a30c9608e49e0443be4a0edd7f2987111" title="Run receiver." alt="" coords="108,5,183,32"/>
-<area shape="rect" id="node4" href="$application_8c.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,5,60,32"/>
-</map>
