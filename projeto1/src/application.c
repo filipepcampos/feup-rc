@@ -202,6 +202,7 @@ int receiver_read_to_file(int input_fd, int output_fd, int argc){
             return 1;
         }
     }
+    return 0;
 }
 
 int receiver(int argc, char *argv[], int port_number){    
