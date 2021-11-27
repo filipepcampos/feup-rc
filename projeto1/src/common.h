@@ -40,8 +40,8 @@ typedef struct {
 #define IS_INFO_CONTROL_BYTE(b) ((b & 0xBF) == 0) /*Check if a control byte is an INFO control byte*/
 #define INFO_FRAME_SIZE_WITHOUT_DATA 5 /*Size of a information frame without data (FLAG,CTL,ADDR,BYTE,FLAG)*/
 
-#define CREATE_RR_FRAME_CTL_BYTE(R) ((R << 7) | CTL_RR) /* Create RR Control byte with chosen R value */
-#define CREATE_REJ_FRAME_CTL_BYTE(R) ((R << 7) | CTL_REJ) /* Create REJ Control byte with chosen R value */
+#define CREATE_RR_FRAME_CTL_BYTE(R) (((R) << 7) | CTL_RR) /* Create RR Control byte with chosen R value */
+#define CREATE_REJ_FRAME_CTL_BYTE(R) (((R) << 7) | CTL_REJ) /* Create REJ Control byte with chosen R value */
 #define GET_RESPONSE_FRAME_CTL_BIT(b) (b >> 7) /* Get the R bit from a RR/REJ Control byte */
 #define RESPONSE_CTL_MASK 0b00000111 /*Mask that removes the R bit from RR/REJ*/
 #define APPLY_RESPONSE_CTL_MASK(b) (b & RESPONSE_CTL_MASK) /*Short function to apply the previous mask*/
