@@ -7,8 +7,7 @@
 #define _POSIX_SOURCE 1 /* POSIX compliant source */
 #define VERBOSE false /* Controls if logger functions are enabled or disabled */
 
-#define INFO_FRAME_SIZE 512 /*Maximum size of a information frame*/
-#define BUFFER_SIZE (INFO_FRAME_SIZE*2) /*Necessary buffer size to accommodate INFO_FRAME_SIZE, in the edge case where all data is flags (double the size)*/
+#define BUFFER_SIZE 1024 /*Necessary buffer size to accommodate INFO_FRAME_SIZE, in the edge case where all data is flags (double the size)*/
 
 #define FRAME_RESEND_TIMEOUT 3 /* Timeout between frame resends */
 #define MAX_EMIT_ATTEMPTS 3 /* Maximum amounts of frame resends before giving up*/

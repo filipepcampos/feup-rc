@@ -1,22 +1,28 @@
 #ifndef __INTERFACE_
 #define __INTERFACE_
 
+#include <stdbool.h>
+#include <termios.h>
 
-#define MAX_INFO_SIZE 512
+#define MAX_INFO_SIZE (BUFFER_SIZE/2)
 #define MAX_SIZE (MAX_INFO_SIZE*2 + 2)
 
-#define INFO_FRAME_FAILURE_RATE 0 // Percentage
+#define INFO_FRAME_FAILURE_RATE 0 // In percentage. Used to test FER,should be set to 0 for 'real' use.
 
-typedef struct {
-    int fileDescriptor; // Descritor correspondente à porta série
-    int status; // TRANSMITTER | RECEIVER
-} applicationLayer;
+#define MAX_OPEN_SERIAL_PORTS 8 // Maximum allowed serial ports open at any given time
 
 typedef enum{
     EMITTER,
     RECEIVER
 } flag_t;
 
+typedef struct {
+    int fd; // File descriptor associated with the serial port
+    int S; // Sequence number of the transmission
+    flag_t status; // EMITTER | Receiver
+    struct termios oldtio; // Old settings to be restored after closing.
+    bool open; // States if the serial_interface is still in use or not
+} serial_interface;
 
 /**
  * @brief Start serial port with respective flag
