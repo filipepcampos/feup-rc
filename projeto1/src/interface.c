@@ -151,6 +151,7 @@ int llclose(int fd){
         return -1;
     }
     serial_interface *serial = &(serial_ports[serial_index]);
+    serial->open = false;
 
     if(serial->status == EMITTER){
         framecontent fc = create_non_information_frame(CTL_DISC, ADDRESS1);
