@@ -30,6 +30,9 @@ framecontent create_information_frame(uint8_t *data, size_t data_len, int S, uin
 
 size_t byte_stuffing(uint8_t *data, size_t data_len) {
 	uint8_t aux_buffer[BUFFER_SIZE];
+	if(data_len > BUFFER_SIZE){
+		return -1;
+	}
 	memcpy(aux_buffer, data, data_len);
 	
 	int k = 0;
