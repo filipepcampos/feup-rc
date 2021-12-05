@@ -7,18 +7,22 @@
 #define MAX_PACKET_SIZE 512 /*Maximum packet size allowed by llwrite*/
 #define MAX_PACKET_DATA_SIZE MAX_PACKET_SIZE - 4 /*Section of MAX_PACKET_SIZE that's available for data*/
 #define CONTROL_PACKET_PARAMETER_COUNT 2 /* Number of parameters sent in control packet */
+#define MAX_CONTROL_PARAMETER_SIZE ((MAX_PACKET_SIZE-1)/CONTROL_PACKET_PARAMETER_COUNT)
 
 /* Control bytes sent in control packet */
 #define CTL_BYTE_DATA 1
 #define CTL_BYTE_START 2
 #define CTL_BYTE_END 3
 
-
-typedef struct {
-    uint8_t sequence_number;
-    uint8_t L2;
-    uint8_t L1;
-    uint8_t data[MAX_PACKET_SIZE - 4]; // TODO: this -4 looks awful tbh
+typedef union {
+    struct {
+        uint8_t control;
+        uint8_t sequence_number;
+        uint8_t L2;
+        uint8_t L1;
+        uint8_t data[MAX_PACKET_SIZE - 4]; // TODO: this -4 looks awful tbh
+    };
+    uint8_t bytes[MAX_PACKET_SIZE - 1];
 } data_packet;
 
 typedef enum {
@@ -27,10 +31,13 @@ typedef enum {
 } parameter_type; /* Control packet parameters type */
 
 /* TLV Control packet parameter */
-typedef struct {
-    parameter_type type;
-    uint8_t length;
-    uint8_t *value;
+typedef union {
+    struct {
+        uint8_t type;
+        uint8_t length;
+        uint8_t value[MAX_CONTROL_PARAMETER_SIZE-2];
+    };
+    uint8_t bytes[MAX_CONTROL_PARAMETER_SIZE];
 } control_parameter;
 
 typedef struct {
@@ -132,13 +139,5 @@ int emitter(int argc, char *argv[], int port_number);
  * @return uint64_t 
  */
 uint64_t create_control_packet(control_packet *ctl_packet, int fd, char *filename);
-
-/**
- * @brief Free memory used by a control packet
- * 
- * @param packet 
- * @return int 
- */
-int free_control_packet(control_packet *packet);
 
 #endif
