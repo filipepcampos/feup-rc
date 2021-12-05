@@ -4,9 +4,6 @@
 #include <stdbool.h>
 #include <termios.h>
 
-#define MAX_INFO_SIZE (BUFFER_SIZE/2)
-#define MAX_SIZE (MAX_INFO_SIZE*2 + 2)
-
 #define INFO_FRAME_FAILURE_RATE 0 // In percentage. Used to test FER,should be set to 0 for 'real' use.
 
 #define MAX_OPEN_SERIAL_PORTS 8 // Maximum allowed serial ports open at any given time

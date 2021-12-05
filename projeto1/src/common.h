@@ -5,9 +5,11 @@
 #include <stddef.h>
 
 #define _POSIX_SOURCE 1 /* POSIX compliant source */
-#define VERBOSE false /* Controls if logger functions are enabled or disabled */
+#define VERBOSE true /* Controls if logger functions are enabled or disabled */
 
-#define BUFFER_SIZE 1024 /*Necessary buffer size to accommodate INFO_FRAME_SIZE, in the edge case where all data is flags (double the size)*/
+#define MAX_INFO_SIZE 512
+#define BUFFER_SIZE (MAX_INFO_SIZE*2) /*Necessary buffer size to accommodate INFO_FRAME_SIZE, in the edge case where all data is flags (double the size)*/
+
 
 #define FRAME_RESEND_TIMEOUT 3 /* Timeout between frame resends */
 #define MAX_EMIT_ATTEMPTS 3 /* Maximum amounts of frame resends before giving up*/
@@ -28,11 +30,9 @@
 typedef struct {
 	uint8_t address;
 	uint8_t control;
-	uint8_t *data;
+	uint8_t data[BUFFER_SIZE];
 	size_t data_len;
 } framecontent;
-
-#define DEFAULT_FC {0, 0, NULL, 0}; /* Emtpy framecontent struct */
 
 #define CREATE_INFO_FRAME_CTL_BYTE(S) (S << 6) /* Create INFO Control byte with the chosen S value */
 #define GET_INFO_FRAME_CTL_BIT(b) (b >> 6) /*Get the sequence bit from a INFO control byte*/

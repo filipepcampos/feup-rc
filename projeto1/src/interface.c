@@ -13,7 +13,7 @@
 static int used_serial_ports = 0;
 static serial_interface serial_ports[MAX_OPEN_SERIAL_PORTS];
 
-int firts_available_serial_index(){
+int first_available_serial_index(){
     if(used_serial_ports < MAX_OPEN_SERIAL_PORTS){
         serial_ports[used_serial_ports].open = true;
         return used_serial_ports++;
@@ -40,7 +40,7 @@ int llopen(int port, flag_t flag) {
     if(port < 0 || port > 999){
         return -1;
     }
-    int serial_index = firts_available_serial_index();
+    int serial_index = first_available_serial_index();
     if(serial_index < 0){ // Too many serial ports already open
         return -1;
     }
@@ -62,8 +62,7 @@ int llopen(int port, flag_t flag) {
     }
     else if (flag == RECEIVER) {
         serial->S = 1;
-        uint8_t buffer[BUFFER_SIZE];
-        framecontent received_fc = receive_frame(serial->fd, buffer, BUFFER_SIZE);
+        framecontent received_fc = receive_frame(serial->fd);
         if(received_fc.control != CTL_SET){
             return -1;
         }
@@ -86,9 +85,7 @@ int llwrite(int fd, uint8_t * input_buffer, int length) {
     if(serial->status != EMITTER || length > MAX_INFO_SIZE){
         return -1;
     }
-    uint8_t buffer[MAX_SIZE];
-    memcpy(buffer, input_buffer, length);
-    framecontent fc = create_information_frame(buffer, length, serial->S,  ADDRESS1);
+    framecontent fc = create_information_frame(input_buffer, length, serial->S,  ADDRESS1);
     if(emit_frame_until_response(fd, &fc, CREATE_RR_FRAME_CTL_BYTE(serial->S)) != 0){
         printf("Maximum emit attempts reached\n");
         return -1;
@@ -108,7 +105,7 @@ int llread(int fd, uint8_t * output_buffer) {
         return -1;
     }
 
-    framecontent received_fc = receive_frame(fd, output_buffer, BUFFER_SIZE);
+    framecontent received_fc = receive_frame(fd);
     bool received = false;
     srand(time(NULL)); // For FER calculation
     while(!received){
@@ -142,6 +139,7 @@ int llread(int fd, uint8_t * output_buffer) {
             return -1;
         }
     }
+    memcpy(output_buffer, received_fc.data, received_fc.data_len);
     return received_fc.data_len;
 }
 
@@ -159,8 +157,7 @@ int llclose(int fd){
         fc = create_non_information_frame(CTL_UA, ADDRESS2);
         emit_frame(fd, &fc);
     } else if (serial->status == RECEIVER){
-        uint8_t buffer[BUFFER_SIZE];
-        framecontent received_fc = receive_frame(fd, buffer, BUFFER_SIZE);
+        framecontent received_fc = receive_frame(fd);
         if(received_fc.control == CTL_DISC){
             framecontent fc = create_non_information_frame(CTL_DISC, ADDRESS2);
             emit_frame_until_response(fd, &fc, CTL_UA);

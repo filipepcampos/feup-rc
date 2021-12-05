@@ -9,35 +9,34 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-size_t write_control_packet_parameter(uint8_t *buffer, size_t buffer_size, control_parameter *parameter){
-    size_t size = parameter->length + 2;
-    if(size > buffer_size){
-        return -1;
-    }
-    memcpy(buffer, parameter->bytes, size);
-    return size;
-}
-
 int write_control_packet(int fd, control_packet *packet){
     uint8_t buffer[MAX_PACKET_SIZE];
     buffer[0] = packet->control;
 
     int buf_pos = 1;
     for(int i = 0; i < CONTROL_PACKET_PARAMETER_COUNT; ++i){
-        size_t res = write_control_packet_parameter(buffer+buf_pos, MAX_PACKET_SIZE-buf_pos, &(packet->parameters)[i]);
-        if (res < 0){
-            return -1;
+        control_parameter parameter = (packet->parameters)[i];
+        if(buf_pos + parameter.length > MAX_PACKET_SIZE){
+            return 1;
         }
-        buf_pos += res;
+        buffer[buf_pos++] = parameter.type;
+        buffer[buf_pos++] = parameter.length;
+        memcpy(buffer+buf_pos, parameter.value, parameter.length);
+        buf_pos += parameter.length;
     }
     llwrite(fd, buffer, buf_pos);
     return 0;
 }
 
 int write_data_packet(int fd, data_packet *packet){
-    packet->control = CTL_BYTE_DATA; // Make sure control_byte is set, for safety
-    int len = packet->L2 * 256 + packet->L1;
-    return llwrite(fd, packet->bytes, len + 4) >= 0 ? 0 : -1; // TODO: This +4 is a bit ugly
+    uint8_t buffer[MAX_PACKET_SIZE];
+    buffer[0] = CTL_BYTE_DATA;
+    buffer[1] = packet->sequence_number;
+    buffer[2] = packet->L2;
+    buffer[3] = packet->L1;
+    size_t len = (packet->L2)*256 + (packet->L1);
+    memcpy(buffer + 4, packet->data, len);
+    return llwrite(fd, buffer, len + 4) >= 0 ? 0 : -1;
 }
 
 int control_packet_fill_parameter(control_packet *packet, size_t parameter_index, parameter_type type, size_t length, uint8_t *value){
@@ -46,7 +45,15 @@ int control_packet_fill_parameter(control_packet *packet, size_t parameter_index
     }
     packet->parameters[parameter_index].type = type;
     packet->parameters[parameter_index].length = length;
+    packet->parameters[parameter_index].value = malloc((sizeof (uint8_t)) * length);
     memcpy(packet->parameters[parameter_index].value, value, length);
+    return 0;
+}
+
+int free_control_packet(control_packet *packet){
+    for(int i = 0; i < CONTROL_PACKET_PARAMETER_COUNT; ++i){
+        free(packet->parameters[i].value);
+    }
     return 0;
 }
 
@@ -96,7 +103,6 @@ int emitter(int argc, char *argv[], int port_number){
     uint64_t current_num_packets = 0;
 
     data_packet dt_packet;
-    dt_packet.control = CTL_BYTE_DATA; // TODO: This could look better somehow
     while((read_res = read(input_fd, &(dt_packet.data), MAX_PACKET_DATA_SIZE)) > 0){
 		dt_packet.sequence_number = sequence++;
         current_num_packets++;
@@ -112,6 +118,7 @@ int emitter(int argc, char *argv[], int port_number){
     ctl_packet.control = CTL_BYTE_END;
     write_control_packet(output_fd, &ctl_packet);
     printf("Sent END packet\n");
+    free_control_packet(&ctl_packet);
     llclose(output_fd);
     close(input_fd);
     return 0;

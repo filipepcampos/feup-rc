@@ -47,13 +47,11 @@ receiver_state statemachine_address_received(uint8_t byte);
 receiver_state statemachine_control_received(uint8_t byte, framecontent *fc);
 
 /**
- * @brief Receive a frame from fd and write it on the given buffer
+ * @brief Receive a frame from fd 
  * 
  * @param fd 
- * @param buffer 
- * @param size 
  * @return framecontent FC filled with the received frame.
  */
-framecontent receive_frame(int fd, uint8_t *buffer, size_t size);
+framecontent receive_frame(int fd);
 
 #endif

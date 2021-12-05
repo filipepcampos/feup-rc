@@ -7,21 +7,25 @@
 
 // ========= [Frame creation] ========= //
 framecontent create_non_information_frame(uint8_t control, uint8_t address){
-  framecontent fc = DEFAULT_FC;
+  framecontent fc;
   fc.control = control;
   fc.address = address;
+  fc.data_len = 0;
   return fc;
 }
 
 framecontent create_information_frame(uint8_t *data, size_t data_len, int S, uint8_t address){
+	if(data_len > MAX_INFO_SIZE){
+		; // TODO: Maybe add error
+	}
 	uint8_t bcc = calculate_bcc(data, data_len);
 	data[data_len] = bcc;
 	size_t stuffed_bytes_size = byte_stuffing(data, data_len+1);
 
-	framecontent fc = DEFAULT_FC;
+	framecontent fc;
 	fc.control = CREATE_INFO_FRAME_CTL_BYTE(S);
 	fc.address = address;
-	fc.data = data;
+	memcpy(fc.data, data, stuffed_bytes_size);
 	fc.data_len = stuffed_bytes_size;
 	return fc;
 }
