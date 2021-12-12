@@ -64,7 +64,6 @@ int emit_frame_until_response(int fd, framecontent *fc, uint8_t expected_respons
 			alarm(0);
 			printf("Resending frame, attempt %d/%d\n", MAX_EMIT_ATTEMPTS-attempts+1, MAX_EMIT_ATTEMPTS);
 			if(emit_frame(fd, fc) < 0){
-				printf("[debug]: emit_frame < 0\n");
 				return -1;
 			}
 			alarm(FRAME_RESEND_TIMEOUT);
