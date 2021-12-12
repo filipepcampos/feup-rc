@@ -51,6 +51,10 @@ receiver_state statemachine_control_received(uint8_t byte, framecontent *fc);
  * 
  * @param fd 
  * @return framecontent FC filled with the received frame.
+ * 		If the function was interrupted by an alarm, fc.control will be equals to CTL_INVALID_FRAME.
+ * 		If an error occurs in a INFO frame data (wrong bcc), the frame will return with data_len=0 (data is discarded).
+ * 		If the received INFO frame data is greater (in length) than BUFFER_SIZE, the contents will be
+ * 	discarded and the state machine will reset to START state
  */
 framecontent receive_frame(int fd);
 

@@ -86,6 +86,9 @@ int llwrite(int fd, uint8_t * input_buffer, int length) {
         return -1;
     }
     framecontent fc = create_information_frame(input_buffer, length, serial->S,  ADDRESS1);
+    if(fc.data_len == 0){ // Datalen > MAX_INFO_SIZE.
+        return -1;
+    }
     if(emit_frame_until_response(fd, &fc, CREATE_RR_FRAME_CTL_BYTE(serial->S)) != 0){
         printf("Maximum emit attempts reached\n");
         return -1;
@@ -122,7 +125,7 @@ int llread(int fd, uint8_t * output_buffer) {
                 control = CREATE_RR_FRAME_CTL_BYTE(serial->S);
                 received = true;
             } else {
-                printf("error:");
+                printf("An error has occurred, responding with: ");
                 if(is_new_frame){
                     printf("REJ\n");
                     control = CREATE_REJ_FRAME_CTL_BYTE(1-(serial->S));

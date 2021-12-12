@@ -20,6 +20,7 @@ framecontent create_non_information_frame(uint8_t control, uint8_t address);
  * @param S Sequence bit
  * @param address Address byte
  * @return framecontent filled with the arguments given
+ *          If data_len > MAX_INFO_SIZE, an empty fc with fc.data_len=0 will be returned.
  */
 framecontent create_information_frame(uint8_t *data, size_t data_len, int S, uint8_t address);
 

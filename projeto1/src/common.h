@@ -5,11 +5,10 @@
 #include <stddef.h>
 
 #define _POSIX_SOURCE 1 /* POSIX compliant source */
-#define VERBOSE true /* Controls if logger functions are enabled or disabled */
+#define VERBOSE false /* Controls if logger functions are enabled or disabled */
 
 #define MAX_INFO_SIZE 512
 #define BUFFER_SIZE (MAX_INFO_SIZE*2) /*Necessary buffer size to accommodate INFO_FRAME_SIZE, in the edge case where all data is flags (double the size)*/
-
 
 #define FRAME_RESEND_TIMEOUT 3 /* Timeout between frame resends */
 #define MAX_EMIT_ATTEMPTS 3 /* Maximum amounts of frame resends before giving up*/
@@ -25,6 +24,7 @@
 #define CTL_DISC 0X0B
 #define CTL_RR 0x05
 #define CTL_REJ 0x01
+#define CTL_INVALID_FRAME 0xFF
 
 // Representation of a frame, after flags have been removed
 typedef struct {

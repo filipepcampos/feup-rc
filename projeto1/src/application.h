@@ -18,7 +18,7 @@ typedef struct {
     uint8_t sequence_number;
     uint8_t L2;
     uint8_t L1;
-    uint8_t data[MAX_PACKET_SIZE - 4]; // TODO: this -4 looks awful tbh
+    uint8_t data[MAX_PACKET_SIZE - 4];
 } data_packet;
 
 typedef enum {
