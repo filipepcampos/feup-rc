@@ -5,7 +5,7 @@
 #include <stddef.h>
 
 #define _POSIX_SOURCE 1 /* POSIX compliant source */
-#define VERBOSE true /* Controls if logger functions are enabled or disabled */
+#define VERBOSE false /* Controls if logger functions are enabled or disabled */
 
 #define MAX_INFO_SIZE 512
 #define BUFFER_SIZE (MAX_INFO_SIZE*2 + 2) /*Necessary buffer size to accommodate INFO_FRAME_SIZE, 
