@@ -59,15 +59,19 @@ int emit_frame_until_response(int fd, framecontent *fc, uint8_t expected_respons
 		framecontent response_fc = receive_frame(fd);
 		if(response_fc.control == expected_response){
 			break;
+		} else if (response_fc.control == CTL_REJ){
+			RESEND_FRAME = true;
 		}
 		if(RESEND_FRAME){
+			printf("Resending frame, attempt %d/%d\n", MAX_EMIT_ATTEMPTS-attempts+1, MAX_EMIT_ATTEMPTS);
 			RESEND_FRAME = false;
 			if(emit_frame(fd, fc) < 0){
+				printf("[debug]: emit_frame < 0\n");
 				return -1;
 			}
 			alarm(FRAME_RESEND_TIMEOUT);
+			attempts--;
 		}
-		attempts--;
 	}
 	alarm(0);
 	if(attempts == 0){

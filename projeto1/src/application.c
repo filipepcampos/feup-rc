@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <time.h>
 
 int write_control_packet(int fd, control_packet *packet){
     uint8_t buffer[MAX_PACKET_SIZE];
@@ -243,7 +244,8 @@ int main(int argc, char *argv[]){
         printf("Invalid port number\n");
         return 1;
     }
-
+    
+    srand(time(NULL)); // Used for FER analysis.
     if(strcmp(argv[1],"emitter") == 0){
         if(argc != 4){
             print_usage(argv[0]);

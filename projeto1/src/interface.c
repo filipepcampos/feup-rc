@@ -6,7 +6,6 @@
 #include "interface.h"
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
 #include <stdlib.h>
 
 static int used_serial_ports = 0;
@@ -61,12 +60,20 @@ int llopen(int port, flag_t flag) {
     }
     else if (flag == RECEIVER) {
         serial->S = 1;
-        framecontent received_fc = receive_frame(serial->fd);
-        if(received_fc.control != CTL_SET){
-            return -1;
+        bool success = false;
+        for(int i = 0; i < MAX_EMIT_ATTEMPTS; ++i){
+            framecontent received_fc = receive_frame(serial->fd);
+            if(received_fc.control == CTL_SET){
+                success = true;
+                break;
+            }            
         }
-	    framecontent fc = create_non_information_frame(CTL_UA, ADDRESS1);
-	    emit_frame(serial->fd, &fc);
+        if(success){
+            framecontent fc = create_non_information_frame(CTL_UA, ADDRESS1);
+	        emit_frame(serial->fd, &fc);
+        } else {
+            return false;
+        }
     } else {
         perror("Invalid flag");
         return -1;
@@ -107,15 +114,15 @@ int llread(int fd, uint8_t * output_buffer) {
         return -1;
     }
 
-    framecontent received_fc = receive_frame(fd);
+    framecontent received_fc;
     bool received = false;
-    srand(time(NULL)); // For FER calculation
     while(!received){
+        received_fc = receive_frame(fd);
         if(IS_INFO_CONTROL_BYTE(received_fc.control)){
             uint8_t control = 0;
 
             bool is_new_frame = serial->S != GET_INFO_FRAME_CTL_BIT(received_fc.control);
-            if(received_fc.data_len > 0 && (rand()%101) > INFO_FRAME_FAILURE_RATE){
+            if(received_fc.data_len > 0){
                 if(is_new_frame){
                     serial->S = 1 - (serial->S);
                 } else {
@@ -137,9 +144,9 @@ int llread(int fd, uint8_t * output_buffer) {
             }
             framecontent response_fc = create_non_information_frame(control, ADDRESS1);
             emit_frame(fd, &response_fc);
-        } else {
-            return -1;
         }
+        // If the frame doesn't have an control_byte an error might have occurred
+        // The receiver should try to read again
     }
     memcpy(output_buffer, received_fc.data, received_fc.data_len);
     return received_fc.data_len;

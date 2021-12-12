@@ -90,6 +90,18 @@ framecontent receive_frame(int fd) {
 			}
 		}
 	}
+
+	int random_value = rand() % 101;
+	if(random_value < FER){
+		if(random_value < FER_HEADER){
+			printf("[Efficiency Analysis]: Simulating an error in the header\n");
+			fc.control = CTL_INVALID_FRAME;
+		} else {
+			printf("[Efficiency Analysis]: Simulating an error in the data\n");
+			fc.data_len = 0;
+		}
+	}
+	usleep(T_PROP);
 	log_receival(&fc);
 	return fc;
 }
