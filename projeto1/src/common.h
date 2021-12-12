@@ -7,7 +7,9 @@
 #define _POSIX_SOURCE 1 /* POSIX compliant source */
 #define VERBOSE false /* Controls if logger functions are enabled or disabled */
 
-#define MAX_INFO_SIZE 512
+#define INFO_FRAME_FAILURE_RATE 0 // In percentage. Used to test FER,should be set to 0 for 'real' use.
+
+#define MAX_INFO_SIZE 256
 #define BUFFER_SIZE (MAX_INFO_SIZE*2 + 2) /*Necessary buffer size to accommodate INFO_FRAME_SIZE, 
 							in the edge case where all data is flags (double the size)
 							+ 2 bytes for the BCC (if it also needs to be escaped) */

@@ -1,5 +1,4 @@
 #include "config.h"
-#include "common.h"
 #include "datalink_emitter.h"
 #include "datalink_receiver.h"
 #include "core.h"

@@ -3,8 +3,9 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include "interface.h"
 
-#define MAX_PACKET_SIZE 512 /*Maximum packet size allowed by llwrite*/
+#define MAX_PACKET_SIZE (MAX_WRITE_SIZE)
 #define MAX_PACKET_DATA_SIZE MAX_PACKET_SIZE - 4 /*Section of MAX_PACKET_SIZE that's available for data*/
 #define CONTROL_PACKET_PARAMETER_COUNT 2 /* Number of parameters sent in control packet */
 
