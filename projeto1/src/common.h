@@ -5,10 +5,12 @@
 #include <stddef.h>
 
 #define _POSIX_SOURCE 1 /* POSIX compliant source */
-#define VERBOSE false /* Controls if logger functions are enabled or disabled */
+#define VERBOSE true /* Controls if logger functions are enabled or disabled */
 
 #define MAX_INFO_SIZE 512
-#define BUFFER_SIZE (MAX_INFO_SIZE*2) /*Necessary buffer size to accommodate INFO_FRAME_SIZE, in the edge case where all data is flags (double the size)*/
+#define BUFFER_SIZE (MAX_INFO_SIZE*2 + 2) /*Necessary buffer size to accommodate INFO_FRAME_SIZE, 
+							in the edge case where all data is flags (double the size)
+							+ 2 bytes for the BCC (if it also needs to be escaped) */
 
 #define FRAME_RESEND_TIMEOUT 3 /* Timeout between frame resends */
 #define MAX_EMIT_ATTEMPTS 3 /* Maximum amounts of frame resends before giving up*/

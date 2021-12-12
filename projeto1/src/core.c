@@ -21,13 +21,13 @@ framecontent create_information_frame(uint8_t *data, size_t data_len, int S, uin
 		return fc;
 	}
 	uint8_t bcc = calculate_bcc(data, data_len);
-	data[data_len] = bcc;
-	size_t stuffed_bytes_size = byte_stuffing(data, data_len+1);
 
 	framecontent fc;
 	fc.control = CREATE_INFO_FRAME_CTL_BYTE(S);
 	fc.address = address;
-	memcpy(fc.data, data, stuffed_bytes_size);
+	memcpy(fc.data, data, data_len);
+	fc.data[data_len] = bcc;
+	size_t stuffed_bytes_size = byte_stuffing(fc.data, data_len+1);
 	fc.data_len = stuffed_bytes_size;
 	return fc;
 }
