@@ -69,10 +69,10 @@ int disconnect_serial(int fd, struct termios *oldtio) {
 }
 
 // ========= [Alarm setup] ========= //
-volatile bool RESEND_FRAME = false;
+volatile bool ALARM_ACTIVATED = false;
 
 void sig_handler(int signum){
-	RESEND_FRAME = true;
+	ALARM_ACTIVATED = true;
 }
 
 void setup_sigalarm(){

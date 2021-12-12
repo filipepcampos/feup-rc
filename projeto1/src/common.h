@@ -21,6 +21,7 @@
 
 #define FRAME_RESEND_TIMEOUT 3 /* Timeout between frame resends */
 #define MAX_EMIT_ATTEMPTS 3 /* Maximum amounts of frame resends before giving up*/
+#define READ_TIMEOUT (FRAME_RESEND_TIMEOUT * (MAX_EMIT_ATTEMPTS+1))
 
 #define FLAG 0x7e /*Frame flag byte*/
 #define ESCAPE 0x7d /*Frame escape byte*/

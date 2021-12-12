@@ -11,7 +11,7 @@
 int setup_serial(struct termios *oldtio, char *serial_device);
 int disconnect_serial(int fd, struct termios *oldtio);
 
-extern volatile bool RESEND_FRAME;
+extern volatile bool ALARM_ACTIVATED;
 void sig_handler(int signum);
 void setup_sigalarm();
 

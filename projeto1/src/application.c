@@ -202,7 +202,7 @@ int receiver_read_to_file(int input_fd, int output_fd, int argc){
             return 1;
         }
     }
-    return 0;
+    return read_res >= 0 ? 0 : -1;
 }
 
 int receiver(int argc, char *argv[], int port_number){    
@@ -219,7 +219,10 @@ int receiver(int argc, char *argv[], int port_number){
         }
     }
 
-    receiver_read_to_file(input_fd, output_fd, argc);
+    if(receiver_read_to_file(input_fd, output_fd, argc) < 0){
+        close(output_fd);
+        return 1; // Receiver had an error caused by serial port error, llclose will also lead to an error.
+    }
 
     llclose(input_fd);
     close(output_fd);

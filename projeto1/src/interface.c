@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 static int used_serial_ports = 0;
 static serial_interface serial_ports[MAX_OPEN_SERIAL_PORTS];
@@ -61,18 +62,25 @@ int llopen(int port, flag_t flag) {
     else if (flag == RECEIVER) {
         serial->S = 1;
         bool success = false;
+        alarm(READ_TIMEOUT);
         for(int i = 0; i < MAX_EMIT_ATTEMPTS; ++i){
             framecontent received_fc = receive_frame(serial->fd);
             if(received_fc.control == CTL_SET){
                 success = true;
                 break;
-            }            
+            }
+            if(ALARM_ACTIVATED){
+                ALARM_ACTIVATED = false;
+                return -1;
+            }    
         }
+        alarm(0);
+        ALARM_ACTIVATED = false;
         if(success){
             framecontent fc = create_non_information_frame(CTL_UA, ADDRESS1);
 	        emit_frame(serial->fd, &fc);
         } else {
-            return false;
+            return -1;
         }
     } else {
         perror("Invalid flag");
@@ -116,6 +124,7 @@ int llread(int fd, uint8_t * output_buffer) {
 
     framecontent received_fc;
     bool received = false;
+    alarm(READ_TIMEOUT);
     while(!received){
         received_fc = receive_frame(fd);
         if(IS_INFO_CONTROL_BYTE(received_fc.control)){
@@ -145,9 +154,15 @@ int llread(int fd, uint8_t * output_buffer) {
             framecontent response_fc = create_non_information_frame(control, ADDRESS1);
             emit_frame(fd, &response_fc);
         }
+        if(ALARM_ACTIVATED){
+            ALARM_ACTIVATED = false;
+            return -1;
+        }
         // If the frame doesn't have an control_byte an error might have occurred
         // The receiver should try to read again
     }
+    alarm(0);
+    ALARM_ACTIVATED = false;
     memcpy(output_buffer, received_fc.data, received_fc.data_len);
     return received_fc.data_len;
 }
@@ -166,13 +181,18 @@ int llclose(int fd){
         fc = create_non_information_frame(CTL_UA, ADDRESS2);
         emit_frame(fd, &fc);
     } else if (serial->status == RECEIVER){
+        alarm(READ_TIMEOUT);
         framecontent received_fc = receive_frame(fd);
         if(received_fc.control == CTL_DISC){
             framecontent fc = create_non_information_frame(CTL_DISC, ADDRESS2);
             emit_frame_until_response(fd, &fc, CTL_UA);
         } else {
+            alarm(0);
+            ALARM_ACTIVATED = false;
             return -1;
         }
+        alarm(0);
+        ALARM_ACTIVATED = false;
     } else {
         return -1;
     }

@@ -60,11 +60,11 @@ int emit_frame_until_response(int fd, framecontent *fc, uint8_t expected_respons
 		if(response_fc.control == expected_response){
 			break;
 		} else if (response_fc.control == CTL_REJ){
-			RESEND_FRAME = true;
+			ALARM_ACTIVATED = true;
 		}
-		if(RESEND_FRAME){
+		if(ALARM_ACTIVATED){
 			printf("Resending frame, attempt %d/%d\n", MAX_EMIT_ATTEMPTS-attempts+1, MAX_EMIT_ATTEMPTS);
-			RESEND_FRAME = false;
+			ALARM_ACTIVATED = false;
 			if(emit_frame(fd, fc) < 0){
 				printf("[debug]: emit_frame < 0\n");
 				return -1;
@@ -74,6 +74,7 @@ int emit_frame_until_response(int fd, framecontent *fc, uint8_t expected_respons
 		}
 	}
 	alarm(0);
+	ALARM_ACTIVATED = false;
 	if(attempts == 0){
 		return 1;
 	}
