@@ -48,7 +48,7 @@ framecontent receive_frame(int fd) {
 		int res = read(fd, &current_byte, 1);
 		if (res == -1) {
 			if(errno == EINTR){ // Read was interrupted by an alarm.
-				fc.control = 0; // TODO:Document this
+				fc.control = CTL_INVALID_FRAME;
 				return fc;
 			}
 			perror("read");
@@ -62,16 +62,13 @@ framecontent receive_frame(int fd) {
 			if(state == INFO){
 				state = STOP;
 				size_t destuffed_size = byte_destuffing(fc.data, buffer_pos);
-				if(destuffed_size > BUFFER_SIZE){
-					; // TODO: Return error?
-				}
 				uint8_t bcc = fc.data[destuffed_size-1]; // The last byte of the buffer is the BCC. We can't distinguish it from the data until we hit a flag.
 				if(bcc == calculate_bcc(fc.data, destuffed_size-1)){
 					fc.data_len = destuffed_size-1;
 					break;
 				} 
+				fc.data_len = 0;
 				// If an error occurs, in data (wrong BCC) the data is discarded.
-				// TODO: Document this behaviour
 			}
 			state = FLAG_RCV;
 		} else {
@@ -82,7 +79,14 @@ framecontent receive_frame(int fd) {
 					fc.control = current_byte; break;
 				case C_RCV:	state = statemachine_control_received(current_byte, &fc); break;
 					default: state = START;
-				case INFO: fc.data[buffer_pos++] = current_byte; break;
+				case INFO: 
+					if(buffer_pos < BUFFER_SIZE){
+						fc.data[buffer_pos++] = current_byte; break;
+					} else {
+						state = START;
+						buffer_pos = 0;
+						break;
+					}
 			}
 		}
 	}

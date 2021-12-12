@@ -16,7 +16,9 @@ framecontent create_non_information_frame(uint8_t control, uint8_t address){
 
 framecontent create_information_frame(uint8_t *data, size_t data_len, int S, uint8_t address){
 	if(data_len > MAX_INFO_SIZE){
-		; // TODO: Maybe add error
+		framecontent fc;
+		fc.data_len = 0;
+		return fc;
 	}
 	uint8_t bcc = calculate_bcc(data, data_len);
 	data[data_len] = bcc;

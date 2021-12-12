@@ -66,7 +66,7 @@ uint64_t create_control_packet(control_packet *ctl_packet, int fd, char *filenam
     }
     uint64_t size_value = statbuf.st_size;
     if(size_value == 0){
-        perror("empty file\n"); // TODO: Check this
+        perror("empty file\n");
         return 0;
     }
     uint64_t total_packets = size_value / ((uint64_t) MAX_PACKET_DATA_SIZE);
@@ -74,7 +74,7 @@ uint64_t create_control_packet(control_packet *ctl_packet, int fd, char *filenam
     if(control_packet_fill_parameter(ctl_packet, 0, SIZE, 8, (uint8_t *) &size_value) < 0){
         return 0;
     }
-    if(control_packet_fill_parameter(ctl_packet, 1, NAME, strlen(filename)+1, filename) < 0){  // TODO: Could strlen be dangerous?
+    if(control_packet_fill_parameter(ctl_packet, 1, NAME, strlen(filename)+1, filename) < 0){
         return 0;
     }
     return total_packets;
