@@ -59,12 +59,10 @@ int emit_frame_until_response(int fd, framecontent *fc, uint8_t expected_respons
 		framecontent response_fc = receive_frame(fd);
 		if(response_fc.control == expected_response){
 			break;
-		} else if (response_fc.control == CTL_REJ){
-			ALARM_ACTIVATED = true;
-		}
-		if(ALARM_ACTIVATED){
-			printf("Resending frame, attempt %d/%d\n", MAX_EMIT_ATTEMPTS-attempts+1, MAX_EMIT_ATTEMPTS);
+		} else { // Either receive_frame was interrupted by alarm or control byte is invalid (e.g REJ), therefore requiring reemission.
 			ALARM_ACTIVATED = false;
+			alarm(0);
+			printf("Resending frame, attempt %d/%d\n", MAX_EMIT_ATTEMPTS-attempts+1, MAX_EMIT_ATTEMPTS);
 			if(emit_frame(fd, fc) < 0){
 				printf("[debug]: emit_frame < 0\n");
 				return -1;
