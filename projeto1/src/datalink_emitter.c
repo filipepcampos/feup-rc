@@ -50,15 +50,13 @@ int emit_frame(int fd, framecontent *fc) {
 }
 
 int emit_frame_until_response(int fd, framecontent *fc, uint8_t expected_response){
-	uint8_t buffer[BUFFER_SIZE];
 	if(emit_frame(fd, fc) < 0){
 		return -1;
 	}
 	int attempts = MAX_EMIT_ATTEMPTS;
 	alarm(FRAME_RESEND_TIMEOUT);
 	while(attempts > 0){
-		
-		framecontent response_fc = receive_frame(fd, buffer, BUFFER_SIZE);
+		framecontent response_fc = receive_frame(fd);
 		if(response_fc.control == expected_response){
 			break;
 		}

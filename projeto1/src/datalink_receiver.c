@@ -38,13 +38,12 @@ receiver_state statemachine_control_received(uint8_t byte, framecontent *fc) {
 	return START;
 }
 
-framecontent receive_frame(int fd, uint8_t *buffer, size_t size) {
-	uint8_t temporary_buffer[BUFFER_SIZE];
+framecontent receive_frame(int fd) {
+	framecontent fc;
 	size_t buffer_pos = 0;
 	uint8_t current_byte;
 	receiver_state state = START;
 	
-	framecontent fc = DEFAULT_FC;
 	while (state != STOP) {
 		int res = read(fd, &current_byte, 1);
 		if (res == -1) {
@@ -62,11 +61,12 @@ framecontent receive_frame(int fd, uint8_t *buffer, size_t size) {
 			}
 			if(state == INFO){
 				state = STOP;
-				size_t destuffed_size = byte_destuffing(temporary_buffer, buffer_pos);
-				memcpy(buffer, temporary_buffer, destuffed_size);
-				uint8_t bcc = temporary_buffer[destuffed_size-1]; // The last byte of the buffer is the BCC. We can't distinguish it from the data until we hit a flag.
-				if(bcc == calculate_bcc(buffer, destuffed_size-1)){
-					fc.data = buffer;
+				size_t destuffed_size = byte_destuffing(fc.data, buffer_pos);
+				if(destuffed_size > BUFFER_SIZE){
+					; // TODO: Return error?
+				}
+				uint8_t bcc = fc.data[destuffed_size-1]; // The last byte of the buffer is the BCC. We can't distinguish it from the data until we hit a flag.
+				if(bcc == calculate_bcc(fc.data, destuffed_size-1)){
 					fc.data_len = destuffed_size-1;
 					break;
 				} 
@@ -82,7 +82,7 @@ framecontent receive_frame(int fd, uint8_t *buffer, size_t size) {
 					fc.control = current_byte; break;
 				case C_RCV:	state = statemachine_control_received(current_byte, &fc); break;
 					default: state = START;
-				case INFO: temporary_buffer[buffer_pos++] = current_byte; break;
+				case INFO: fc.data[buffer_pos++] = current_byte; break;
 			}
 		}
 	}
