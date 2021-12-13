@@ -2,31 +2,14 @@ import os
 import subprocess
 import time
 import sys
-import socket
-
-HOST = '192.168.1.14'
-PORT = 9001
 
 IS_EMITTER = False
-s = None
-conn = None
 
 def init():
     if(len(sys.argv) != 2):
         exit(-1)
-    global IS_EMITTER, conn, s
+    global IS_EMITTER
     IS_EMITTER = sys.argv[1] == 'e'
-
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    if IS_EMITTER:
-        s.connect((HOST, PORT))
-        print("Connected")
-    else:
-        s.bind((HOST, PORT))
-        s.listen()
-        conn, addr = s.accept()
-        print("Connected")
-
     os.system("rm -rf ./logs; mkdir -p logs")
 
 def clean():
@@ -41,39 +24,28 @@ def run(i):
     else:
         return run_receiver(i)
     
-def sync():
-    if IS_EMITTER:
-        data = s.recv(1024)
-        s.send(data)
-        time.sleep(0.005)
-    else:
-        conn.send(b'foo')
-        data = conn.recv(1024)
 
 def run_emitter(i):
     with open(f'./logs/log{i}', 'w+') as f:
-        sync()
+        input("")
         start = time.time()
         emitter = subprocess.Popen(['./build/application', 'emitter', '0', './files/pinguim.gif'], stdout=f)
     emitter.wait()
-    total = time.time() - start
-    sync()
-    return total
+    return time.time() - start
 
 def run_receiver(i):
     with open(f'./logs/log{i}', 'w+') as f:
-        sync()
+        input("")
         start = time.time()
-        receiver = subprocess.Popen(['./build/application', 'receiver', '0', f'./build/output{i}'], stdout=f)
+        receiver = subprocess.Popen(['./build/application', 'receiver', '0', './build/output'], stdout=f)
     receiver.wait()
     total = time.time() - start
-    os.system(f"diff ./files/pinguim.gif ./build/output{i}")
-    sync()
+    os.system("diff ./files/pinguim.gif ./build/output")
     return total
 
 FER = [0, 1, 5, 10]
 TPROP = [0, 200000, 1000000]
-INFOSIZE = [256, 512, 1024, 2048]
+INFOSIZE = [256, 512]
 
 def main():
     init()
@@ -81,12 +53,11 @@ def main():
     for tprop in TPROP:
         for fer in FER:
             for isize in INFOSIZE:
+                clean()
                 make(fer,tprop,isize)
                 print(f'[{i}] {tprop},{fer/100},{isize}: ', end='', flush=True)
                 print(run(i))
                 i += 1
-    clean()
-    conn.close()
 
 if __name__ == "__main__":
     main()
