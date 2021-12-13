@@ -8,13 +8,19 @@
 #define VERBOSE false /* Controls if logger functions are enabled or disabled */
 
 /* For efficiency analysis purposes only, should be set to 0 for real use */
+#ifndef FER
 #define FER 0 // In percentage. Used to test FER,should be set to 0 for 'real' use.
+#endif
 #define FER_HEADER (FER/2) // Chance of the error occuring in the header
 #define FER_DATA (FER - FER_HEADER) // Chance of the error occuring in the data
 // FER = FER_HEADER + FER_DATA
+#ifndef T_PROP
 #define T_PROP 0 // In microseconds
+#endif
 
+#ifndef MAX_INFO_SIZE
 #define MAX_INFO_SIZE 512
+#endif
 #define BUFFER_SIZE (MAX_INFO_SIZE*2 + 2) /*Necessary buffer size to accommodate INFO_FRAME_SIZE, 
 							in the edge case where all data is flags (double the size)
 							+ 2 bytes for the BCC (if it also needs to be escaped) */
