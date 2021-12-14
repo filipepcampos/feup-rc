@@ -22,10 +22,10 @@ typedef struct {
 } serial_interface;
 
 /**
- * @brief Start serial port with respective flag
+ * @brief Connect serial port with respective flag
  * 
- * @param port serial port to be started
- * @param flag indicator if it is emitter or receiver
+ * @param port Serial port to be started
+ * @param flag Indicator if it is emitter or receiver
  * @return int -1 if failure; file descriptor if success
  */
 int llopen(int port, flag_t flag);
@@ -33,27 +33,27 @@ int llopen(int port, flag_t flag);
 /**
  * @brief Create frame and send it
  * 
- * @param fd file descriptor
- * @param buffer buffer with packet
- * @param length length of packet
- * @return int -1 if failure
+ * @param fd File descriptor
+ * @param buffer Buffer with packet
+ * @param length Length of packet
+ * @return int -1 if failure, frame size if success
  */
 int llwrite(int fd, uint8_t * buffer, int length);
 
 /**
  * @brief Receive frame and read it
  * 
- * @param fd file descriptor
- * @param buffer buffer with packet
- * @return int -1 if failure; packet length if success
+ * @param fd File descriptor
+ * @param buffer Buffer with packet
+ * @return int -1 if failure, packet length if success
  */
 int llread(int fd, uint8_t * buffer);
 
 /**
- * @brief Finish transmission and close serial port
+ * @brief Finish transmission and disconnect serial port
  * 
- * @param fd file descriptor
- * @return int -1 if failure; 0 if success
+ * @param fd File descriptor
+ * @return int -1 if failure, 0 if success
  */
 int llclose(int fd);
 
