@@ -78,7 +78,6 @@ framecontent receive_frame(int fd) {
 				case A_RCV:	state = statemachine_address_received(current_byte); 
 					fc.control = current_byte; break;
 				case C_RCV:	state = statemachine_control_received(current_byte, &fc); break;
-					default: state = START;
 				case INFO: 
 					if(buffer_pos < BUFFER_SIZE){
 						fc.data[buffer_pos++] = current_byte; break;
@@ -87,6 +86,7 @@ framecontent receive_frame(int fd) {
 						buffer_pos = 0;
 						break;
 					}
+				default: state = START;
 			}
 		}
 	}
