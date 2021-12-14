@@ -95,7 +95,7 @@ framecontent receive_frame(int fd) {
 	if(random_value < FER){
 		if(random_value < FER_HEADER){
 			printf("[Efficiency Analysis]: Simulating an error in the header\n");
-			fc.control = CTL_INVALID_FRAME;
+			return receive_frame(fd); // Return to START as if an BCC error occured.
 		} else {
 			printf("[Efficiency Analysis]: Simulating an error in the data\n");
 			fc.data_len = 0;

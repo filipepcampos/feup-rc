@@ -1,5 +1,4 @@
 CC=gcc
-CFLAGS=-Wall -Wno-pointer-sign
 
 EXEC = application
 OBJ = ./src/core.o ./src/datalink_receiver.o ./src/config.o ./src/logger.o ./src/datalink_emitter.o ./src/interface.o

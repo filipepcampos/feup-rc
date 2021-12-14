@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -Wno-pointer-sign -DFER=$(FER) -DT_PROP=$(T_PROP) -DMAX_INFO_SIZE=$(MAX_INFO_SIZE)
+CFLAGS= -DFER=$(FER) -DT_PROP=$(T_PROP) -DMAX_INFO_SIZE=$(MAX_INFO_SIZE)
 
 EXEC = application
 OBJ = ./src/core.o ./src/datalink_receiver.o ./src/config.o ./src/logger.o ./src/datalink_emitter.o ./src/interface.o
@@ -13,8 +13,7 @@ build_dir:
 	mkdir -p build 
 
 $(EXEC) : $(OBJ)
-	$(CC) $(CFLAGS) $(DEFINES) $(OBJ) ./src/$@.c -o ./build/$@
+	$(CC) $(CFLAGS) $(OBJ) ./src/$@.c -o ./build/$@
 
 clean:
 	-rm -rf ./build/*
-
