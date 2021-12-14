@@ -55,9 +55,9 @@ int emit_frame_until_response(int fd, framecontent *fc, uint8_t expected_respons
 	}
 	int attempts = MAX_EMIT_ATTEMPTS;
 	alarm(FRAME_RESEND_TIMEOUT);
-	while(attempts > 0){
+	while(true){
 		framecontent response_fc = receive_frame(fd);
-		if(response_fc.control == expected_response){
+		if(response_fc.control == expected_response || attempts == 0){
 			break;
 		} else { // Either receive_frame was interrupted by alarm or control byte is invalid (e.g REJ), therefore requiring reemission.
 			ALARM_ACTIVATED = false;
@@ -72,8 +72,5 @@ int emit_frame_until_response(int fd, framecontent *fc, uint8_t expected_respons
 	}
 	alarm(0);
 	ALARM_ACTIVATED = false;
-	if(attempts == 0){
-		return 1;
-	}
-	return 0;
+	return attempts == 0 ? 1 : 0;
 }
