@@ -68,6 +68,7 @@ framecontent receive_frame(int fd) {
 					break;
 				} 
 				fc.data_len = 0;
+				break;
 				// If an error occurs, in data (wrong BCC) the data is discarded.
 			}
 			state = FLAG_RCV;
