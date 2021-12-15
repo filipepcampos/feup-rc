@@ -1,0 +1,15 @@
+Received START packet
+  parameter T=0 L=8 V=10968
+  parameter T=1 L=20 V=./files/pinguim.gif
+Received DATA packet [1/6]
+Received DATA packet [2/6]
+Received DATA packet [3/6]
+Received DATA packet [4/6]
+Received DATA packet [5/6]
+[Efficiency Analysis]: Simulating an error in the data
+An error has occurred, responding with: REJ
+Received DATA packet [6/6]
+Received END packet
+  parameter T=0 L=8 V=10968
+  parameter T=1 L=20 V=./files/pinguim.gif
+[Efficiency Analysis]: Simulating an error in the data

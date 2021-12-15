@@ -1,0 +1,54 @@
+Received START packet
+  parameter T=0 L=8 V=10968
+  parameter T=1 L=20 V=./files/pinguim.gif
+Received DATA packet [1/44]
+Received DATA packet [2/44]
+Received DATA packet [3/44]
+Received DATA packet [4/44]
+Received DATA packet [5/44]
+Received DATA packet [6/44]
+Received DATA packet [7/44]
+[Efficiency Analysis]: Simulating an error in the data
+An error has occurred, responding with: REJ
+Received DATA packet [8/44]
+Received DATA packet [9/44]
+Received DATA packet [10/44]
+Received DATA packet [11/44]
+Received DATA packet [12/44]
+Received DATA packet [13/44]
+Received DATA packet [14/44]
+Received DATA packet [15/44]
+Received DATA packet [16/44]
+Received DATA packet [17/44]
+Received DATA packet [18/44]
+Received DATA packet [19/44]
+Received DATA packet [20/44]
+Received DATA packet [21/44]
+Received DATA packet [22/44]
+Received DATA packet [23/44]
+Received DATA packet [24/44]
+Received DATA packet [25/44]
+Received DATA packet [26/44]
+Received DATA packet [27/44]
+Received DATA packet [28/44]
+Received DATA packet [29/44]
+[Efficiency Analysis]: Simulating an error in the data
+An error has occurred, responding with: REJ
+Received DATA packet [30/44]
+Received DATA packet [31/44]
+Received DATA packet [32/44]
+Received DATA packet [33/44]
+Received DATA packet [34/44]
+Received DATA packet [35/44]
+Received DATA packet [36/44]
+Received DATA packet [37/44]
+Received DATA packet [38/44]
+Received DATA packet [39/44]
+Received DATA packet [40/44]
+Received DATA packet [41/44]
+Received DATA packet [42/44]
+Received DATA packet [43/44]
+Received DATA packet [44/44]
+Received END packet
+  parameter T=0 L=8 V=10968
+  parameter T=1 L=20 V=./files/pinguim.gif

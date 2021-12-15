@@ -1,0 +1,20 @@
+Received START packet
+  parameter T=0 L=8 V=10968
+  parameter T=1 L=20 V=./files/pinguim.gif
+Received DATA packet [1/11]
+Received DATA packet [2/11]
+[Efficiency Analysis]: Simulating an error in the header
+Received DATA packet [3/11]
+Received DATA packet [4/11]
+Received DATA packet [5/11]
+Received DATA packet [6/11]
+Received DATA packet [7/11]
+Received DATA packet [8/11]
+Received DATA packet [9/11]
+[Efficiency Analysis]: Simulating an error in the header
+Received DATA packet [10/11]
+Received DATA packet [11/11]
+Received END packet
+  parameter T=0 L=8 V=10968
+  parameter T=1 L=20 V=./files/pinguim.gif
+[Efficiency Analysis]: Simulating an error in the data
