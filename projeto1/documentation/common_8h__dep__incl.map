@@ -1,0 +1,14 @@
+<map id="src/common.h" name="src/common.h">
+<area shape="rect" id="node1" title=" " alt="" coords="322,5,437,32"/>
+<area shape="rect" id="node2" href="$interface_8h.html" title=" " alt="" coords="147,80,262,107"/>
+<area shape="rect" id="node6" href="$core_8h.html" title=" " alt="" coords="337,80,422,107"/>
+<area shape="rect" id="node8" href="$datalink__receiver_8c.html" title=" " alt="" coords="299,155,468,181"/>
+<area shape="rect" id="node9" href="$logger_8h.html" title=" " alt="" coords="635,80,734,107"/>
+<area shape="rect" id="node12" href="$datalink__emitter_8h.html" title=" " alt="" coords="446,80,611,107"/>
+<area shape="rect" id="node3" href="$application_8h.html" title=" " alt="" coords="5,155,135,181"/>
+<area shape="rect" id="node5" href="$interface_8c.html" title=" " alt="" coords="159,155,274,181"/>
+<area shape="rect" id="node4" href="$application_8c.html" title=" " alt="" coords="6,229,134,256"/>
+<area shape="rect" id="node7" href="$core_8c.html" title=" " alt="" coords="492,155,576,181"/>
+<area shape="rect" id="node10" href="$datalink__emitter_8c.html" title=" " alt="" coords="600,155,764,181"/>
+<area shape="rect" id="node11" href="$logger_8c.html" title=" " alt="" coords="788,155,885,181"/>
+</map>

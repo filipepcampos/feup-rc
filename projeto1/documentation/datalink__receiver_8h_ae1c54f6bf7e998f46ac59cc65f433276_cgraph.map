@@ -1,0 +1,13 @@
+<map id="receive_frame" name="receive_frame">
+<area shape="rect" id="node1" title="Receive a frame from fd." alt="" coords="5,159,121,185"/>
+<area shape="rect" id="node2" href="$core_8c.html#aa857abb102fe078a192a6d1da849e0d0" title="Apply byte destuffing to data *." alt="" coords="375,5,499,32"/>
+<area shape="rect" id="node3" href="$core_8c.html#ab08cfb49b03eb4fae2b437ed69eb0f5e" title="Calculate BCC for an array of bytes." alt="" coords="381,56,492,83"/>
+<area shape="rect" id="node4" href="$logger_8c.html#a3817f01f7955ea49aa0b2546ca3eb7cc" title="Print frame receival info." alt="" coords="386,107,487,133"/>
+<area shape="rect" id="node7" href="$datalink__receiver_8c.html#ae1c54f6bf7e998f46ac59cc65f433276" title="Receive a frame from fd." alt="" coords="169,159,285,185"/>
+<area shape="rect" id="node8" href="$datalink__receiver_8c.html#ac459fbe1174ec0a0297d7eedad8161ff" title="Process byte when in A_RCV state." alt="" coords="352,179,521,221"/>
+<area shape="rect" id="node10" href="$datalink__receiver_8c.html#a3897847735eefbf12504c4479c397c50" title="Process byte when in C_RCV state." alt="" coords="355,245,518,286"/>
+<area shape="rect" id="node11" href="$datalink__receiver_8c.html#abef44ae435398c515fd21f5942855fb8" title="Process byte when in FLAG_RCV state." alt="" coords="333,311,540,337"/>
+<area shape="rect" id="node5" href="$logger_8c.html#a2643a4de6799409f0c148a62ab3bc028" title="Print address byte." alt="" coords="600,136,736,163"/>
+<area shape="rect" id="node6" href="$logger_8c.html#a7c3cb26ef790a76027b5378f0302aba3" title="Print the control byte." alt="" coords="603,85,733,112"/>
+<area shape="rect" id="node9" href="$datalink__receiver_8c.html#a4ae375faca8d89a57d922611753532a4" title="Verify if the given byte is an valid control byte." alt="" coords="588,187,748,213"/>
+</map>
