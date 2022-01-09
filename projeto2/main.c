@@ -10,6 +10,7 @@
 #include <stdbool.h>
 
 // ftp://[<user>:<password>@]<host>/<url-path>
+#define FTP_PORT 21
 #define REPLY_COMMAND_OK 200
 #define REPLY_SERVICE_READY 220
 #define REPLY_REQUIRE_PASSWORD 331
@@ -67,45 +68,34 @@ int parse_url(char *str, ftp_information *ftp){
     return 0;
 }
 
-int main(int argc, char **argv) {
-    if(argc != 2){
-        printf("Insuficient arguments\n");
-        return 1;
-    }
-    ftp_information ftp_info;
-    if(parse_url(argv[1], &ftp_info) != 0){
-        printf("Invalid URL\n");
-        return 1;
-    }
+int print_usage(char *program_name){
+    printf("Usage: %s ftp://[<user>:<password>@]<host>/<url-path>\n", program_name);
+    return 0;    
+}
+
+int print_parameters(ftp_information *ftp_info, struct hostent *host){
     printf("\n-----------------------------------\nParameters:\n");
-    if(ftp_info.anonymous){
-        printf("  host : %s\n  url_path : %s\n", ftp_info.host, ftp_info.url_path);
+    if(ftp_info->anonymous){
+        printf("  host : %s\n  url_path : %s\n", ftp_info->host, ftp_info->url_path);
     } else {
-        printf("  user : %s\n  password : %s\n  host : %s\n  url_path : %s\n", ftp_info.user, ftp_info.password, ftp_info.host, ftp_info.url_path);
+        printf("  user : %s\n  password : %s\n  host : %s\n  url_path : %s\n", ftp_info->user, ftp_info->password, ftp_info->host, ftp_info->url_path);
     }
-
-    struct hostent *host;
-    if ((host = gethostbyname(ftp_info.host)) == NULL) {
-        herror("gethostbyname()");
-        exit(-1);
-    }
-
     printf("  host_name  : %s\n", host->h_name);
     printf("  ip_address : %s\n", inet_ntoa(*((struct in_addr *) host->h_addr)));
     printf("-----------------------------------\n\n");
+    return 0;
+}
 
-
-
+int init_socket(in_addr_t *ip_addr, unsigned int port) {
     int sockfd;
     struct sockaddr_in server_addr;
-    size_t bytes;
 
     /*server address handling*/
     bzero((char *) &server_addr, sizeof(server_addr));
     server_addr.sin_family = AF_INET;
     
-    server_addr.sin_addr.s_addr = *((in_addr_t *) host->h_addr);    /*32 bit Internet address network byte ordered*/
-    server_addr.sin_port = htons(21);        /*server TCP port must be network byte ordered */
+    server_addr.sin_addr.s_addr = *ip_addr;    /*32 bit Internet address network byte ordered*/
+    server_addr.sin_port = htons(port);        /*server TCP port must be network byte ordered */
 
     /*open a TCP socket*/
     if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -119,43 +109,69 @@ int main(int argc, char **argv) {
         perror("connect()");
         exit(-1);
     }
-    /*send a string to the server*/
-    char buf[1024]; // TODO: Use correct size / Verify size
-    if(ftp_info.anonymous){
-        snprintf(buf, 1024, "USER anonymous\nPASS anonymous\n");
-    } else {
-        snprintf(buf, 1024, "USER %s\nPASS %s\n", ftp_info.user, ftp_info.password);
+    return sockfd;
+}
+
+int main(int argc, char **argv) {
+    if(argc != 2){
+        printf("Insuficient arguments\n");
+        print_usage(argv[0]);
+        return 1;
+    }
+    ftp_information ftp_info;
+    if(parse_url(argv[1], &ftp_info) != 0){
+        printf("Invalid URL\n");
+        print_usage(argv[0]);
+        return 1;
     }
 
-    bytes = write(sockfd, buf, strlen(buf));
-    if (bytes > 0)
-        printf("Bytes escritos %ld\n", bytes);
-    else {
-        perror("write()");
+    struct hostent *host;
+    if ((host = gethostbyname(ftp_info.host)) == NULL) {
+        herror("gethostbyname()");
         exit(-1);
+    }
+
+    print_parameters(&ftp_info, host);
+
+    int serverfd = init_socket((in_addr_t *) host->h_addr, FTP_PORT);
+
+    // Log in to server
+    size_t bytes;
+    if(ftp_info.anonymous){
+        bytes = dprintf(serverfd, "USER anonymous\nPASS anonymous\n");
+    } else {
+        bytes = dprintf(serverfd, "USER %s\nPASS %s\n", ftp_info.user, ftp_info.password);
     }
     
     size_t read_size = 0;
-    while((read_size = read(sockfd, &buf, 1024)) > 0){
+    char buf[1024]; // TODO: Verify size
+    while((read_size = read(serverfd, &buf, 1024)) > 0){
         buf[read_size] = 0;
         printf("%s", buf);
         if(strstr(buf, "230") != NULL){
             break;
         }
     }
-    snprintf(buf, 1024, "pasv\n");
-    bytes = write(sockfd, buf, strlen(buf));
+
+    bytes = dprintf(serverfd, "pasv\n");
     if (bytes <= 0) {
-        perror("write()");
+        perror("dprintf()");
         exit(-1);
     }
 
-    while((read_size = read(sockfd, &buf, 1024)) > 0){
+    if((read_size = read(serverfd, &buf, 1024)) > 0){
         buf[read_size] = 0;
+        int h1,h2,h3,h4;
+        int p1,p2;
+        sscanf(buf, "227 Entering Passive Mode (%d,%d,%d,%d,%d,%d).", &h1, &h2, &h3, &h4, &p1, &p2);
         printf("%s", buf);
+        printf("Got %d.%d.%d.%d %d\n", h1,h2,h3,h4,p1*256+p2);
+    } else {
+        perror("read()");
+        exit(-1);
     }
 
-    if (close(sockfd)<0) {
+    if (close(serverfd)<0) {
         perror("close()");
         exit(-1);
     }
