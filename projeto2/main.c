@@ -1,7 +1,3 @@
-/**      (C)2000-2021 FEUP
- *       tidy up some includes and parameters
- * */
-
 #include <stdio.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -14,6 +10,13 @@
 #include <stdbool.h>
 
 // ftp://[<user>:<password>@]<host>/<url-path>
+#define REPLY_COMMAND_OK 200
+#define REPLY_SERVICE_READY 220
+#define REPLY_REQUIRE_PASSWORD 331
+#define REPLY_ENTERING_PASV 227
+#define REPLY_LOGGED_IN 230
+#define REPLY_FILE_OK 150
+#define REPLY_CLOSING_DATA 226
 
 typedef struct {
     bool anonymous;
@@ -52,7 +55,7 @@ int parse_url(char *str, ftp_information *ftp){
     ftp->host = malloc(sizeof(char)* host_size);
     memcpy(ftp->host, str, host_size);
     if(host_size == strlen(str)){
-        if(ftp->anonymous){
+        if(!ftp->anonymous){
             free(ftp->user);
             free(ftp->password);
         }
@@ -70,7 +73,10 @@ int main(int argc, char **argv) {
         return 1;
     }
     ftp_information ftp_info;
-    parse_url(argv[1], &ftp_info);
+    if(parse_url(argv[1], &ftp_info) != 0){
+        printf("Invalid URL\n");
+        return 1;
+    }
     printf("\n-----------------------------------\nParameters:\n");
     if(ftp_info.anonymous){
         printf("  host : %s\n  url_path : %s\n", ftp_info.host, ftp_info.url_path);
