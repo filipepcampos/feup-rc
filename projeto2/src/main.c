@@ -173,8 +173,7 @@ int main(int argc, char **argv) {
                     clientfd = start_client_connection(reply.message);
                     dprintf(serverfd, "retr %s\n", ftp_info.url_path);
                     break;
-                case REPLY_CLOSING_DATA: received_data = true; break;
-
+                case REPLY_FILE_OK: received_data = true; break;
             }
             free(reply.message);
         }
