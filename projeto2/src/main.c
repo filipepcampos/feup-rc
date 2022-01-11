@@ -191,8 +191,6 @@ int main(int argc, char **argv) {
     size_t bytes_read;
     while((bytes_read = read(clientfd, buffer, 1024)) > 0){
         buffer[bytes_read] = 0;
-        printf("Read %ld bytes\n", bytes_read);
-        printf("%s", buffer);
         write(outputfd, buffer, bytes_read);
     }
 
@@ -202,5 +200,4 @@ int main(int argc, char **argv) {
     }
     return 0;
 }
-
 
