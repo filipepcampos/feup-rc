@@ -11,17 +11,17 @@ typedef struct{
     int current_size;
     size_t front;
     size_t back;
-} queue;
+} reply_queue;
 
 
-queue create_queue(int capacity);
+reply_queue create_queue(int capacity);
 
-void destroy_queue(queue *queue);
+void destroy_queue(reply_queue *queue);
 
-int enqueue(queue *queue, ftp_reply value);
+int enqueue(reply_queue *queue, ftp_reply value);
 
-ftp_reply dequeue(queue *queue);
+ftp_reply dequeue(reply_queue *queue);
 
-int is_full(queue *queue);
+int is_full(reply_queue *queue);
 
-int is_empty(queue *queue);
+int is_empty(reply_queue *queue);

@@ -1,7 +1,7 @@
 #include "queue.h"
 
-queue create_queue(int capacity){
-    queue queue;
+reply_queue create_queue(int capacity){
+    reply_queue queue;
     queue.queue = malloc((sizeof(ftp_reply))*capacity);
     queue.front = 0;
     queue.back = -1;
@@ -10,12 +10,11 @@ queue create_queue(int capacity){
     return queue;
 }
 
-void destroy_queue(queue *queue){
+void destroy_queue(reply_queue *queue){
     free(queue->queue);
 }
 
-#include<stdio.h>//TODO: Remove
-int enqueue(queue *queue, ftp_reply value){
+int enqueue(reply_queue *queue, ftp_reply value){
     if(!is_full(queue)){
         queue->back = (queue->back+1) % queue->capacity;
         queue->queue[queue->back] = value;
@@ -25,7 +24,7 @@ int enqueue(queue *queue, ftp_reply value){
     return -1;
 }
 
-ftp_reply dequeue(queue *queue){
+ftp_reply dequeue(reply_queue *queue){
     if(queue->current_size > 0){
         ftp_reply value = queue->queue[queue->front];
         queue->front = (queue->front + 1) % queue->capacity;
@@ -36,10 +35,10 @@ ftp_reply dequeue(queue *queue){
     return invalid_reply;
 }
 
-int is_full(queue *queue) {
+int is_full(reply_queue *queue) {
     return (queue->capacity == queue->current_size);
 }
 
-int is_empty(queue *queue){
+int is_empty(reply_queue *queue){
     return queue->current_size == 0;
 }

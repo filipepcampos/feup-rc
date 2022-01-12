@@ -84,7 +84,7 @@ int get_reply_code(char *line){
     return -1;    
 }
 
-int readFTP(int fd, queue *reply_queue){
+int readFTP(int fd, reply_queue *reply_queue){
     size_t read_size = 0;
     char buf[1024]; // TODO: Verify size
     read_size = read(fd, &buf, 1024);
@@ -103,6 +103,22 @@ int readFTP(int fd, queue *reply_queue){
         return 0;
     }
     return -1;
+}
+
+// Read data from the given file descriptor into a file
+int read_data_to_file(int fd, char *filename){
+    int outputfd = open(filename, O_WRONLY | O_CREAT, 0666); // TODO: Maybe change ?
+    if(outputfd < 0){
+        perror("open()");
+        exit(-1);
+    }
+
+    char buffer[1024];
+    size_t bytes_read;
+    while((bytes_read = read(fd, buffer, 1024)) > 0){
+        buffer[bytes_read] = 0;
+        write(outputfd, buffer, bytes_read);
+    }
 }
 
 int activate_passive_mode(int fd){
@@ -162,7 +178,7 @@ int main(int argc, char **argv) {
     
     int clientfd;
     bool received_data = false;
-    queue reply_queue = create_queue(16); // TODO: Change size?
+    reply_queue reply_queue = create_queue(16); // TODO: Change size?
     while(!received_data && readFTP(serverfd, &reply_queue) >= 0){
         while(!is_empty(&reply_queue)){
             ftp_reply reply = dequeue(&reply_queue);
@@ -181,20 +197,11 @@ int main(int argc, char **argv) {
 
     printf("---------------------------\n");
 
-    int outputfd = open("output", O_WRONLY | O_CREAT, 0666); // TODO: Maybe change ?
-    if(outputfd < 0){
-        perror("open()");
-        exit(-1);
+    if(read_data_to_file(serverfd, "output") < 0){
+        return -1;
     }
 
-    char buffer[1024];
-    size_t bytes_read;
-    while((bytes_read = read(clientfd, buffer, 1024)) > 0){
-        buffer[bytes_read] = 0;
-        write(outputfd, buffer, bytes_read);
-    }
-
-    if (close(serverfd)<0 || close(clientfd)<0 || close(outputfd)<0) {
+    if (close(serverfd)<0 || close(clientfd)<0) {
         perror("close()");
         exit(-1);
     }

@@ -15,5 +15,5 @@ $(EXEC) : $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) ./src/$@.c -o ./build/$@
 
 clean:
-	-rm -rf ./build/*
+	-rm -rf ./build
 
