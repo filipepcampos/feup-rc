@@ -33,9 +33,11 @@ char *parse_login(char *url, ftp_information *ftp){
     } else {
         ftp->anonymous = false;
         ftp->user = malloc(sizeof(char)*username_size);
+        memcpy(ftp->user, url, username_size);
         url += username_size + 1;
-        ftp->password = parse_password(url, ftp);
-        if(ftp->password == NULL){ // Username defined but no password error
+        url = parse_password(url, ftp);
+        
+        if(url == NULL){ // Username defined but no password error
             free(ftp->user);
             return NULL;
         }
@@ -72,6 +74,5 @@ int parse_url(char *url, ftp_information *ftp){
         return -1;
     }
     ftp->url_path = url;
-
     return 0;
 }
