@@ -197,7 +197,7 @@ int main(int argc, char **argv) {
 
     printf("---------------------------\n");
 
-    if(read_data_to_file(serverfd, "output") < 0){
+    if(read_data_to_file(clientfd, "output") < 0){
         return -1;
     }
 
