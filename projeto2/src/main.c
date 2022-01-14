@@ -177,9 +177,9 @@ int main(int argc, char **argv) {
     }    
     
     int clientfd;
-    bool received_data = false;
+    bool data_connection_started = false;
     reply_queue reply_queue = create_queue(16); // TODO: Change size?
-    while(!received_data && readFTP(serverfd, &reply_queue) >= 0){
+    while(!data_connection_started && readFTP(serverfd, &reply_queue) >= 0){
         while(!is_empty(&reply_queue)){
             ftp_reply reply = dequeue(&reply_queue);
             printf("%s\n", reply.message);
@@ -189,7 +189,7 @@ int main(int argc, char **argv) {
                     clientfd = start_client_connection(reply.message);
                     dprintf(serverfd, "retr %s\n", ftp_info.url_path);
                     break;
-                case REPLY_FILE_OK: received_data = true; break;
+                case REPLY_FILE_OK: data_connection_started = true; break;
             }
             free(reply.message);
         }
