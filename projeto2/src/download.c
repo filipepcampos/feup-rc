@@ -10,6 +10,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <stdbool.h>
+#include <libgen.h>
 
 #include "url_parser.h"
 #include "queue.h"
@@ -138,10 +139,10 @@ connection_info parse_pasv_ip(char *message){
 }
 
 // Run client connection and output to file
-int run_client(connection_info *connection_info){
+int run_client(connection_info *connection_info, char *filename){
     int fd = init_socket(&connection_info->address, connection_info->port);
     
-    if(read_data_to_file(fd, "output") < 0){
+    if(read_data_to_file(fd, filename) < 0){
         exit(-1);
     }
 
@@ -153,9 +154,9 @@ int run_client(connection_info *connection_info){
 }
 
 // Create a fork and run the client
-int fork_and_run_client(connection_info *connection_info){
+int fork_and_run_client(connection_info *connection_info, char *filename){
     if(fork() == 0){
-        return run_client(connection_info);
+        return run_client(connection_info, filename);
     }
     return 0;
 }
@@ -164,7 +165,8 @@ int fork_and_run_client(connection_info *connection_info){
 int open_data_connection(char *reply_message, int fd, char *url_path){
     retrieve_file(fd, url_path);
     connection_info client_connection_info = parse_pasv_ip(reply_message);
-    fork_and_run_client(&client_connection_info);
+    char *filename = basename(url_path);
+    fork_and_run_client(&client_connection_info, filename);
     return 0;
 }
 
