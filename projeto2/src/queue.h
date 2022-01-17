@@ -1,3 +1,6 @@
+#ifndef __queue__
+#define __queue__
+
 #include <stdlib.h>
 
 typedef struct{
@@ -25,3 +28,5 @@ ftp_reply dequeue(reply_queue *queue);
 int is_full(reply_queue *queue);
 
 int is_empty(reply_queue *queue);
+
+#endif

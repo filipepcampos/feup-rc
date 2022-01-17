@@ -1,3 +1,6 @@
+#ifndef __url_parser__
+#define __url_parser__
+
 #include <stdbool.h>
 
 typedef struct {
@@ -17,3 +20,5 @@ char *parse_login(char *url, ftp_information *ftp);
 char *parse_host(char *url, ftp_information *ftp);
 
 int parse_url(char *str, ftp_information *ftp);
+
+#endif
