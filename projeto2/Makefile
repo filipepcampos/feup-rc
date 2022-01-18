@@ -1,7 +1,7 @@
 CC=gcc
 
-EXEC = main
-OBJ = ./src/url_parser.o ./src/queue.o
+EXEC = download
+OBJ = ./src/url_parser.o ./src/queue.o ./src/server_commands.o
 
 .SILENT: clean
 .INTERMEDIATE: $(OBJ)
