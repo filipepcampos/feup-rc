@@ -1,0 +1,14 @@
+ip:172.16.20.1/24 
+mac: 00:21:5a:5a:7d:12 brd ff:ff:ff:ff:ff:ff
+
+root@tux23:~# ip route show
+172.16.20.0/24 dev eth0 proto kernel scope link src 172.16.20.1 
+root@tux23:~# ip neigh
+172.16.20.254 dev eth0 lladdr 00:22:64:a6:a4:f1 STALE
+root@tux23:~# 
+
+ex3alinea7
+root@tux23:~# ip route
+172.16.20.0/24 dev eth0 proto kernel scope link src 172.16.20.1 
+172.16.21.0/24 via 172.16.20.254 dev eth0 
+

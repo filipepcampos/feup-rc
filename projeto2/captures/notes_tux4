@@ -1,0 +1,14 @@
+eth0
+ip: 172.16.20.254/24
+mac: 00:22:64:a6:a4:f1 brd ff:ff:ff:ff:ff:ff
+
+eth1
+link/ether 00:08:54:50:3f:2c brd ff:ff:ff:ff:ff:ff
+inet 172.16.21.253/24 
+
+
+ex3alinea7
+root@tux24:~# ip route
+172.16.20.0/24 dev eth0 proto kernel scope link src 172.16.20.254 
+172.16.21.0/24 dev eth1 proto kernel scope link src 172.16.21.253 
+

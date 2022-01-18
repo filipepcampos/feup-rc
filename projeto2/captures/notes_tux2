@@ -1,0 +1,8 @@
+mac: 00:21:5a:61:2b:72 brd ff:ff:ff:ff:ff:ff
+ip: 172.16.21.1/24 scope global eth0
+
+ex3alinea7
+root@tux22:~# ip route
+172.16.20.0/24 via 172.16.21.253 dev eth0 
+172.16.21.0/24 dev eth0 proto kernel scope link src 172.16.21.1 
+
