@@ -26,6 +26,7 @@
 #define REPLY_LOGGED_IN 230
 #define REPLY_REQUIRE_PASSWORD 331
 #define REPLY_ANONYMOUS_ONLY 530
+#define REPLY_FAILED_OPEN_FILE 550
 
 typedef struct {
     in_addr_t address;
@@ -185,6 +186,7 @@ int handle_reply(ftp_reply reply, int fd, ftp_information *ftp_info){
             open_data_connection(reply.message, fd, ftp_info->url_path);
             break;
         case REPLY_ANONYMOUS_ONLY:
+        case REPLY_FAILED_OPEN_FILE:
         case REPLY_CLOSING_DATA:
             connection_finished = true;
             break;
