@@ -92,7 +92,7 @@ int get_reply_code(char *line){
 // Read FTP server replies
 int readFTP(int fd, reply_queue *reply_queue){
     size_t read_size = 0;
-    char buf[1024]; // TODO: Verify size
+    char buf[1024];
     read_size = read(fd, &buf, 1024);
     if(read_size > 0){
         buf[read_size] = 0;
@@ -113,15 +113,14 @@ int readFTP(int fd, reply_queue *reply_queue){
 
 // Read data from the given file descriptor into a file
 int read_data_to_file(int fd, char *filename){
-    int outputfd = open(filename, O_WRONLY | O_CREAT, 0666); // TODO: Maybe change ?
-    if(outputfd < 0){
-        perror("open()");
-        exit(-1);
-    }
-
+    int outputfd = -1;
     char buffer[4098];
-    size_t bytes_read;
+    size_t bytes_read;    
     while((bytes_read = read(fd, buffer, 4098)) > 0){
+        if(outputfd < 0){ // Only create file after receiving some data
+            outputfd = open(filename, O_WRONLY | O_CREAT, 0644);
+            if(outputfd < 0){ perror("open()"); exit(-1); }
+        }
         buffer[bytes_read] = 0;
         write(outputfd, buffer, bytes_read);
     }
