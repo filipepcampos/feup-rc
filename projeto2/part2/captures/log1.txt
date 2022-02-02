@@ -1,0 +1,331 @@
+No.     Time           Source                Destination           Protocol Length Info
+      1 0.000000000    Cisco_5c:4d:84        Spanning-tree-(for-bridges)_00 STP      60     Conf. Root = 32768/20/fc:fb:fb:5c:4d:80  Cost = 0  Port = 0x8004
+
+Frame 1: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface eth0, id 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Spanning Tree Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+      2 2.004885480    Cisco_5c:4d:84        Spanning-tree-(for-bridges)_00 STP      60     Conf. Root = 32768/20/fc:fb:fb:5c:4d:80  Cost = 0  Port = 0x8004
+
+Frame 2: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface eth0, id 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Spanning Tree Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+      3 3.196127919    Cisco_5c:4d:84        Cisco_5c:4d:84        LOOP     60     Reply
+
+Frame 3: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface eth0, id 0
+Ethernet II, Src: Cisco_5c:4d:84 (fc:fb:fb:5c:4d:84), Dst: Cisco_5c:4d:84 (fc:fb:fb:5c:4d:84)
+Configuration Test Protocol (loopback)
+Data (40 bytes)
+
+0000  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00   ................
+0010  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00   ................
+0020  00 00 00 00 00 00 00 00                           ........
+
+No.     Time           Source                Destination           Protocol Length Info
+      4 4.010126459    Cisco_5c:4d:84        Spanning-tree-(for-bridges)_00 STP      60     Conf. Root = 32768/20/fc:fb:fb:5c:4d:80  Cost = 0  Port = 0x8004
+
+Frame 4: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface eth0, id 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Spanning Tree Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+      5 6.014690591    Cisco_5c:4d:84        Spanning-tree-(for-bridges)_00 STP      60     Conf. Root = 32768/20/fc:fb:fb:5c:4d:80  Cost = 0  Port = 0x8004
+
+Frame 5: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface eth0, id 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Spanning Tree Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+      6 8.019830086    Cisco_5c:4d:84        Spanning-tree-(for-bridges)_00 STP      60     Conf. Root = 32768/20/fc:fb:fb:5c:4d:80  Cost = 0  Port = 0x8004
+
+Frame 6: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface eth0, id 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Spanning Tree Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+      7 8.442544106    HewlettP_5a:7d:12     Broadcast             ARP      42     Who has 172.16.20.254? Tell 172.16.20.1
+
+Frame 7: 42 bytes on wire (336 bits), 42 bytes captured (336 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12), Dst: Broadcast (ff:ff:ff:ff:ff:ff)
+Address Resolution Protocol (request)
+
+No.     Time           Source                Destination           Protocol Length Info
+      8 8.442679182    HewlettP_a6:a4:f1     HewlettP_5a:7d:12     ARP      60     172.16.20.254 is at 00:22:64:a6:a4:f1
+
+Frame 8: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1), Dst: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12)
+Address Resolution Protocol (reply)
+
+No.     Time           Source                Destination           Protocol Length Info
+      9 8.442698459    172.16.20.1           172.16.20.254         ICMP     98     Echo (ping) request  id=0x2833, seq=1/256, ttl=64 (reply in 10)
+
+Frame 9: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12), Dst: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1)
+Internet Protocol Version 4, Src: 172.16.20.1, Dst: 172.16.20.254
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     10 8.442835211    172.16.20.254         172.16.20.1           ICMP     98     Echo (ping) reply    id=0x2833, seq=1/256, ttl=64 (request in 9)
+
+Frame 10: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1), Dst: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12)
+Internet Protocol Version 4, Src: 172.16.20.254, Dst: 172.16.20.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     11 9.444180755    172.16.20.1           172.16.20.254         ICMP     98     Echo (ping) request  id=0x2833, seq=2/512, ttl=64 (reply in 12)
+
+Frame 11: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12), Dst: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1)
+Internet Protocol Version 4, Src: 172.16.20.1, Dst: 172.16.20.254
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     12 9.444314364    172.16.20.254         172.16.20.1           ICMP     98     Echo (ping) reply    id=0x2833, seq=2/512, ttl=64 (request in 11)
+
+Frame 12: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1), Dst: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12)
+Internet Protocol Version 4, Src: 172.16.20.254, Dst: 172.16.20.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     13 10.024469368   Cisco_5c:4d:84        Spanning-tree-(for-bridges)_00 STP      60     Conf. Root = 32768/20/fc:fb:fb:5c:4d:80  Cost = 0  Port = 0x8004
+
+Frame 13: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface eth0, id 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Spanning Tree Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     14 10.468183415   172.16.20.1           172.16.20.254         ICMP     98     Echo (ping) request  id=0x2833, seq=3/768, ttl=64 (reply in 15)
+
+Frame 14: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12), Dst: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1)
+Internet Protocol Version 4, Src: 172.16.20.1, Dst: 172.16.20.254
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     15 10.468316396   172.16.20.254         172.16.20.1           ICMP     98     Echo (ping) reply    id=0x2833, seq=3/768, ttl=64 (request in 14)
+
+Frame 15: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1), Dst: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12)
+Internet Protocol Version 4, Src: 172.16.20.254, Dst: 172.16.20.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     16 11.496183663   172.16.20.1           172.16.20.254         ICMP     98     Echo (ping) request  id=0x2833, seq=4/1024, ttl=64 (reply in 17)
+
+Frame 16: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12), Dst: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1)
+Internet Protocol Version 4, Src: 172.16.20.1, Dst: 172.16.20.254
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     17 11.496340949   172.16.20.254         172.16.20.1           ICMP     98     Echo (ping) reply    id=0x2833, seq=4/1024, ttl=64 (request in 16)
+
+Frame 17: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1), Dst: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12)
+Internet Protocol Version 4, Src: 172.16.20.254, Dst: 172.16.20.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     18 12.029461354   Cisco_5c:4d:84        Spanning-tree-(for-bridges)_00 STP      60     Conf. Root = 32768/20/fc:fb:fb:5c:4d:80  Cost = 0  Port = 0x8004
+
+Frame 18: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface eth0, id 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Spanning Tree Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     19 12.516174139   172.16.20.1           172.16.20.254         ICMP     98     Echo (ping) request  id=0x2833, seq=5/1280, ttl=64 (reply in 20)
+
+Frame 19: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12), Dst: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1)
+Internet Protocol Version 4, Src: 172.16.20.1, Dst: 172.16.20.254
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     20 12.516302859   172.16.20.254         172.16.20.1           ICMP     98     Echo (ping) reply    id=0x2833, seq=5/1280, ttl=64 (request in 19)
+
+Frame 20: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1), Dst: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12)
+Internet Protocol Version 4, Src: 172.16.20.254, Dst: 172.16.20.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     21 13.195497206   Cisco_5c:4d:84        Cisco_5c:4d:84        LOOP     60     Reply
+
+Frame 21: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface eth0, id 0
+Ethernet II, Src: Cisco_5c:4d:84 (fc:fb:fb:5c:4d:84), Dst: Cisco_5c:4d:84 (fc:fb:fb:5c:4d:84)
+Configuration Test Protocol (loopback)
+Data (40 bytes)
+
+0000  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00   ................
+0010  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00   ................
+0020  00 00 00 00 00 00 00 00                           ........
+
+No.     Time           Source                Destination           Protocol Length Info
+     22 13.540179313   172.16.20.1           172.16.20.254         ICMP     98     Echo (ping) request  id=0x2833, seq=6/1536, ttl=64 (reply in 23)
+
+Frame 22: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12), Dst: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1)
+Internet Protocol Version 4, Src: 172.16.20.1, Dst: 172.16.20.254
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     23 13.540307125   172.16.20.254         172.16.20.1           ICMP     98     Echo (ping) reply    id=0x2833, seq=6/1536, ttl=64 (request in 22)
+
+Frame 23: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1), Dst: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12)
+Internet Protocol Version 4, Src: 172.16.20.254, Dst: 172.16.20.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     24 13.690709360   HewlettP_a6:a4:f1     HewlettP_5a:7d:12     ARP      60     Who has 172.16.20.1? Tell 172.16.20.254
+
+Frame 24: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1), Dst: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12)
+Address Resolution Protocol (request)
+
+No.     Time           Source                Destination           Protocol Length Info
+     25 13.690730243   HewlettP_5a:7d:12     HewlettP_a6:a4:f1     ARP      42     172.16.20.1 is at 00:21:5a:5a:7d:12
+
+Frame 25: 42 bytes on wire (336 bits), 42 bytes captured (336 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12), Dst: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1)
+Address Resolution Protocol (reply)
+
+No.     Time           Source                Destination           Protocol Length Info
+     26 14.034404310   Cisco_5c:4d:84        Spanning-tree-(for-bridges)_00 STP      60     Conf. Root = 32768/20/fc:fb:fb:5c:4d:80  Cost = 0  Port = 0x8004
+
+Frame 26: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface eth0, id 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Spanning Tree Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     27 14.564182461   172.16.20.1           172.16.20.254         ICMP     98     Echo (ping) request  id=0x2833, seq=7/1792, ttl=64 (reply in 28)
+
+Frame 27: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12), Dst: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1)
+Internet Protocol Version 4, Src: 172.16.20.1, Dst: 172.16.20.254
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     28 14.564315372   172.16.20.254         172.16.20.1           ICMP     98     Echo (ping) reply    id=0x2833, seq=7/1792, ttl=64 (request in 27)
+
+Frame 28: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1), Dst: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12)
+Internet Protocol Version 4, Src: 172.16.20.254, Dst: 172.16.20.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     29 15.588214036   172.16.20.1           172.16.20.254         ICMP     98     Echo (ping) request  id=0x2833, seq=8/2048, ttl=64 (reply in 30)
+
+Frame 29: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12), Dst: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1)
+Internet Protocol Version 4, Src: 172.16.20.1, Dst: 172.16.20.254
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     30 15.588349810   172.16.20.254         172.16.20.1           ICMP     98     Echo (ping) reply    id=0x2833, seq=8/2048, ttl=64 (request in 29)
+
+Frame 30: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1), Dst: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12)
+Internet Protocol Version 4, Src: 172.16.20.254, Dst: 172.16.20.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     31 16.039246692   Cisco_5c:4d:84        Spanning-tree-(for-bridges)_00 STP      60     Conf. Root = 32768/20/fc:fb:fb:5c:4d:80  Cost = 0  Port = 0x8004
+
+Frame 31: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface eth0, id 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Spanning Tree Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     32 16.612205311   172.16.20.1           172.16.20.254         ICMP     98     Echo (ping) request  id=0x2833, seq=9/2304, ttl=64 (reply in 33)
+
+Frame 32: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12), Dst: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1)
+Internet Protocol Version 4, Src: 172.16.20.1, Dst: 172.16.20.254
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     33 16.612357917   172.16.20.254         172.16.20.1           ICMP     98     Echo (ping) reply    id=0x2833, seq=9/2304, ttl=64 (request in 32)
+
+Frame 33: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1), Dst: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12)
+Internet Protocol Version 4, Src: 172.16.20.254, Dst: 172.16.20.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     34 17.636181988   172.16.20.1           172.16.20.254         ICMP     98     Echo (ping) request  id=0x2833, seq=10/2560, ttl=64 (reply in 35)
+
+Frame 34: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12), Dst: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1)
+Internet Protocol Version 4, Src: 172.16.20.1, Dst: 172.16.20.254
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     35 17.636313642   172.16.20.254         172.16.20.1           ICMP     98     Echo (ping) reply    id=0x2833, seq=10/2560, ttl=64 (request in 34)
+
+Frame 35: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1), Dst: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12)
+Internet Protocol Version 4, Src: 172.16.20.254, Dst: 172.16.20.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     36 18.044035503   Cisco_5c:4d:84        Spanning-tree-(for-bridges)_00 STP      60     Conf. Root = 32768/20/fc:fb:fb:5c:4d:80  Cost = 0  Port = 0x8004
+
+Frame 36: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface eth0, id 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Spanning Tree Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     37 18.660187930   172.16.20.1           172.16.20.254         ICMP     98     Echo (ping) request  id=0x2833, seq=11/2816, ttl=64 (reply in 38)
+
+Frame 37: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12), Dst: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1)
+Internet Protocol Version 4, Src: 172.16.20.1, Dst: 172.16.20.254
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     38 18.660325729   172.16.20.254         172.16.20.1           ICMP     98     Echo (ping) reply    id=0x2833, seq=11/2816, ttl=64 (request in 37)
+
+Frame 38: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1), Dst: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12)
+Internet Protocol Version 4, Src: 172.16.20.254, Dst: 172.16.20.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     39 19.684282571   172.16.20.1           172.16.20.254         ICMP     98     Echo (ping) request  id=0x2833, seq=12/3072, ttl=64 (reply in 40)
+
+Frame 39: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12), Dst: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1)
+Internet Protocol Version 4, Src: 172.16.20.1, Dst: 172.16.20.254
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     40 19.684428333   172.16.20.254         172.16.20.1           ICMP     98     Echo (ping) reply    id=0x2833, seq=12/3072, ttl=64 (request in 39)
+
+Frame 40: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface eth0, id 0
+Ethernet II, Src: HewlettP_a6:a4:f1 (00:22:64:a6:a4:f1), Dst: HewlettP_5a:7d:12 (00:21:5a:5a:7d:12)
+Internet Protocol Version 4, Src: 172.16.20.254, Dst: 172.16.20.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     41 20.048924329   Cisco_5c:4d:84        Spanning-tree-(for-bridges)_00 STP      60     Conf. Root = 32768/20/fc:fb:fb:5c:4d:80  Cost = 0  Port = 0x8004
+
+Frame 41: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface eth0, id 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Spanning Tree Protocol
