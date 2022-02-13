@@ -1,6 +1,0 @@
-<map id="llopen" name="llopen">
-<area shape="rect" id="node1" title="Connect serial port with respective flag." alt="" coords="231,31,293,57"/>
-<area shape="rect" id="node2" href="$application_8h.html#af346febbb4a3564c98973a5a7dfc1a09" title="Run emitter." alt="" coords="110,5,181,32"/>
-<area shape="rect" id="node4" href="$application_8h.html#a30c9608e49e0443be4a0edd7f2987111" title="Run receiver." alt="" coords="108,56,183,83"/>
-<area shape="rect" id="node3" href="$application_8c.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,31,60,57"/>
-</map>

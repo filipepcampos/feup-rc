@@ -1,5 +1,0 @@
-<map id="create_information_frame" name="create_information_frame">
-<area shape="rect" id="node1" title="Create a information frame object." alt="" coords="5,23,152,65"/>
-<area shape="rect" id="node2" href="$core_8c.html#ac5ffcdebbb0073de085652c000b59bdc" title="Apply byte stuffing to data, note that the data buffer must have at least 2*data_len of space to avoi..." alt="" coords="201,5,309,32"/>
-<area shape="rect" id="node3" href="$core_8c.html#ab08cfb49b03eb4fae2b437ed69eb0f5e" title="Calculate BCC for an array of bytes." alt="" coords="200,56,311,83"/>
-</map>

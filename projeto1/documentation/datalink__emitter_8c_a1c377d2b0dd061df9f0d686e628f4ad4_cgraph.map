@@ -1,8 +1,0 @@
-<map id="emit_frame" name="emit_frame">
-<area shape="rect" id="node1" title="Send frame." alt="" coords="5,56,104,83"/>
-<area shape="rect" id="node2" href="$datalink__emitter_8c.html#a25fa88f226755bfd999f743d4eb82052" title="Fill buffer with the content of the frame." alt="" coords="152,5,276,32"/>
-<area shape="rect" id="node3" href="$logger_8c.html#ab86e54443cb3d8af3fca1aa9f22ee67b" title="Print frame emition info." alt="" coords="160,56,268,83"/>
-<area shape="rect" id="node6" href="$datalink__emitter_8c.html#a141404f4eac905cc53383742b98e5c6f" title="Write frame content to file descriptor." alt="" coords="166,107,262,133"/>
-<area shape="rect" id="node4" href="$logger_8c.html#a2643a4de6799409f0c148a62ab3bc028" title="Print address byte." alt="" coords="324,31,460,57"/>
-<area shape="rect" id="node5" href="$logger_8c.html#a7c3cb26ef790a76027b5378f0302aba3" title="Print the control byte." alt="" coords="327,81,457,108"/>
-</map>
